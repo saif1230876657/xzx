@@ -85,6 +85,7 @@
       -moz-osx-font-smoothing: grayscale;
       margin: 0; 
       padding: 0; 
+      overflow: hidden; /* Prevent viewport scrollbars */
     }
 
     body {
@@ -94,16 +95,16 @@
       align-items: center;
       color: var(--text-primary);
       overflow: hidden; 
-      padding: 15px;
+      padding: 0; /* MODIFIED: Was 15px, changed to 0 to remove large empty edges */
     }
 
     .container {
       width: 100%;
-      max-width: 800px;
+      max-width: 800px; /* Kept for readability on larger screens */
       height: 100%; 
       background: var(--bg-surface); 
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color); /* Kept for container definition */
+      border-radius: var(--border-radius-lg); /* Kept for app-like rounded corners */
       display: flex;
       flex-direction: column; 
       overflow: hidden; 
@@ -345,7 +346,7 @@
       color: var(--text-on-primary); 
     }
 
-    /* Speak Button Styles (added from previous step) */
+    /* Speak Button Styles */
     .speak-btn {
       background: rgba(255,255,255,0.08);
       border: 1px solid var(--border-color-light);
@@ -668,7 +669,7 @@
         color: var(--text-primary);
         background: rgba(255,255,255,0.1);
      }
-    #subjectListContainer {
+    #subjectListContainer { /* Ensures buttons are side-by-side and wrap */
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -763,7 +764,7 @@
         opacity: 1;
     }
 
-    /* TTS Overlay Styles (added from previous step) */
+    /* TTS Overlay Styles */
     .tts-overlay {
       display: none; 
       position: fixed;
@@ -826,11 +827,14 @@
     /* Media Queries for Responsiveness */
     @media (max-width: 768px) { 
       .container {
-        border-radius: 16px; 
+        /* border-radius: 16px; MODIFIED: If body padding is 0, top-level container might not need radius on mobile for edge-to-edge */
+        border-radius: 0; /* Example for true edge-to-edge on mobile */
+        border-left: none;
+        border-right: none;
       }
-      body { 
-        padding: 10px;
-      }
+      /* body { 
+        padding: 10px; MODIFIED: Body padding is now 0 globally
+      } */
       :root { 
         --chat-input-area-height: 55px; 
         --status-bar-area-height: 22px;
@@ -854,6 +858,13 @@
     }
 
     @media (max-width: 480px) { 
+       /* Make container full width and remove side borders/radius if body padding is 0 */
+      .container {
+        border-radius: 0; 
+        border-left: none;
+        border-right: none;
+        /* border-top and border-bottom might also be none if truly edge to edge with no definition */
+      }
       :root {
         --chat-input-area-height: 52px; 
         --status-bar-area-height: 20px;
@@ -861,9 +872,9 @@
         --scroll-btn-size: 36px;
         --scroll-btn-spacing: 6px;
       }
-       body { 
-        padding: 8px;
-      }
+       /* body { 
+        padding: 8px; MODIFIED: Body padding is now 0 globally
+      } */
       .header { 
         padding: 0.6rem 0.8rem; 
         gap: 0.4rem; 
@@ -1025,7 +1036,7 @@
     </div>
   </div>
 
-  <!-- TTS Overlay (added from previous step) -->
+  <!-- TTS Overlay -->
   <div id="ttsOverlay" class="tts-overlay">
     <div class="tts-overlay-content">
       <i class="fas fa-volume-up tts-icon"></i>
@@ -1063,7 +1074,7 @@
     const subjectModal = document.getElementById('subjectModal');
     const subjectListContainer = document.getElementById('subjectListContainer');
 
-    // TTS Elements and state (added from previous step)
+    // TTS Elements and state
     const ttsOverlay = document.getElementById('ttsOverlay');
     const ttsStatusText = document.getElementById('ttsStatusText');
     const cancelTtsBtn = document.getElementById('cancelTtsBtn');
@@ -1222,12 +1233,11 @@
                 !subjectModal.contains(e.target) && e.target !== enterSubjectsBtn) { 
                 uploadOptionsContainer.classList.remove('active');
             }
-             // Close TTS overlay if clicked outside its content
             if (ttsOverlay.style.display === 'flex' && !ttsOverlay.querySelector('.tts-overlay-content').contains(e.target)) {
-                 if (speechSynthesis.speaking) { // Only cancel if it was the reason overlay was open
-                    // cancelSpeech(); // Or let the cancel button handle it if user clicks that
+                 if (speechSynthesis.speaking) { 
+                    // cancelSpeech(); // User might prefer explicit cancel button
                  } else {
-                     ttsOverlay.style.display = 'none'; // If not speaking, just hide
+                     ttsOverlay.style.display = 'none';
                  }
             }
         });
@@ -1270,14 +1280,13 @@
         initSpeechRecognition();
         voiceInputBtn.addEventListener('click', toggleListening);
 
-        // Initialize TTS cancel button (added from previous step)
         cancelTtsBtn.onclick = cancelSpeech;
         speechSynthesis.onvoiceschanged = () => {
             // console.log("Voices available:", speechSynthesis.getVoices().length);
         };
     }
 
-    // New TTS functions (added from previous step)
+    // TTS functions
     function speakText(textToSpeak, messageIndex, buttonElement) {
         if (!('speechSynthesis' in window)) {
             setStatus("متصفحك لا يدعم ميزة تحويل النص إلى كلام.", "error", 3000);
@@ -1285,7 +1294,7 @@
         }
 
         if (speechSynthesis.speaking) {
-            speechSynthesis.cancel(); // This also triggers onend for the previous utterance
+            speechSynthesis.cancel(); 
         }
 
         currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -1325,7 +1334,7 @@
                 currentSpeakingButton.classList.remove('speaking');
                 if(currentSpeakingButton.querySelector('.speak-btn-text')) currentSpeakingButton.querySelector('.speak-btn-text').textContent = 'تشغيل';
             }
-            if (currentUtterance === event.utterance || !speechSynthesis.speaking) { // Check if this was the utterance that ended naturally
+            if (currentUtterance === event.utterance || !speechSynthesis.speaking) { 
                 currentSpeakingButton = null;
                 speakingMessageIndex = -1;
             }
@@ -1586,7 +1595,7 @@
           }
           bubble.appendChild(img);
         } else {
-          const originalText = msg.text; // This is the raw text for TTS
+          const originalText = msg.text; 
           const characterLimit = 250; 
 
           if (msg.sender === "bot" && !msg.isSystemMessage && !msg.isInitialWelcome && originalText.length > characterLimit) {
@@ -1623,6 +1632,7 @@
         
         let actionsDiv = null;
 
+        // Add speak button for ANY message with text (user or bot)
         if (!msg.isImage && msg.text && typeof msg.text === 'string' && msg.text.trim() !== "") {
             actionsDiv = messageElem.querySelector('.message-actions'); 
             if (!actionsDiv) { 
@@ -1654,14 +1664,20 @@
                 if (speechSynthesis.speaking && index === speakingMessageIndex) {
                     cancelSpeech(); 
                 } else {
-                    speakText(msg.text, index, speakBtn); // Pass the raw msg.text
+                    speakText(msg.text, index, speakBtn);
                 }
             };
-            actionsDiv.prepend(speakBtn); 
+            // Prepend speak button so it appears first in actions for consistency
+            if (actionsDiv.firstChild) {
+                actionsDiv.insertBefore(speakBtn, actionsDiv.firstChild);
+            } else {
+                actionsDiv.appendChild(speakBtn);
+            }
         }
         
+        // Add other actions (like, copy, retry) ONLY for bot messages
         if(msg.sender === "bot" && !msg.isImage && !msg.isSystemMessage && !msg.isInitialWelcome) {
-            if (!actionsDiv) { 
+            if (!actionsDiv) { // Ensure actionsDiv exists if only these buttons are added
                 actionsDiv = document.createElement("div");
                 actionsDiv.classList.add("message-actions");
                 messageElem.appendChild(actionsDiv);
@@ -1677,7 +1693,7 @@
             copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
             copyBtn.title = "نسخ النص";
             copyBtn.addEventListener("click", () => {
-              navigator.clipboard.writeText(msg.text) // Copy raw msg.text
+              navigator.clipboard.writeText(msg.text) 
               .then(() => setStatus("تم نسخ المحتوى بنجاح 👍", "success", 1500))
               .catch(err => setStatus("فشل النسخ: " + err.message, "error", 2000));
             });
@@ -1717,7 +1733,6 @@
     }
 
     function deleteMessage(index) {
-      // If the message being deleted is currently being spoken, stop speech.
       if (index === speakingMessageIndex) {
           cancelSpeech();
       }
@@ -1733,7 +1748,6 @@
     }
 
     function deleteAllMessages() {
-      // Stop speech if any message is speaking before deleting all
       if (speechSynthesis.speaking) {
           cancelSpeech();
       }
@@ -1750,6 +1764,7 @@
         if (messages.length === 0) { 
             addWelcomeMessage(); 
         } else { 
+            // Ensure welcome message text is updated if it was the only one left and context changed
             addWelcomeMessage(); 
         }
         refreshChat(); 
