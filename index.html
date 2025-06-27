@@ -132,6 +132,68 @@
       position: relative; 
       box-shadow: var(--shadow-lg);
     }
+    
+    /* --- NEW: Download Notification Styles --- */
+    .download-notification {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-on-primary);
+      text-align: center;
+      font-weight: 500;
+      z-index: 100;
+      box-shadow: var(--shadow-md);
+      border-bottom: 1px solid var(--border-color);
+      overflow: hidden;
+      max-height: 0;
+      padding: 0 15px;
+      transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+    }
+    .download-notification.show {
+        max-height: 80px; /* Animate height */
+        padding: 10px 15px; /* Animate padding */
+    }
+    .notification-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-right: auto; /* Push buttons to the left in RTL */
+        padding-right: 15px;
+    }
+    .download-btn {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: var(--primary-color);
+        border: none;
+        padding: 6px 14px;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        font-family: 'Tajawal', sans-serif;
+    }
+    .download-btn:hover {
+        background-color: #fff;
+        transform: scale(1.05);
+    }
+    .close-btn {
+        background: none;
+        border: none;
+        color: var(--text-on-primary);
+        font-size: 1.8rem;
+        cursor: pointer;
+        padding: 0 5px;
+        line-height: 1;
+        opacity: 0.8;
+        transition: all 0.25s ease;
+    }
+    .close-btn:hover {
+        opacity: 1;
+        transform: rotate(90deg) scale(1.1);
+    }
+    /* --- END: New Styles --- */
+
 
     .header { 
       background: linear-gradient(to right, var(--bg-surface-raised), var(--bg-surface));
@@ -937,6 +999,21 @@
         --scroll-btn-size: 36px;
         --scroll-btn-spacing: 6px;
       }
+      .download-notification {
+          font-size: 0.8rem;
+          padding: 0 10px;
+      }
+      .download-notification.show {
+          padding: 8px 10px;
+      }
+      .download-btn {
+          padding: 4px 10px;
+          font-size: 0.75rem;
+      }
+      .notification-buttons {
+          gap: 5px;
+          padding-right: 10px;
+      }
       .header { 
         flex-wrap: wrap; 
         justify-content: center; 
@@ -1001,6 +1078,15 @@
 </head>
 <body>
   <div class="container">
+    <!-- NEW: Download Notification Bar -->
+    <div id="downloadNotification" class="download-notification">
+      <span>يمكنك تحميل التطبيق لمميزات أكثر!</span>
+      <div class="notification-buttons">
+          <button id="downloadAppBtn" class="download-btn">تحميل</button>
+          <button id="closeNotificationBtn" class="close-btn">×</button>
+      </div>
+    </div>
+    
     <header class="header">
       <i class="fas fa-share-alt share-btn-header" id="shareBtn" title="مشاركة التطبيق"></i>
       <i class="fas fa-trash delete-all-btn" onclick="deleteAllMessages()" title="حذف كل الرسائل"></i>
@@ -1139,6 +1225,11 @@
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const shareLinkInput = document.getElementById('shareLinkInput');
     
+    // NEW: Notification Bar Elements
+    const downloadNotification = document.getElementById('downloadNotification');
+    const downloadAppBtn = document.getElementById('downloadAppBtn');
+    const closeNotificationBtn = document.getElementById('closeNotificationBtn');
+    let notificationTimeout;
 
     const botName = "سيف AI";
     const localStorageKeyAllChats = "saifAiAllChatsHistory_v2"; 
@@ -1173,6 +1264,21 @@
     
     let recognition;
     let isListening = false;
+    
+    // --- NEW: Notification Functions ---
+    function showAppNotification() {
+      clearTimeout(notificationTimeout); // Clear any existing hide timer
+      downloadNotification.classList.add('show');
+      // Set a timer to hide it after 5 seconds
+      notificationTimeout = setTimeout(() => {
+        hideAppNotification();
+      }, 5000); // 5 seconds
+    }
+
+    function hideAppNotification() {
+      downloadNotification.classList.remove('show');
+    }
+    // --- END: Notification Functions ---
 
     function initSpeechRecognition() {
         if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -1329,6 +1435,20 @@
                 closeCamera();
             }
         });
+        
+        // --- NEW: Setup for Notification Bar ---
+        downloadAppBtn.addEventListener('click', () => {
+            window.open('https://t.me/sezxxsz/11', '_blank');
+            hideAppNotification(); // Hide after clicking download
+        });
+        closeNotificationBtn.addEventListener('click', hideAppNotification);
+        // Show notification on page load
+        showAppNotification();
+        // Show it again every 5 minutes
+        setInterval(() => {
+            showAppNotification();
+        }, 5 * 60 * 1000); // 5 minutes in milliseconds
+        // --- END: Setup ---
     }
 
     function handleChatScroll() {
