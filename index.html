@@ -4,7 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- Social Share Meta Tags (New) -->
+  <!-- PWA: Link to Manifest File -->
+  <link rel="manifest" href="manifest.json">
+  <!-- PWA: Theme color for browser UI -->
+  <meta name="theme-color" content="#24292b" />
+  <!-- PWA: Favicon for the site -->
+  <link rel="icon" href="https://i.postimg.cc/nhkF1YqX/Screenshot-680d03679600f7af0b4c700c6b270fe7-2.jpg" type="image/jpeg">
+
+
+  <!-- Social Share Meta Tags -->
   <title>Saif AI - دردشة ذكاء اصطناعي</title>
   <meta property="og:title" content="Saif AI - دردشة ذكاء اصطناعي" />
   <meta property="og:description" content="مساعد ذكاء اصطناعي عربي متقدم للإجابة على كافة أسئلتك، مع دعم متخصص للمواد الدراسية." />
@@ -133,7 +141,6 @@
       box-shadow: var(--shadow-lg);
     }
     
-    /* --- NEW: Download Notification Styles --- */
     .download-notification {
       display: flex;
       align-items: center;
@@ -151,14 +158,14 @@
       transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
     }
     .download-notification.show {
-        max-height: 80px; /* Animate height */
-        padding: 10px 15px; /* Animate padding */
+        max-height: 80px; 
+        padding: 10px 15px; 
     }
     .notification-buttons {
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-right: auto; /* Push buttons to the left in RTL */
+        margin-right: auto;
         padding-right: 15px;
     }
     .download-btn {
@@ -192,8 +199,6 @@
         opacity: 1;
         transform: rotate(90deg) scale(1.1);
     }
-    /* --- END: New Styles --- */
-
 
     .header { 
       background: linear-gradient(to right, var(--bg-surface-raised), var(--bg-surface));
@@ -298,9 +303,9 @@
         box-shadow: var(--shadow-xs);
     }
 
-    .chat-wrapper, #subjectsViewContainer { /* Common container for main content views */
+    .chat-wrapper, #subjectsViewContainer { 
         flex: 1;
-        display: flex; /* Will be toggled to none for the hidden view */
+        display: flex; 
         flex-direction: column;
         overflow: hidden; 
         min-height: 0; 
@@ -309,7 +314,7 @@
     #subjectsViewContainer {
         background-color: var(--bg-main);
         padding: 1.5rem;
-        display: none; /* Initially hidden */
+        display: none; 
         align-items: center; 
     }
     
@@ -399,7 +404,6 @@
     .subject-item-btn:hover i {
         color: var(--text-on-primary); 
     }
-
 
     .chat-container {
       flex: 1; 
@@ -728,7 +732,6 @@
       text-decoration: underline;
     }
     
-    /* MODAL STYLES (CAMERA AND SHARE) */
     .camera-modal, .share-modal { 
         display: none; 
         position: fixed;
@@ -745,7 +748,7 @@
         animation: fadeIn 0.3s ease;
     }
     .share-modal {
-        z-index: 1001; /* Above camera if both were open */
+        z-index: 1001;
     }
 
     @keyframes fadeIn {
@@ -804,7 +807,6 @@
         background-color: hsl(0, 90%, 45%); 
     }
     
-    /* SHARE MODAL SPECIFIC STYLES */
     .share-modal-content {
         padding: 30px 40px;
         width: 450px;
@@ -874,7 +876,6 @@
         transform: rotate(90deg);
     }
 
-
     .scroll-btn {
       position: absolute; 
       right: 25px;
@@ -909,7 +910,6 @@
     }
 
     #scrollToBottomBtn {
-      /* Position relative to chatWrapper, not document body */
       bottom: calc(var(--chat-input-area-height) + var(--status-bar-area-height) + var(--search-log-area-height) + var(--scroll-btn-spacing));
     }
     #scrollToTopBtn {
@@ -937,7 +937,6 @@
         opacity: 1;
     }
 
-    /* Media Queries for Responsiveness */
     @media (max-width: 768px) { 
       .container {
         border-radius: 0; 
@@ -1065,7 +1064,7 @@
         --scroll-btn-size: 34px;
         --header-title-font-size: 0.85rem;
        }
-      .subject-item-btn { min-width: calc(50% - 6px); font-size: 0.85rem;} /* Ensure two items fit */
+      .subject-item-btn { min-width: calc(50% - 6px); font-size: 0.85rem;} 
       .subject-item-btn i { font-size: 1.6rem; }
 
       .bubble { padding: 0.6rem 0.8rem; }
@@ -1073,16 +1072,14 @@
       .chat-input-btn { width: 36px; height: 36px; }
       .upload-options-container { right: 42px; } 
     }
-
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- NEW: Download Notification Bar -->
     <div id="downloadNotification" class="download-notification">
-      <span>يمكنك تحميل التطبيق لمميزات أكثر!</span>
+      <span id="downloadNotificationText">ثبّت التطبيق على جهازك للوصول السريع!</span>
       <div class="notification-buttons">
-          <button id="downloadAppBtn" class="download-btn">تحميل</button>
+          <button id="downloadAppBtn" class="download-btn">تثبيت</button>
           <button id="closeNotificationBtn" class="close-btn">×</button>
       </div>
     </div>
@@ -1225,12 +1222,12 @@
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const shareLinkInput = document.getElementById('shareLinkInput');
     
-    // NEW: Notification Bar Elements
+    // Notification Bar Elements
     const downloadNotification = document.getElementById('downloadNotification');
+    const downloadNotificationText = document.getElementById('downloadNotificationText');
     const downloadAppBtn = document.getElementById('downloadAppBtn');
     const closeNotificationBtn = document.getElementById('closeNotificationBtn');
-    let notificationTimeout;
-
+    
     const botName = "سيف AI";
     const localStorageKeyAllChats = "saifAiAllChatsHistory_v2"; 
     const localStorageKeyAdCounter = "saifAiAdCounter";
@@ -1264,15 +1261,14 @@
     
     let recognition;
     let isListening = false;
-    
-    // --- NEW: Notification Functions ---
+    let deferredPrompt; // PWA: For storing the install prompt event
+
+    // --- Notification Functions ---
     function showAppNotification() {
-      clearTimeout(notificationTimeout); // Clear any existing hide timer
+      // This function will now always show the install prompt message
+      downloadNotificationText.textContent = "ثبّت التطبيق على جهازك للوصول السريع!";
+      downloadAppBtn.textContent = "تثبيت";
       downloadNotification.classList.add('show');
-      // Set a timer to hide it after 5 seconds
-      notificationTimeout = setTimeout(() => {
-        hideAppNotification();
-      }, 5000); // 5 seconds
     }
 
     function hideAppNotification() {
@@ -1347,8 +1343,22 @@
         voiceIndicator.classList.remove('active');
         if (statusBar.textContent === "جاري الاستماع...") { setStatus("", "", 100); }
     }
+    
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('Service Worker registration failed:', error);
+          });
+      }
+    }
 
     function initializeApp() {
+        registerServiceWorker(); 
+    
         const storedAdCount = localStorage.getItem(localStorageKeyAdCounter);
         if (storedAdCount) { successfulResponseCount = parseInt(storedAdCount, 10) || 0; }
 
@@ -1401,7 +1411,6 @@
         initSpeechRecognition();
         voiceInputBtn.addEventListener('click', toggleListening);
 
-        // Share Modal Event Listeners
         shareBtn.addEventListener('click', () => {
             shareModal.style.display = 'flex';
         });
@@ -1412,7 +1421,7 @@
 
         copyLinkBtn.addEventListener('click', () => {
             shareLinkInput.select();
-            shareLinkInput.setSelectionRange(0, 99999); // For mobile devices
+            shareLinkInput.setSelectionRange(0, 99999);
             
             navigator.clipboard.writeText(shareLinkInput.value).then(() => {
                 const originalText = copyLinkBtn.innerHTML;
@@ -1425,8 +1434,20 @@
                 setStatus("فشل نسخ الرابط. يرجى نسخه يدوياً.", "error", 2500);
             });
         });
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showAppNotification();
+        });
+        
+        window.addEventListener('appinstalled', () => {
+          console.log('PWA was installed');
+          deferredPrompt = null;
+          hideAppNotification();
+        });
 
-        // Close modal when clicking outside of it
+
         window.addEventListener('click', (event) => {
             if (event.target == shareModal) {
                 shareModal.style.display = 'none';
@@ -1436,23 +1457,21 @@
             }
         });
         
-        // --- NEW: Setup for Notification Bar ---
-        downloadAppBtn.addEventListener('click', () => {
-            window.open('https://t.me/sezxxsz/11', '_blank');
-            hideAppNotification(); // Hide after clicking download
+        downloadAppBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (deferredPrompt) {
+                hideAppNotification();
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+            }
         });
+        
         closeNotificationBtn.addEventListener('click', hideAppNotification);
-        // Show notification on page load
-        showAppNotification();
-        // Show it again every 5 minutes
-        setInterval(() => {
-            showAppNotification();
-        }, 5 * 60 * 1000); // 5 minutes in milliseconds
-        // --- END: Setup ---
     }
 
     function handleChatScroll() {
-        // Only show scroll buttons if chatWrapper is visible
         if (chatWrapper.style.display === 'none') {
             scrollToTopBtn.classList.remove('visible');
             scrollToBottomBtn.classList.remove('visible');
@@ -1470,7 +1489,7 @@
     function openSubjectsView() {
         chatWrapper.style.display = 'none';
         subjectsViewContainer.style.display = 'flex'; 
-        handleChatScroll(); // This will hide scroll buttons
+        handleChatScroll(); 
     }
 
     function closeSubjectsView() {
@@ -1538,7 +1557,7 @@
 
     function switchToGeneralMode() {
         if (currentSubject === "general") {
-            if(subjectsViewContainer.style.display === 'flex') closeSubjectsView(); // If subject view open, close it
+            if(subjectsViewContainer.style.display === 'flex') closeSubjectsView();
             return;
         }
 
@@ -1548,7 +1567,7 @@
         if (!allMessages[currentSubject]) { allMessages[currentSubject] = []; }
 
         updateSubjectUI();
-        if(subjectsViewContainer.style.display === 'flex') closeSubjectsView(); // Ensure subject view is closed
+        if(subjectsViewContainer.style.display === 'flex') closeSubjectsView();
         addWelcomeMessage(); 
         refreshChat(); 
         setStatus("تم الرجوع إلى الوضع العام", "success", 3000);
