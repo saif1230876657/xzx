@@ -4,14 +4,14 @@
   "description": "مساعد ذكاء اصطناعي عربي متقدم للإجابة على كافة أسئلتك، مع دعم متخصص للمواد الدراسية.",
   "icons": [
     {
-      "src": "https://i.postimg.cc/nhkF1YqX/Screenshot-680d03679600f7af0b4c700c6b270fe7-2.jpg",
-      "type": "image/jpeg",
+      "src": "https://i.postimg.cc/cCLZPwnw/2dd388fc-039e-4ce1-ab35-4f9db8cc40b2.png",
+      "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.postimg.cc/nhkF1YqX/Screenshot-680d03679600f7af0b4c700c6b270fe7-2.jpg",
-      "type": "image/jpeg",
+      "src": "https://i.postimg.cc/cCLZPwnw/2dd388fc-039e-4ce1-ab35-4f9db8cc40b2.png",
+      "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
     }
