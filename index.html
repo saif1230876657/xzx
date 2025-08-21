@@ -7,7 +7,7 @@
   <!-- PWA: Link to Manifest File -->
   <link rel="manifest" href="manifest.json">
   <!-- PWA: Theme color for browser UI -->
-  <meta name="theme-color" content="#24292b" />
+  <meta name="theme-color" content="#000000" />
   <!-- PWA: Favicon for the site -->
   <link rel="icon" href="https://i.postimg.cc/cCLZPwnw/2dd388fc-039e-4ce1-ab35-4f9db8cc40b2.png" type="image/png">
 
@@ -29,37 +29,37 @@
   <style>
     :root {
       --primary-hue: 205;
-      --primary-saturation: 75%;
-      --primary-lightness: 42%;
+      --primary-saturation: 85%;
+      --primary-lightness: 55%;
 
       --primary-color: hsl(var(--primary-hue), var(--primary-saturation), var(--primary-lightness));
-      --primary-hover-color: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) - 5%));
-      --primary-glow-color: hsla(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) + 10%), 0.5);
+      --primary-hover-color: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) - 7%));
+      --primary-glow-color: hsla(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) + 10%), 0.4);
 
-      --secondary-color: #6a7bff;
+      --secondary-color: #7a8cff;
       
-      --bg-main: #1a1d1e;
-      --bg-surface: #24292b;
-      --bg-surface-raised: #2e3335;
-      --bg-input: #2e3335;
+      /* MODIFIED: Pure Black Theme */
+      --bg-main: #000000;
+      --bg-surface: #101010;
+      --bg-surface-raised: #1c1c1c;
+      --bg-input: #1c1c1c;
 
-      --text-primary: #eef2f4;
-      --text-secondary: #a5b3c1;
+      --text-primary: #f0f4f8;
+      --text-secondary: #a0a8b2;
       --text-on-primary: #ffffff;
       
-      --border-color: #3c4245;
-      --border-color-light: #4d5458;
+      --border-color: #2a2a2a;
+      --border-color-light: #404040;
       
-      --success-color: #4ac97c;
-      --error-color: #ff6b6b;
+      --success-color: #4ce083;
+      --error-color: #ff5c5c;
       
-      --user-message-bg: var(--secondary-color);
-      --bot-message-bg: var(--bg-surface-raised);
+      /* Bubble colors removed as they are no longer used */
 
-      --shadow-xs: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-sm: 0 4px 6px rgba(0,0,0,0.35);
-      --shadow-md: 0 6px 12px rgba(0,0,0,0.4);
-      --shadow-lg: 0 12px 24px rgba(0,0,0,0.45);
+      --shadow-xs: 0 1px 3px rgba(0,0,0,0.5);
+      --shadow-sm: 0 4px 6px rgba(0,0,0,0.6);
+      --shadow-md: 0 6px 12px rgba(0,0,0,0.7);
+      --shadow-lg: 0 12px 24px rgba(0,0,0,0.8);
       
       --border-radius-sm: 8px;
       --border-radius-md: 12px;
@@ -74,10 +74,11 @@
       --scroll-btn-size: 42px; 
       --scroll-btn-spacing: 10px; 
 
-      --header-padding-vertical: 0.5rem; 
+      --header-height: 52px;
+      --header-padding-vertical: 0.4rem; 
       --header-padding-horizontal: 0.8rem;
       --header-gap: 0.5rem;
-      --header-icon-size: 1.3rem; 
+      --header-icon-size: 1.2rem; 
       --header-icon-container-size: 32px; 
       --header-title-font-size: 1.05rem; 
       --header-btn-font-size: 0.75rem; 
@@ -118,7 +119,7 @@
     }
 
     body {
-      background: linear-gradient(135deg, #141618 0%, #1c2023 100%);
+      background: #000;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -129,11 +130,10 @@
 
     .container {
       width: 100%;
-      max-width: 800px; 
       height: 100%; 
-      background: var(--bg-surface); 
+      background: var(--bg-main); 
       border: 1px solid var(--border-color); 
-      border-radius: var(--border-radius-lg); 
+      border-radius: 0;
       display: flex;
       flex-direction: column; 
       overflow: hidden; 
@@ -201,7 +201,7 @@
     }
 
     .header { 
-      background: linear-gradient(to right, var(--bg-surface-raised), var(--bg-surface));
+      background: var(--bg-surface);
       color: var(--text-primary);
       padding: var(--header-padding-vertical) var(--header-padding-horizontal); 
       display: flex;
@@ -212,7 +212,7 @@
       box-shadow: var(--shadow-sm);
       flex-shrink: 0; 
       z-index: 10; 
-      min-height: auto; 
+      height: var(--header-height);
     }
 
     .header .delete-all-btn, .header .share-btn-header { 
@@ -221,15 +221,8 @@
       color: var(--text-secondary);
       font-size: var(--header-icon-size); 
       z-index: 11; 
-      padding: 5px; 
-    }
-    .header .delete-all-btn {
-      order: -1; 
-      margin-right: auto; 
-    }
-    .header .share-btn-header {
-      order: -2;
-      margin-left: 5px;
+      padding: 5px;
+      flex-shrink: 0;
     }
     .delete-all-btn:hover {
       color: var(--error-color);
@@ -251,6 +244,7 @@
       justify-content: center;
       border-radius: 50%;
       animation: pulseIcon 2.5s infinite ease-in-out;
+      flex-shrink: 0;
     }
 
     @keyframes pulseIcon {
@@ -266,16 +260,16 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-left: 0.2rem; 
-      margin-right: 0.2rem; 
-      flex-grow: 0; 
       text-align: center;
-      text-shadow: 0 0 6px rgba(106, 123, 255, 0.25); 
+      text-shadow: 0 0 6px rgba(106, 123, 255, 0.25);
+      flex-grow: 1;
+      min-width: 0;
     }
 
     #subjectControls { 
         display: flex;
         gap: var(--header-gap); 
+        flex-shrink: 0;
     }
 
     .header-btn { 
@@ -407,37 +401,42 @@
 
     .chat-container {
       flex: 1; 
-      padding: 1.2rem 0.9rem; 
+      padding: 1.5rem 1rem; 
       overflow-y: auto; 
       background: var(--bg-main);
       scroll-behavior: smooth; 
       min-height: 0; 
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(42, 60, 87, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(106, 123, 255, 0.05) 0%, transparent 20%);
     }
 
+    /* MODIFIED: Message Style (No Bubbles) */
     .message {
-      margin-bottom: 1.4rem; 
+      max-width: 85%;
+      margin-bottom: 2rem; 
       display: flex;
       flex-direction: column;
       animation: messageAppear 0.4s ease-out;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      line-height: 1.7;
     }
 
     @keyframes messageAppear {
-      from { opacity: 0; transform: translateY(15px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .message-content {
+        padding: 0.2rem 0.5rem;
     }
 
     .message-header {
-      font-size: 0.75rem; 
+      font-size: 0.8rem; 
       color: var(--text-secondary);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.4rem;
       display: flex;
       align-items: center;
       gap: 8px;
       font-weight: 500;
-      padding: 0 8px; 
     }
 
     .delete-btn {
@@ -445,21 +444,22 @@
       font-size: 0.8rem; 
       cursor: pointer;
       transition: color 0.2s, transform 0.2s;
-      opacity: 0.5; 
-      background: rgba(255,255,255,0.05);
+      opacity: 0.4; 
       padding: 3px 5px;
       border-radius: 4px;
     }
-
+    .message:hover .delete-btn {
+        opacity: 0.8;
+    }
     .delete-btn:hover {
       opacity: 1;
       color: var(--error-color);
       transform: scale(1.15);
-      background: rgba(255,107,107,0.1);
     }
 
     .message.user {
       align-items: flex-end;
+      margin-left: auto; /* Push to the right */
     }
     .message.user .message-header {
       flex-direction: row-reverse; 
@@ -467,40 +467,23 @@
 
     .message.bot {
       align-items: flex-start;
+      margin-right: auto; /* Push to the left */
     }
-
-    .bubble {
-      max-width: 80%; 
-      padding: 0.9rem 1.2rem; 
-      border-radius: var(--border-radius-md); 
-      word-wrap: break-word;
-      white-space: pre-wrap;
-      line-height: 1.65;
-      transition: all 0.25s ease;
-      box-shadow: var(--shadow-xs);
-      position: relative;
+    
+    .message.user .message-content {
+      color: #c7d2fe; /* Light blue for user text */
     }
-
-    .message.user .bubble {
-      background: var(--user-message-bg);
-      color: var(--text-on-primary);
-      border-bottom-right-radius: var(--border-radius-sm); 
-    }
-
-    .message.bot .bubble {
-      background: var(--bot-message-bg);
+    
+    .message.bot .message-content {
       color: var(--text-primary);
-      border-bottom-left-radius: var(--border-radius-sm); 
-      border: 1px solid rgba(255,255,255,0.05);
     }
-
-    .message:hover .bubble {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+    
+    .message.bot .message-content strong {
+        color: var(--primary-color);
     }
 
     .message-actions {
-      margin-top: 8px;
+      margin-top: 10px;
       display: flex;
       gap: 8px; 
       padding: 0 8px; 
@@ -511,10 +494,10 @@
     }
 
     .message-actions button {
-      background: rgba(255,255,255,0.08); 
-      border: 1px solid var(--border-color-light); 
+      background: var(--bg-surface-raised); 
+      border: 1px solid var(--border-color); 
       cursor: pointer;
-      font-size: 0.9rem; 
+      font-size: 0.85rem; 
       padding: 5px 9px; 
       color: var(--text-secondary);
       transition: all 0.25s ease;
@@ -530,39 +513,37 @@
       border-color: var(--primary-color);
       box-shadow: 0 0 10px var(--primary-glow-color);
     }
-
-    .message-actions button.liked {
-      color: var(--success-color);
-      border-color: var(--success-color);
-      background: rgba(74, 201, 124, 0.1);
-    }
-     .message-actions button.liked:hover {
-      background-color: var(--success-color);
-      color: var(--text-on-primary);
-      box-shadow: 0 0 10px rgba(74, 201, 124, 0.4);
-    }
-    .message-actions button.retry-btn i { 
-      color: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) + 15%));
-    }
-    .message-actions button.retry-btn:hover i {
-      color: var(--text-on-primary); 
-    }
-
-
+    
+    /* MODIFIED: Transparent Input Area */
     .chat-input-area { 
         flex-shrink: 0; 
+        background: transparent;
+        position: relative;
+    }
+    
+    /* Add a gradient overlay for visual separation */
+    .chat-input-area::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 150px;
+        background: linear-gradient(to top, var(--bg-main) 20%, transparent 100%);
+        pointer-events: none; /* Allows clicks to go through */
+        z-index: 4;
     }
 
     .chat-input {
       display: flex;
       align-items: flex-end; 
-      border-top: 1px solid var(--border-color);
       padding: 0.8rem 1rem; 
-      background: var(--bg-surface); 
       gap: 0.8rem; 
       position: relative; 
       z-index: 5; 
       min-height: var(--chat-input-area-height); 
+      max-width: 800px;
+      margin: 0 auto; /* Center the input area */
     }
 
     .chat-input textarea {
@@ -575,7 +556,7 @@
       border-radius: var(--border-radius-xl); 
       background: var(--bg-input);
       color: var(--text-primary);
-      max-height: 120px; 
+      max-height: 150px; /* Increased max height */
       line-height: 1.6;
       transition: border-color 0.25s ease, box-shadow 0.25s ease;
     }
@@ -609,69 +590,85 @@
       transform: scale(1.08);
       box-shadow: 0 0 15px var(--primary-glow-color);
     }
-    .chat-input-btn:active {
-        transform: scale(0.92);
+    
+    .voice-indicator {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-surface-raised);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-md);
+      gap: 8px;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .voice-indicator.active {
+      display: flex;
+      opacity: 1;
+    }
+    .voice-indicator i {
+      color: var(--error-color);
+      animation: pulseMic 1.5s infinite ease-in-out;
+    }
+    @keyframes pulseMic {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
     }
     
     .chat-input-btn.recording {
-        background: var(--error-color);
-        animation: pulseRecording 1.5s infinite;
+        background-color: var(--error-color);
     }
     
-    @keyframes pulseRecording {
-        0% { box-shadow: 0 0 0 0 rgba(255,107,107,0.5); }
-        70% { box-shadow: 0 0 0 12px rgba(255,107,107,0); }
-        100% { box-shadow: 0 0 0 0 rgba(255,107,107,0); }
-    }
-
-    #imageUpload {
-      display: none;
-    }
-
-    .upload-options-container {
-      position: absolute;
-      bottom: calc(100% + 8px); 
-      right: 55px; 
-      background-color: var(--bg-surface-raised);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-md);
-      box-shadow: var(--shadow-md);
+    #uploadOptionsContainer {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      background-color: var(--bg-surface-raised);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
       padding: 10px;
+      position: absolute;
+      bottom: calc(100% + 5px);
+      left: 60px;
       z-index: 10;
+      box-shadow: var(--shadow-md);
       opacity: 0;
       visibility: hidden;
-      transform: translateY(10px);
-      transition: all 0.3s ease;
+      transform: translateY(10px) scale(0.95);
+      transition: all 0.25s ease-out;
     }
-    .upload-options-container.active {
+    #uploadOptionsContainer.active {
       opacity: 1;
       visibility: visible;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
-    .upload-options-container button {
-      background-color: var(--bg-input);
+    #uploadOptionsContainer button {
+      background: var(--bg-input);
       color: var(--text-secondary);
       border: 1px solid var(--border-color-light);
-      padding: 10px 14px;
       border-radius: var(--border-radius-sm);
+      padding: 8px 12px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 0.9rem;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
+      text-align: right;
+      width: 100%;
+      white-space: nowrap;
     }
-    .upload-options-container button:hover {
+    #uploadOptionsContainer button:hover {
       background-color: var(--primary-color);
       color: var(--text-on-primary);
       border-color: var(--primary-color);
-      transform: translateY(-2px);
-    }
-    .upload-options-container button i {
-      font-size: 1.1rem;
     }
 
     .status {
@@ -685,51 +682,12 @@
       transition: color 0.3s ease;
       font-weight: 500;
     }
-
-    .status.success { color: var(--success-color); }
-    .status.error { color: var(--error-color); }
-
+    
     a {
       color: var(--primary-color); 
       text-decoration: none;
       word-break: break-all;
       font-weight: 500;
-    }
-
-    a:hover {
-      text-decoration: underline;
-      color: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) + 10%)); 
-    }
-
-    .search-log {
-      text-align: center;
-      font-size: 0.75rem; 
-      color: var(--text-secondary);
-      opacity: 0.7; 
-      padding: 0.2rem 0; 
-      border-top: 1px dashed var(--border-color-light);
-      background-color: var(--bg-main); 
-      min-height: var(--search-log-area-height);
-      font-weight: 500;
-    }
-
-    .toggle-details-btn {
-      cursor: pointer;
-      color: var(--primary-color);
-      font-weight: 500;
-      border: none;
-      background: none;
-      padding: 0;
-      margin-top: 10px;
-      display: block; 
-      text-align: right; 
-      font-size: 0.9rem;
-      transition: color 0.25s ease;
-    }
-
-    .toggle-details-btn:hover {
-      color: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) + 10%));
-      text-decoration: underline;
     }
     
     .camera-modal, .share-modal { 
@@ -745,17 +703,8 @@
         align-items: center;
         justify-content: center;
         backdrop-filter: blur(5px);
-        animation: fadeIn 0.3s ease;
     }
-    .share-modal {
-        z-index: 1001;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
+    
     .camera-modal-content, .share-modal-content { 
         background-color: var(--bg-surface);
         padding: 25px;
@@ -768,114 +717,8 @@
         align-items: center;
         position: relative; 
         box-shadow: var(--shadow-lg);
-        animation: slideIn 0.4s ease-out;
-    }
-
-    @keyframes slideIn {
-        from { transform: translateY(-30px) scale(0.95); opacity: 0; }
-        to { transform: translateY(0) scale(1); opacity: 1; }
     }
     
-    #cameraView {
-        width: 100%;
-        max-width: 450px;
-        height: auto;
-        border-radius: var(--border-radius-md);
-        margin-bottom: 20px;
-        background-color: #000; 
-    }
-    .camera-controls button { 
-        background: var(--primary-color);
-        border: none;
-        color: var(--text-on-primary);
-        padding: 12px 24px;
-        font-size: 1rem;
-        border-radius: var(--border-radius-md);
-        cursor: pointer;
-        margin: 8px; 
-        transition: all 0.25s ease;
-        font-weight: 500;
-    }
-     .camera-controls button:hover { 
-        background: var(--primary-hover-color);
-        transform: translateY(-2px);
-    }
-    .camera-controls button#cancelCameraBtn {
-        background-color: var(--error-color);
-    }
-    .camera-controls button#cancelCameraBtn:hover {
-        background-color: hsl(0, 90%, 45%); 
-    }
-    
-    .share-modal-content {
-        padding: 30px 40px;
-        width: 450px;
-    }
-    .share-modal-content h2 {
-        color: var(--primary-color);
-        margin-bottom: 10px;
-        font-size: 1.8rem;
-    }
-    .share-modal-content p {
-        color: var(--text-secondary);
-        font-size: 1rem;
-        margin-bottom: 25px;
-    }
-    .share-link-container {
-        display: flex;
-        width: 100%;
-        margin-bottom: 20px;
-    }
-    .share-link-container input {
-        flex-grow: 1;
-        background-color: var(--bg-input);
-        border: 1px solid var(--border-color-light);
-        color: var(--text-primary);
-        padding: 12px;
-        border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
-        font-size: 0.95rem;
-        text-align: left;
-        direction: ltr;
-        border-right: none;
-    }
-    .share-link-container button {
-        background: var(--primary-color);
-        border: none;
-        color: var(--text-on-primary);
-        padding: 12px 18px;
-        cursor: pointer;
-        border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
-        font-size: 0.95rem;
-        font-weight: 500;
-        transition: all 0.25s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .share-link-container button:hover {
-        background: var(--primary-hover-color);
-    }
-    .support-message {
-        font-weight: 700;
-        color: var(--success-color) !important;
-        font-size: 1.1rem !important;
-        margin-top: 10px;
-    }
-    .close-share-modal {
-        color: var(--text-secondary);
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: color 0.3s ease, transform 0.3s ease;
-    }
-    .close-share-modal:hover {
-        color: var(--text-primary);
-        transform: rotate(90deg);
-    }
-
     .scroll-btn {
       position: absolute; 
       right: 25px;
@@ -891,187 +734,65 @@
       font-size: 1.1rem; 
       box-shadow: var(--shadow-md);
       transition: all 0.3s ease;
-      z-index: 3; 
+      z-index: 6; 
       opacity: 0;
       visibility: hidden;
-    }
-    .scroll-btn:hover {
-      background-color: var(--primary-hover-color);
-      transform: scale(1.12);
-      box-shadow: 0 0 15px var(--primary-glow-color);
-    }
-    .scroll-btn.visible {
-        display: flex;
-        opacity: 0.85; 
-        visibility: visible;
-    }
-    .scroll-btn.visible:hover {
-        opacity: 1; 
-    }
-
-    #scrollToBottomBtn {
-      bottom: calc(var(--chat-input-area-height) + var(--status-bar-area-height) + var(--search-log-area-height) + var(--scroll-btn-spacing));
+      display: flex;
     }
     #scrollToTopBtn {
-      bottom: calc(var(--chat-input-area-height) + var(--status-bar-area-height) + var(--search-log-area-height) + var(--scroll-btn-spacing) + var(--scroll-btn-size) + var(--scroll-btn-spacing));
+        bottom: calc(var(--chat-input-area-height) + var(--scroll-btn-size) + var(--scroll-btn-spacing) + 15px);
+    }
+    #scrollToBottomBtn {
+        bottom: calc(var(--chat-input-area-height) + var(--scroll-btn-spacing) + 15px);
+    }
+    .scroll-btn.visible {
+        opacity: 0.8;
+        visibility: visible;
+    }
+    .scroll-btn:hover {
+        opacity: 1;
+        transform: scale(1.1);
     }
     
-    .voice-indicator {
-        position: absolute;
-        top: -30px; 
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--error-color);
-        color: white;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .voice-indicator.active {
-        opacity: 1;
+    /* Media Queries for Responsive Design */
+    @media (min-width: 1024px) {
+        body { padding: 0; }
+        .container {
+            max-width: 100%;
+            height: 100%;
+            border-radius: 0;
+            border: none;
+        }
     }
 
-    @media (max-width: 768px) { 
+    @media (max-width: 767px) { 
       .container {
         border-radius: 0; 
-        border-left: none;
-        border-right: none;
+        border: none;
+        height: 100%;
+        width: 100%;
       }
-      :root { 
-        --header-padding-vertical: 0.4rem;
-        --header-padding-horizontal: 0.7rem;
-        --header-gap: 0.4rem;
-        --header-icon-size: 1.2rem;
-        --header-icon-container-size: 30px;
-        --header-title-font-size: 1rem;
-        --header-btn-font-size: 0.7rem;
-        --header-btn-padding-vertical: 0.3rem;
-        --header-btn-padding-horizontal: 0.6rem;
-
-        --chat-input-area-height: 55px; 
-        --status-bar-area-height: 22px;
-        --search-log-area-height: 18px;
-        --scroll-btn-size: 38px;
-        --scroll-btn-spacing: 8px;
-      }
-      #subjectsViewContainer { padding: 1rem; }
-      .subjects-view-header h2 { font-size: 1.4rem; }
-      .back-to-chat-btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
-      .subject-item-btn { padding: 15px 18px; font-size: 0.95rem; min-width: 150px; gap: 8px;}
-      .subject-item-btn i { font-size: 2rem; }
-
-
-      .bubble { max-width: 85%; padding: 0.8rem 1rem; line-height: 1.6; }
-      .chat-input { padding: 0.6rem 0.8rem; gap: 0.6rem; } 
-      .chat-input textarea { font-size: 0.9rem; padding: 0.7rem 1rem; } 
-      .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; } 
-      .upload-options-container { right: 48px; } 
-      .upload-options-container button { padding: 8px 12px; font-size: 0.85rem; }
+      .message { max-width: 90%; }
     }
 
     @media (max-width: 480px) { 
-      .container {
-        border-radius: 0; 
-        border-left: none;
-        border-right: none;
-      }
       :root {
-        --header-padding-vertical: 0.3rem;
-        --header-padding-horizontal: 0.5rem;
-        --header-gap: 0.3rem;
+        --header-height: 50px;
+        --header-padding-horizontal: 0.6rem;
+        --header-gap: 0.4rem;
         --header-icon-size: 1.1rem;
-        --header-icon-container-size: 28px;
-        --header-title-font-size: 0.9rem;
-        --header-btn-font-size: 0.65rem;
-        --header-btn-padding-vertical: 0.25rem;
-        --header-btn-padding-horizontal: 0.5rem;
-        
-        --chat-input-area-height: 52px; 
-        --status-bar-area-height: 20px;
-        --search-log-area-height: 16px;
-        --scroll-btn-size: 36px;
-        --scroll-btn-spacing: 6px;
+        --header-title-font-size: 0.95rem;
+        --header-btn-font-size: 0.7rem;
+        --header-btn-padding-horizontal: 0.6rem;
       }
-      .download-notification {
-          font-size: 0.8rem;
-          padding: 0 10px;
-      }
-      .download-notification.show {
-          padding: 8px 10px;
-      }
-      .download-btn {
-          padding: 4px 10px;
-          font-size: 0.75rem;
-      }
-      .notification-buttons {
-          gap: 5px;
-          padding-right: 10px;
-      }
-      .header { 
-        flex-wrap: wrap; 
-        justify-content: center; 
-      }
-       .header .share-btn-header { order: 0; margin: 2px; }
-       .header .delete-all-btn { order: 1; margin: 2px; }
-       .header .fas.fa-robot { order: 2; margin: 2px; }
-       .header h1 { order: 3; width: 100%; text-align: center; margin: 3px 0; }
-       #subjectControls { order: 4; width: 100%; justify-content: center; margin-top: 0.2rem; }
-      
-      .share-modal-content { padding: 25px; width: 90%; }
-      .share-modal-content h2 { font-size: 1.5rem; }
-      .share-modal-content p { font-size: 0.9rem; margin-bottom: 20px;}
-      .share-link-container { flex-direction: column; gap: 8px; }
-      .share-link-container input { border-radius: var(--border-radius-md); border-right: 1px solid var(--border-color-light);}
-      .share-link-container button { border-radius: var(--border-radius-md); justify-content: center; }
-
-      #subjectsViewContainer { padding: 0.8rem; }
-      .subjects-view-header { flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-      .subjects-view-header h2 { font-size: 1.3rem; text-align: center; }
-      .back-to-chat-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; margin-top: 0.5rem; }
-      #subjectListContainer { gap: 12px; padding: 5px; }
-      .subject-item-btn { padding: 12px 15px; font-size: 0.9rem; min-width: calc(50% - 6px); gap: 6px; } 
-      .subject-item-btn i { font-size: 1.8rem; }
-
-
-      .chat-container { padding: 1rem 0.6rem; }
-      .message-header { font-size: 0.7rem; gap: 5px; }
-      .bubble { max-width: 90%; padding: 0.7rem 0.9rem; line-height: 1.55; }
-      .message-actions button { font-size: 0.85rem; padding: 4px 8px; }
-      
-      .chat-input { padding: 0.5rem 0.6rem; gap: 0.5rem; }
-      .chat-input textarea { font-size: 0.85rem; padding: 0.6rem 0.9rem; max-height: 100px; }
-      .chat-input-btn { width: 38px; height: 38px; font-size: 0.95rem; }
-      .upload-options-container { right: 44px; } 
-      .upload-options-container button { padding: 7px 10px; font-size: 0.8rem; }
-      .upload-options-container button i { font-size: 1rem; }
-      .status { font-size: 0.75rem; padding: 0.3rem;}
-      .search-log { font-size: 0.7rem; padding: 0.15rem 0;}
-      .scroll-btn { right: 18px; }
-      .toggle-details-btn { font-size: 0.85rem; }
+      .subjects-view-header { flex-direction: column; gap: 0.8rem; }
+      .subject-item-btn { min-width: calc(50% - 10px); } 
+      .message { max-width: 95%; }
+      .chat-input { gap: 0.5rem; padding: 0.6rem; }
+      .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; }
+      #uploadOptionsContainer { left: 50px; }
     }
 
-    @media (max-width: 360px) { 
-       :root {
-        --chat-input-area-height: 50px;
-        --status-bar-area-height: 20px; 
-        --search-log-area-height: 15px;
-        --scroll-btn-size: 34px;
-        --header-title-font-size: 0.85rem;
-       }
-      .subject-item-btn { min-width: calc(50% - 6px); font-size: 0.85rem;} 
-      .subject-item-btn i { font-size: 1.6rem; }
-
-      .bubble { padding: 0.6rem 0.8rem; }
-      .chat-input textarea { padding: 0.5rem 0.8rem; }
-      .chat-input-btn { width: 36px; height: 36px; }
-      .upload-options-container { right: 42px; } 
-    }
   </style>
 </head>
 <body>
@@ -1110,15 +831,17 @@
         <div class="chat-input-area"> 
             <div id="searchLog" class="search-log"></div>
             <div class="status" id="statusBar"></div>
+            
+            <div class="voice-indicator" id="voiceIndicator">
+              <i class="fas fa-microphone"></i>
+              <span>جاري الاستماع...</span>
+            </div>
 
             <div class="chat-input">
-              <textarea id="userInput" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
-              
-              <div class="voice-indicator" id="voiceIndicator">
-                <i class="fas fa-microphone"></i>
-                <span>جاري الاستماع...</span>
-              </div>
-              
+              <button class="chat-input-btn" id="toggleUploadBtn" title="إرفاق ملف">
+                <i class="fas fa-plus"></i>
+              </button>
+
               <div class="upload-options-container" id="uploadOptionsContainer">
                 <button onclick="triggerImageUpload()">
                   <i class="fas fa-images"></i> رفع من المعرض
@@ -1127,10 +850,8 @@
                   <i class="fas fa-camera"></i> استخدام الكاميرا
                 </button>
               </div>
-              
-              <button class="chat-input-btn" id="toggleUploadBtn" title="إرفاق ملف">
-                <i class="fas fa-plus"></i>
-              </button>
+
+              <textarea id="userInput" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
               
               <button class="chat-input-btn" id="voiceInputBtn" title="التحدث">
                 <i class="fas fa-microphone"></i>
@@ -1139,7 +860,7 @@
               <button class="chat-input-btn" onclick="sendMessage()" title="إرسال">
                 <i class="fas fa-paper-plane"></i>
               </button>
-              <input id="imageUpload" type="file" accept="image/*" onchange="handleFileSelect(event)" />
+              <input id="imageUpload" type="file" accept="image/*" onchange="handleFileSelect(event)" style="display: none;" />
             </div>
         </div>
     </div>
@@ -1184,9 +905,11 @@
 
 
   <script>
+    // --- API KEYS ---
     const geminiApiKey = "AIzaSyBUqzhaui0pz0PqhCsVEpQYfOHsCYKtPBk"; 
     const ocrApiKey = "K83201031288957";     
 
+    // --- DOM ELEMENTS ---
     const chatWrapper = document.getElementById("chatWrapper");
     const chatContainer = document.getElementById("chatContainer");
     const statusBar = document.getElementById("statusBar");
@@ -1205,7 +928,6 @@
     const subjectListContainer = document.getElementById('subjectListContainer'); 
     const backToChatBtn = document.getElementById('backToChatBtn');
 
-
     const cameraModal = document.getElementById('cameraModal');
     const cameraView = document.getElementById('cameraView');
     const captureBtn = document.getElementById('captureBtn');
@@ -1215,26 +937,24 @@
     const enterSubjectsBtn = document.getElementById('enterSubjectsBtn');
     const generalChatBtn = document.getElementById('generalChatBtn');
     
-    // Share Modal Elements
     const shareBtn = document.getElementById('shareBtn');
     const shareModal = document.getElementById('shareModal');
     const closeShareModalBtn = document.getElementById('closeShareModal');
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const shareLinkInput = document.getElementById('shareLinkInput');
     
-    // Notification Bar Elements
     const downloadNotification = document.getElementById('downloadNotification');
     const downloadNotificationText = document.getElementById('downloadNotificationText');
     const downloadAppBtn = document.getElementById('downloadAppBtn');
     const closeNotificationBtn = document.getElementById('closeNotificationBtn');
     
+    // --- GLOBAL VARIABLES & CONSTANTS ---
     const botName = "سيف AI";
     const localStorageKeyAllChats = "saifAiAllChatsHistory_v2"; 
     const localStorageKeyAdCounter = "saifAiAdCounter";
     const localStorageKeyImageUploadDate = "saifAiImageUploadDate";
     const localStorageKeyImageUploadCount = "saifAiImageUploadCount";
     const localStorageKeyCurrentSubject = "saifAiCurrentSubject_v2";
-
 
     const AD_URL = "https://www.profitableratecpm.com/k8fisnjjc?key=afa7ea920578f74cea5997d670bbe78e";
     const AD_DELAY_MS = 10000; 
@@ -1263,9 +983,8 @@
     let isListening = false;
     let deferredPrompt; // PWA: For storing the install prompt event
 
-    // --- Notification Functions ---
+    // --- PWA & NOTIFICATION FUNCTIONS ---
     function showAppNotification() {
-      // This function will now always show the install prompt message
       downloadNotificationText.textContent = "ثبّت التطبيق على جهازك للوصول السريع!";
       downloadAppBtn.textContent = "تثبيت";
       downloadNotification.classList.add('show');
@@ -1274,8 +993,16 @@
     function hideAppNotification() {
       downloadNotification.classList.remove('show');
     }
-    // --- END: Notification Functions ---
 
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => console.log('Service Worker registered with scope:', registration.scope))
+          .catch((error) => console.error('Service Worker registration failed:', error));
+      }
+    }
+
+    // --- SPEECH RECOGNITION FUNCTIONS ---
     function initSpeechRecognition() {
         if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -1283,41 +1010,30 @@
             recognition.interimResults = true;
             recognition.lang = 'ar-SA';
 
-            recognition.onstart = function() {
+            recognition.onstart = () => {
                 isListening = true;
                 voiceInputBtn.classList.add('recording');
                 voiceIndicator.classList.add('active');
                 setStatus("جاري الاستماع...", "", null);
             };
 
-            recognition.onresult = function(event) {
-                let transcript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    if (event.results[i].isFinal) {
-                        transcript += event.results[i][0].transcript;
-                    } else {
-                        transcript += event.results[i][0].transcript;
-                    }
-                }
+            recognition.onresult = (event) => {
+                let transcript = Array.from(event.results)
+                    .map(result => result[0])
+                    .map(result => result.transcript)
+                    .join('');
                 userInput.value = transcript;
                 autoResizeTextarea();
             };
 
-            recognition.onerror = function(event) {
+            recognition.onerror = (event) => {
                 console.error('Speech recognition error', event.error);
-                let userMessage = "حدث خطأ في التعرف على الصوت: ";
-                switch (event.error) {
-                    case 'no-speech': userMessage += "لم يتم اكتشاف أي كلام."; break;
-                    case 'audio-capture': userMessage += "مشكلة في التقاط الصوت."; break;
-                    case 'not-allowed': userMessage += "لم يتم منح الإذن للميكروفون."; break;
-                    case 'network': userMessage += "مشكلة في الشبكة."; break;
-                    default: userMessage += event.error;
-                }
+                let userMessage = "حدث خطأ في التعرف على الصوت: " + event.error;
                 setStatus(userMessage, "error", 4000);
                 stopListening();
             };
 
-            recognition.onend = function() { stopListening(); };
+            recognition.onend = () => stopListening();
         } else {
             voiceInputBtn.style.display = 'none'; 
             setStatus("المتصفح لا يدعم التعرف على الصوت", "error", 3000);
@@ -1325,14 +1041,21 @@
     }
     
     function toggleListening() {
-        if (!recognition) { setStatus("ميزة التعرف على الصوت غير متاحة.", "error", 3000); return; }
-        if (isListening) { recognition.stop(); } 
-        else {
+        if (!recognition) { 
+            setStatus("ميزة التعرف على الصوت غير متاحة.", "error", 3000); 
+            return; 
+        }
+        if (isListening) { 
+            recognition.stop(); 
+        } else {
             try {
-                userInput.value = ""; autoResizeTextarea(); recognition.start();
+                userInput.value = ""; 
+                autoResizeTextarea(); 
+                recognition.start();
             } catch (e) {
                 console.error("Error starting speech recognition:", e);
-                setStatus("لا يمكن بدء التعرف على الصوت.", "error", 3000); stopListening(); 
+                setStatus("لا يمكن بدء التعرف على الصوت.", "error", 3000); 
+                stopListening(); 
             }
         }
     }
@@ -1341,36 +1064,30 @@
         isListening = false;
         voiceInputBtn.classList.remove('recording');
         voiceIndicator.classList.remove('active');
-        if (statusBar.textContent === "جاري الاستماع...") { setStatus("", "", 100); }
+        if (statusBar.textContent === "جاري الاستماع...") { 
+            setStatus("", "", 100); 
+        }
     }
     
-    function registerServiceWorker() {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-          .then((registration) => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          })
-          .catch((error) => {
-            console.error('Service Worker registration failed:', error);
-          });
-      }
-    }
-
+    // --- INITIALIZATION & EVENT LISTENERS ---
     function initializeApp() {
         registerServiceWorker(); 
     
-        const storedAdCount = localStorage.getItem(localStorageKeyAdCounter);
-        if (storedAdCount) { successfulResponseCount = parseInt(storedAdCount, 10) || 0; }
-
+        successfulResponseCount = parseInt(localStorage.getItem(localStorageKeyAdCounter) || '0', 10);
+        
         loadAllMessagesAndSetCurrent(); 
 
         const storedSubject = localStorage.getItem(localStorageKeyCurrentSubject);
         if (storedSubject && (subjects.find(s => s.name === storedSubject) || storedSubject === "general")) {
             currentSubject = storedSubject;
-        } else { currentSubject = "general"; }
+        } else {
+            currentSubject = "general";
+        }
         
-        if (!allMessages[currentSubject]) { allMessages[currentSubject] = []; }
-        messages = allMessages[currentSubject];
+        messages = allMessages[currentSubject] || [];
+        if (!allMessages[currentSubject]) {
+            allMessages[currentSubject] = [];
+        }
 
         updateSubjectUI(); 
         botNameElement.textContent = getBotDisplayName(); 
@@ -1379,62 +1096,33 @@
         refreshChat();
         autoResizeTextarea();
 
+        // Event Listeners
         toggleUploadBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); uploadOptionsContainer.classList.toggle('active');
+            e.stopPropagation(); 
+            uploadOptionsContainer.classList.toggle('active');
         });
 
-        document.addEventListener('click', (e) => {
-            const isClickInsideSubjectsView = subjectsViewContainer.contains(e.target);
-            const isClickOnEnterSubjectsBtn = e.target === enterSubjectsBtn;
-            const isClickOnBackToChatBtn = e.target === backToChatBtn || backToChatBtn.contains(e.target);
-
-            if (!uploadOptionsContainer.contains(e.target) && !toggleUploadBtn.contains(e.target) &&
-                !isClickInsideSubjectsView && !isClickOnEnterSubjectsBtn && !isClickOnBackToChatBtn) { 
-                uploadOptionsContainer.classList.remove('active');
-            }
+        document.addEventListener('click', () => {
+            uploadOptionsContainer.classList.remove('active');
         });
 
         captureBtn.addEventListener('click', captureImageFromCamera);
         cancelCameraBtn.addEventListener('click', closeCamera);
-
         scrollToTopBtn.addEventListener('click', () => chatContainer.scrollTo({ top: 0, behavior: 'smooth' }));
         scrollToBottomBtn.addEventListener('click', () => chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }));
-
         chatContainer.addEventListener('scroll', handleChatScroll);
-        handleChatScroll(); 
-
         enterSubjectsBtn.addEventListener('click', openSubjectsView);
         backToChatBtn.addEventListener('click', closeSubjectsView);
         generalChatBtn.addEventListener('click', switchToGeneralMode);
-        populateSubjectListInView(); 
-        
-        initSpeechRecognition();
         voiceInputBtn.addEventListener('click', toggleListening);
+        shareBtn.addEventListener('click', () => shareModal.style.display = 'flex');
+        closeShareModalBtn.addEventListener('click', () => shareModal.style.display = 'none');
+        copyLinkBtn.addEventListener('click', copyShareLink);
+        downloadAppBtn.addEventListener('click', promptInstall);
+        closeNotificationBtn.addEventListener('click', hideAppNotification);
+        userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}});
+        userInput.addEventListener("input", autoResizeTextarea); 
 
-        shareBtn.addEventListener('click', () => {
-            shareModal.style.display = 'flex';
-        });
-
-        closeShareModalBtn.addEventListener('click', () => {
-            shareModal.style.display = 'none';
-        });
-
-        copyLinkBtn.addEventListener('click', () => {
-            shareLinkInput.select();
-            shareLinkInput.setSelectionRange(0, 99999);
-            
-            navigator.clipboard.writeText(shareLinkInput.value).then(() => {
-                const originalText = copyLinkBtn.innerHTML;
-                copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
-                setTimeout(() => {
-                    copyLinkBtn.innerHTML = originalText;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                setStatus("فشل نسخ الرابط. يرجى نسخه يدوياً.", "error", 2500);
-            });
-        });
-        
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -1446,44 +1134,52 @@
           deferredPrompt = null;
           hideAppNotification();
         });
-
-
+        
         window.addEventListener('click', (event) => {
-            if (event.target == shareModal) {
-                shareModal.style.display = 'none';
-            }
-            if (event.target == cameraModal) {
-                closeCamera();
-            }
+            if (event.target == shareModal) shareModal.style.display = 'none';
+            if (event.target == cameraModal) closeCamera();
         });
         
-        downloadAppBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            if (deferredPrompt) {
-                hideAppNotification();
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null;
-            }
+        handleChatScroll(); 
+        populateSubjectListInView(); 
+        initSpeechRecognition();
+    }
+    
+    async function promptInstall(e) {
+        e.preventDefault();
+        if (deferredPrompt) {
+            hideAppNotification();
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+    }
+    
+    function copyShareLink() {
+        shareLinkInput.select();
+        shareLinkInput.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(shareLinkInput.value).then(() => {
+            const originalText = copyLinkBtn.innerHTML;
+            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+            setTimeout(() => { copyLinkBtn.innerHTML = originalText; }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            setStatus("فشل نسخ الرابط.", "error", 2500);
         });
-        
-        closeNotificationBtn.addEventListener('click', hideAppNotification);
     }
 
+    // --- UI & VIEW MANAGEMENT ---
     function handleChatScroll() {
         if (chatWrapper.style.display === 'none') {
             scrollToTopBtn.classList.remove('visible');
             scrollToBottomBtn.classList.remove('visible');
             return;
         }
-        const scrollTop = chatContainer.scrollTop;
-        const scrollHeight = chatContainer.scrollHeight;
-        const clientHeight = chatContainer.clientHeight;
+        const { scrollTop, scrollHeight, clientHeight } = chatContainer;
         const scrollThreshold = 150; 
-
         scrollToTopBtn.classList.toggle('visible', scrollTop > scrollThreshold);
-        scrollToBottomBtn.classList.toggle('visible', scrollHeight > clientHeight && scrollHeight - scrollTop - clientHeight > scrollThreshold);
+        scrollToBottomBtn.classList.toggle('visible', scrollHeight - scrollTop - clientHeight > scrollThreshold);
     }
     
     function openSubjectsView() {
@@ -1498,110 +1194,91 @@
         handleChatScroll(); 
     }
 
-
     function getBotDisplayName() {
-        if (currentSubject === "general") { return botName; }
-        return `${botName} (${currentSubject})`;
+        return currentSubject === "general" ? botName : `${botName} (${currentSubject})`;
     }
     
     function updateSubjectUI() {
         botNameElement.textContent = getBotDisplayName();
-        if (currentSubject === "general") {
-            generalChatBtn.style.display = 'none';
-            enterSubjectsBtn.textContent = "مواد متخصصة";
-        } else {
-            generalChatBtn.style.display = 'inline-block'; 
-            enterSubjectsBtn.textContent = `مادة: ${currentSubject}`;
-        }
+        generalChatBtn.style.display = currentSubject === "general" ? 'none' : 'inline-block';
+        enterSubjectsBtn.textContent = currentSubject === "general" ? "مواد متخصصة" : `مادة: ${currentSubject}`;
         localStorage.setItem(localStorageKeyCurrentSubject, currentSubject);
     }
 
     function populateSubjectListInView() { 
         subjectListContainer.innerHTML = '';
-        subjects.forEach(subjectData => {
+        subjects.forEach(({ name, icon }) => {
             const btn = document.createElement('button');
             btn.className = 'subject-item-btn';
-            
-            const icon = document.createElement('i');
-            icon.className = subjectData.icon; 
-            
-            const textSpan = document.createElement('span');
-            textSpan.textContent = subjectData.name;
-            
-            btn.appendChild(icon);
-            btn.appendChild(textSpan);
-
-            btn.onclick = () => selectSubject(subjectData.name);
+            btn.innerHTML = `<i class="${icon}"></i><span>${name}</span>`;
+            btn.onclick = () => selectSubject(name);
             subjectListContainer.appendChild(btn);
         });
     }
 
     function selectSubject(subjectName) {
-        if (currentSubject === subjectName && subjectsViewContainer.style.display === 'flex') {
+        if (currentSubject === subjectName) {
             closeSubjectsView();
             return;
         }
-
-        allMessages[currentSubject] = messages; 
-        currentSubject = subjectName;
-        messages = allMessages[currentSubject] || []; 
-        if (!allMessages[currentSubject]) { allMessages[currentSubject] = []; }
-
-        updateSubjectUI();
-        closeSubjectsView(); 
-        addWelcomeMessage(); 
-        refreshChat(); 
-        setStatus(`تم التحويل إلى وضع مادة: ${currentSubject}`, "success", 3000);
-        saveAllMessagesToLocalStorage(); 
+        switchSubject(subjectName);
+        setStatus(`تم التحويل إلى وضع مادة: ${subjectName}`, "success", 3000);
     }
 
     function switchToGeneralMode() {
         if (currentSubject === "general") {
-            if(subjectsViewContainer.style.display === 'flex') closeSubjectsView();
+            closeSubjectsView();
             return;
         }
-
-        allMessages[currentSubject] = messages; 
-        currentSubject = "general";
-        messages = allMessages[currentSubject] || []; 
-        if (!allMessages[currentSubject]) { allMessages[currentSubject] = []; }
-
-        updateSubjectUI();
-        if(subjectsViewContainer.style.display === 'flex') closeSubjectsView();
-        addWelcomeMessage(); 
-        refreshChat(); 
+        switchSubject("general");
         setStatus("تم الرجوع إلى الوضع العام", "success", 3000);
-        saveAllMessagesToLocalStorage();
     }
 
-
+    function switchSubject(newSubject) {
+        allMessages[currentSubject] = messages; 
+        currentSubject = newSubject;
+        messages = allMessages[currentSubject] || []; 
+        if (!allMessages[currentSubject]) {
+            allMessages[currentSubject] = [];
+        }
+        updateSubjectUI();
+        closeSubjectsView(); 
+        addWelcomeMessage(); 
+        refreshChat(); 
+        saveAllMessagesToLocalStorage(); 
+    }
+    
+    // --- MESSAGE & CHAT MANAGEMENT ---
     function loadAllMessagesAndSetCurrent() {
-        const storedAllMessages = localStorage.getItem(localStorageKeyAllChats);
-        if (storedAllMessages) {
-            try {
-                const parsed = JSON.parse(storedAllMessages);
-                if (typeof parsed === 'object' && parsed !== null) {
-                    allMessages = parsed;
-                    for (const subjectKey in allMessages) {
-                        if (Object.hasOwnProperty.call(allMessages, subjectKey) && Array.isArray(allMessages[subjectKey])) {
-                            allMessages[subjectKey] = allMessages[subjectKey].map(msg => ({
-                                ...msg, timestamp: new Date(msg.timestamp) 
-                            }));
-                        } else { allMessages[subjectKey] = []; }
+        try {
+            const storedAllMessages = localStorage.getItem(localStorageKeyAllChats);
+            const parsed = storedAllMessages ? JSON.parse(storedAllMessages) : {};
+            if (typeof parsed === 'object' && parsed !== null) {
+                allMessages = parsed;
+                Object.keys(allMessages).forEach(key => {
+                    if (Array.isArray(allMessages[key])) {
+                        allMessages[key] = allMessages[key].map(msg => ({
+                            ...msg, timestamp: new Date(msg.timestamp) 
+                        }));
+                    } else {
+                        allMessages[key] = [];
                     }
-                } else { allMessages = {}; }
-            } catch (e) {
-                console.error("خطأ في تحليل الرسائل:", e); allMessages = {}; 
-                localStorage.removeItem(localStorageKeyAllChats); 
+                });
+            } else {
+                allMessages = {};
             }
-        } else { allMessages = {}; }
+        } catch (e) {
+            console.error("Error parsing messages:", e); 
+            allMessages = {}; 
+            localStorage.removeItem(localStorageKeyAllChats); 
+        }
         if (!allMessages["general"] || !Array.isArray(allMessages["general"])) {
             allMessages["general"] = [];
         }
     }
 
     function saveAllMessagesToLocalStorage() {
-        if (currentSubject && messages) { allMessages[currentSubject] = messages; }
+        allMessages[currentSubject] = messages;
         localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allMessages));
     }
 
@@ -1611,31 +1288,26 @@
              welcomeMsgText = `مرحباً! أنا ${getBotDisplayName()}. حاليًا في وضع الإجابة عن أسئلة مادة ${currentSubject} بناءً على المنهج الدراسي. كيف يمكنني مساعدتك ضمن هذا الإطار؟`;
         }
       
-        if (!messages.some(m => m.isInitialWelcome && m.sender === "bot")) {
+        const welcomeIndex = messages.findIndex(m => m.isInitialWelcome && m.sender === "bot");
+        if (welcomeIndex === -1) {
             messages = messages.filter(m => !m.isInitialWelcome); 
             const welcomeMessageObject = {
                 sender: "bot", text: welcomeMsgText, isImage: false,
                 isSystemMessage: true, timestamp: new Date(), isInitialWelcome: true
             };
             messages.unshift(welcomeMessageObject); 
-            allMessages[currentSubject] = messages; 
-            saveAllMessagesToLocalStorage(); 
-        } else {
-            const welcomeIndex = messages.findIndex(m => m.isInitialWelcome && m.sender === "bot");
-            if (welcomeIndex !== -1 && messages[welcomeIndex].text !== welcomeMsgText) {
-                messages[welcomeIndex].text = welcomeMsgText;
-                allMessages[currentSubject] = messages; saveAllMessagesToLocalStorage();
-            }
+        } else if (messages[welcomeIndex].text !== welcomeMsgText) {
+            messages[welcomeIndex].text = welcomeMsgText;
         }
+        saveAllMessagesToLocalStorage();
     }
 
-    function addMessage(sender, text, isImage = false, isSystemMessage = false, isInitialWelcome = false) {
-      const message = { sender, text, isImage, isSystemMessage, timestamp: new Date(), isInitialWelcome };
+    function addMessage(sender, text, isImage = false, isSystemMessage = false) {
+      const message = { sender, text, isImage, isSystemMessage, timestamp: new Date() };
       messages.push(message);
-      allMessages[currentSubject] = messages; 
       const wasNearBottom = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < 150;
       refreshChat(); 
-      if (sender === 'user' || (isInitialWelcome && messages.length <= 2) || (wasNearBottom && !isImage)) {
+      if (sender === 'user' || wasNearBottom) {
           chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
       }
     }
@@ -1643,148 +1315,141 @@
     function linkifyAndFormatText(text) {
       if (typeof text !== 'string') return '';
       const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-      const linkedText = text.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-      return linkedText.replace(/\n/g, '<br>');
+      return text
+        .replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
+        .replace(/\n/g, '<br>');
     }
 
+    // MODIFIED: refreshChat for bubble-less design
     function refreshChat() {
       chatContainer.innerHTML = ""; 
       messages.forEach((msg, index) => {
         const messageElem = document.createElement("div");
-        messageElem.classList.add("message", msg.sender);
-        const header = document.createElement("div");
-        header.classList.add("message-header");
+        messageElem.className = `message ${msg.sender}`;
+        
         let senderName = msg.sender === "bot" ? getBotDisplayName() : "أنت";
-        if (msg.sender === "bot" && msg.isSystemMessage && !msg.isInitialWelcome) {
-            senderName = `${getBotDisplayName()} (نظام)`;
-        }
-        header.innerHTML = `<span>${senderName}</span>`;
-        const deleteBtn = document.createElement("i");
-        deleteBtn.className = "fas fa-trash delete-btn";
-        deleteBtn.title = "حذف الرسالة";
-        deleteBtn.onclick = () => deleteMessage(index); 
-        header.appendChild(deleteBtn);
-        messageElem.appendChild(header);
-        const bubble = document.createElement("div");
-        bubble.classList.add("bubble");
+        if (msg.isSystemMessage && !msg.isInitialWelcome) senderName += " (نظام)";
+
+        const header = document.createElement("div");
+        header.className = "message-header";
+        header.innerHTML = `<span>${senderName}</span><i class="fas fa-trash delete-btn" title="حذف الرسالة"></i>`;
+        header.querySelector('.delete-btn').onclick = () => deleteMessage(index);
+        
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "message-content";
 
         if(msg.isImage) {
           const img = document.createElement("img");
           img.src = msg.text;
-          img.style.maxWidth = "100%"; img.style.maxHeight = "300px"; 
-          img.style.borderRadius = "var(--border-radius-sm)"; img.alt = "صورة مرسلة";
+          img.style.cssText = "max-width: 100%; max-height: 300px; border-radius: var(--border-radius-md);";
+          img.alt = "صورة مرسلة";
           img.onload = () => {
               if (index === messages.length - 1 || chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < 350) {
                   chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
               }
-          }
-          img.onerror = () => { bubble.textContent = "فشل تحميل الصورة"; }
-          bubble.appendChild(img);
+          };
+          img.onerror = () => contentDiv.textContent = "فشل تحميل الصورة";
+          contentDiv.appendChild(img);
         } else {
-          const originalText = msg.text; 
-          const characterLimit = 250; 
-          if (msg.sender === "bot" && !msg.isSystemMessage && !msg.isInitialWelcome && originalText.length > characterLimit) {
-            const shortText = originalText.substring(0, characterLimit) + "...";
-            const contentContainer = document.createElement('div');
-            const textSpan = document.createElement('span');
-            textSpan.innerHTML = linkifyAndFormatText(shortText);
-            contentContainer.appendChild(textSpan);
-            const toggleButton = document.createElement('button');
-            toggleButton.textContent = "المزيد"; toggleButton.className = "toggle-details-btn";
-            toggleButton.dataset.expanded = "false";
-            toggleButton.onclick = function() {
-              const isExpanded = toggleButton.dataset.expanded === "true";
-              textSpan.innerHTML = linkifyAndFormatText(isExpanded ? shortText : originalText);
-              toggleButton.textContent = isExpanded ? "المزيد" : "أقل";
-              toggleButton.dataset.expanded = (!isExpanded).toString();
-            };
-            contentContainer.appendChild(toggleButton); bubble.appendChild(contentContainer);
-          } else { bubble.innerHTML = linkifyAndFormatText(originalText); }
+          contentDiv.innerHTML = linkifyAndFormatText(msg.text);
         }
-        messageElem.appendChild(bubble);
+        
+        messageElem.appendChild(header);
+        messageElem.appendChild(contentDiv);
         
         if(msg.sender === "bot" && !msg.isImage && !msg.isSystemMessage && !msg.isInitialWelcome) {
-            let actionsDiv = document.createElement("div");
-            actionsDiv.classList.add("message-actions");
-            messageElem.appendChild(actionsDiv);
-            const likeBtn = document.createElement("button");
-            likeBtn.innerHTML = '<i class="fas fa-thumbs-up"></i>'; likeBtn.title = "إعجاب";
-            likeBtn.addEventListener("click", (e) => e.currentTarget.classList.toggle("liked"));
-            actionsDiv.appendChild(likeBtn); 
-            const copyBtn = document.createElement("button");
-            copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; copyBtn.title = "نسخ";
-            copyBtn.addEventListener("click", () => {
+            const actionsDiv = document.createElement("div");
+            actionsDiv.className = "message-actions";
+            actionsDiv.innerHTML = `
+                <button title="إعجاب"><i class="fas fa-thumbs-up"></i></button>
+                <button title="نسخ"><i class="fas fa-copy"></i></button>
+                ${(index > 0 && messages[index - 1]?.sender === 'user') ? '<button class="retry-btn" title="إعادة"><i class="fas fa-redo"></i></button>' : ''}
+            `;
+            actionsDiv.querySelector('[title="إعجاب"]').addEventListener("click", (e) => e.currentTarget.classList.toggle("liked"));
+            actionsDiv.querySelector('[title="نسخ"]').addEventListener("click", () => {
               navigator.clipboard.writeText(msg.text) 
               .then(() => setStatus("تم النسخ 👍", "success", 1500))
-              .catch(err => setStatus("فشل النسخ", "error", 2000));
+              .catch(() => setStatus("فشل النسخ", "error", 2000));
             });
-            actionsDiv.appendChild(copyBtn); 
-            if (index > 0 && messages[index - 1]?.sender === 'user') {
-              const retryBtn = document.createElement("button");
-              retryBtn.innerHTML = '<i class="fas fa-redo"></i>'; retryBtn.title = "إعادة";
-              retryBtn.classList.add("retry-btn"); 
-              retryBtn.onclick = () => retryQuery(index); 
-              actionsDiv.appendChild(retryBtn); 
+            if (actionsDiv.querySelector('.retry-btn')) {
+                actionsDiv.querySelector('.retry-btn').onclick = () => retryQuery(index);
             }
+            messageElem.appendChild(actionsDiv);
         }
         chatContainer.appendChild(messageElem);
       });
-      saveAllMessagesToLocalStorage(); autoResizeTextarea(); handleChatScroll(); 
+      saveAllMessagesToLocalStorage(); 
+      autoResizeTextarea(); 
+      handleChatScroll(); 
     }
 
     async function retryQuery(botMessageIndex) {
-        if (botMessageIndex > 0 && messages[botMessageIndex - 1]?.sender === 'user') {
-            const originalUserQuery = messages[botMessageIndex - 1].text;
-            if (originalUserQuery) {
-                setStatus(`إعادة: "${originalUserQuery.substring(0, 30)}..."`, "", null);
-                await processQueryWithAI(originalUserQuery);
-            } else { setStatus("لم يتم العثور على السؤال الأصلي.", "error", 2000); }
-        } else { setStatus("خطأ: لم يتمكن من تحديد السؤال الأصلي.", "error", 3000); }
+        const userMessageIndex = botMessageIndex - 1;
+        if (userMessageIndex >= 0 && messages[userMessageIndex]?.sender === 'user') {
+            const originalUserQuery = messages[userMessageIndex].text;
+            setStatus(`إعادة: "${originalUserQuery.substring(0, 30)}..."`, "", null);
+            await processQueryWithAI(originalUserQuery);
+        } else {
+            setStatus("خطأ: لم يتمكن من تحديد السؤال الأصلي.", "error", 3000);
+        }
     }
 
     function deleteMessage(index) {
-      const isWelcome = messages[index].isInitialWelcome;
       messages.splice(index, 1); 
-      allMessages[currentSubject] = messages; 
-      if (isWelcome && !messages.some(m => m.isInitialWelcome && m.sender === 'bot')) { addWelcomeMessage(); }
-      refreshChat(); setStatus("تم حذف الرسالة.", "success", 1500);
+      if (!messages.some(m => m.isInitialWelcome)) addWelcomeMessage();
+      refreshChat(); 
+      setStatus("تم حذف الرسالة.", "success", 1500);
     }
 
     function deleteAllMessages() {
       const nonWelcomeMessages = messages.filter(m => !m.isInitialWelcome);
-      if (nonWelcomeMessages.length === 0) { setStatus("لا يوجد رسائل للحذف.", "", 1500); return; }
+      if (nonWelcomeMessages.length === 0) {
+          setStatus("لا يوجد رسائل للحذف.", "", 1500); 
+          return;
+      }
       if (confirm("هل أنت متأكد من حذف جميع الرسائل في هذه الدردشة؟")) {
         messages = messages.filter(m => m.isInitialWelcome); 
-        allMessages[currentSubject] = messages; 
         addWelcomeMessage(); 
-        refreshChat(); setStatus("تم حذف جميع الرسائل بنجاح.", "success", 2000);
+        refreshChat(); 
+        setStatus("تم حذف جميع الرسائل بنجاح.", "success", 2000);
       }
     }
     
     function setStatus(message, type = "", duration = 3000) {
       clearTimeout(statusTimeout);
-      statusBar.textContent = message; statusBar.className = "status " + type; 
+      statusBar.textContent = message; 
+      statusBar.className = "status " + type; 
       if (message && duration !== null) {
         statusTimeout = setTimeout(() => { statusBar.textContent = ""; statusBar.className = "status"; }, duration);
-      } else if (!message) { statusBar.textContent = ""; statusBar.className = "status"; }
+      }
     }
 
+    // --- IMAGE & OCR FUNCTIONS ---
     function triggerImageUpload() {
-        uploadOptionsContainer.classList.remove('active'); imageUploadInput.click();
+        uploadOptionsContainer.classList.remove('active'); 
+        imageUploadInput.click();
     }
 
     function handleFileSelect(event) {
-        if (event.target.type === 'file' && event.target.files?.[0]) {
-            processAndUploadImageFile(event.target.files[0]); event.target.value = ""; 
+        const file = event.target.files?.[0];
+        if (file) {
+            processAndUploadImageFile(file); 
+            event.target.value = ""; 
         }
     }
     
     async function processAndUploadImageFile(file) {
         if (!checkImageUploadLimit()) return;
         setTimeout(() => { window.open(AD_URL, '_blank'); }, AD_DELAY_MS); 
-        if (file.size > 5 * 1024 * 1024) { setStatus("حجم الصورة كبير (الحد 5 ميجا).", "error", 3000); return; }
+        if (file.size > 5 * 1024 * 1024) { 
+            setStatus("حجم الصورة كبير (الحد 5 ميجا).", "error", 3000); 
+            return; 
+        }
         const reader = new FileReader();
-        reader.onload = (e) => { addMessage("user", e.target.result, true); extractTextFromImageAndProcess(file); }
+        reader.onload = (e) => { 
+            addMessage("user", e.target.result, true); 
+            extractTextFromImageAndProcess(file); 
+        }
         reader.readAsDataURL(file);
         incrementImageUploadCount();
     }
@@ -1795,39 +1460,42 @@
         let uploadCount = parseInt(localStorage.getItem(localStorageKeyImageUploadCount) || "0");
         if (lastUploadDate === today && uploadCount >= 2) {
             setStatus("تعديت حد الصور اليومي (2).", "error", 4000);
-            addMessage("bot", "عفواً، استنفدت حصة رفع الصور اليومية.", false, true); return false;
-        } else if (lastUploadDate !== today) {
+            addMessage("bot", "عفواً، استنفدت حصة رفع الصور اليومية.", false, true); 
+            return false;
+        }
+        if (lastUploadDate !== today) {
             localStorage.setItem(localStorageKeyImageUploadDate, today);
-            localStorage.setItem(localStorageKeyImageUploadCount, "0"); uploadCount = 0;
+            localStorage.setItem(localStorageKeyImageUploadCount, "0");
         }
         return true;
     }
 
     function incrementImageUploadCount() {
-        localStorage.setItem(localStorageKeyImageUploadDate, new Date().toISOString().split('T')[0]); 
         let currentCount = parseInt(localStorage.getItem(localStorageKeyImageUploadCount) || "0");
         localStorage.setItem(localStorageKeyImageUploadCount, (currentCount + 1).toString());
+        localStorage.setItem(localStorageKeyImageUploadDate, new Date().toISOString().split('T')[0]); 
     }
 
     async function extractTextFromImageAndProcess(file) {
         if (!ocrApiKey) { 
-             addMessage("bot", "ميزة OCR غير مفعلة. (مفتاح مفقود)", false, true);
-             setStatus("مفتاح OCR غير مكوّن.", "error", 5000); return;
+             addMessage("bot", "ميزة OCR غير مفعلة.", false, true);
+             setStatus("مفتاح OCR غير مكوّن.", "error", 5000); 
+             return;
         }
-        setStatus(`جاري معالجة الصورة واستخلاص النص...`, "", null); 
+        setStatus(`جاري معالجة الصورة...`, "", null); 
         const formData = new FormData();
-        formData.append('apikey', ocrApiKey); formData.append('language', 'ara'); 
-        formData.append('isOverlayRequired', 'false'); formData.append('file', file);
+        formData.append('apikey', ocrApiKey); 
+        formData.append('language', 'ara'); 
+        formData.append('file', file);
         try {
             const ocrResponse = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: formData });
-            if (!ocrResponse.ok) {
-                const err = await ocrResponse.json().catch(() => ({}));
-                throw new Error(`فشل OCR: ${err.ErrorMessage || ocrResponse.statusText}`);
-            }
+            if (!ocrResponse.ok) throw new Error(`فشل OCR: ${ocrResponse.statusText}`);
+            
             const ocrData = await ocrResponse.json();
             if (ocrData.IsErroredOnProcessing) throw new Error(`خطأ معالجة OCR: ${ocrData.ErrorMessage.join(', ')}`);
-            if (ocrData.ParsedResults?.[0]?.ParsedText.trim()) {
-                const extractedText = ocrData.ParsedResults[0].ParsedText.trim();
+            
+            const extractedText = ocrData.ParsedResults?.[0]?.ParsedText.trim();
+            if (extractedText) {
                 addMessage("bot", `النص من الصورة:\n"${extractedText}"`, false, true); 
                 setStatus("تم استخلاص النص، جاري التحليل...", "success", 2500);
                 await processQueryWithAI(extractedText); 
@@ -1842,55 +1510,62 @@
         }
     }
     
+    // --- AI & GEMINI FUNCTIONS ---
     function generateChatPrompt(userMessage) {
-      const maxHistoryMessages = 8; let relevantHistory = "";
-      const textMessages = messages.filter(m => !m.isImage && !(m.sender==='bot' && m.isSystemMessage && !m.isInitialWelcome && !m.text.includes("تم تفعيل وضع مادة") && !m.text.includes("تم الرجوع إلى وضع الدردشة العام")));
-      let currentBotDisplayName = getBotDisplayName();
-      let baseSystemPrompt = `أنت ${currentBotDisplayName}، مساعد ذكاء اصطناعي ودود، صادق، إيجابي، وذكي جداً. هدفك هو مساعدة المستخدم والإجابة على أسئلته بوضوح وبطريقة تفاعلية ومفصلة. تجنب الردود المقتضبة جداً وحاول أن تكون محادثتك جذابة. إذا لم تعرف الإجابة، اعترف بذلك بلطف وحاول تقديم المساعدة إن أمكن. استخدم بعض الرموز التعبيرية بشكل مناسب ولكن باعتدال. إذا سألك المستخدم "من صنعك" أو "مين عملك" أو "من هو مطورك" أو أي سؤال مشابه، يجب أن تكون إجابتك دائمًا "أنا من صنع وتطوير سيف هاني".\n\n`;
-      let finalSystemPrompt = baseSystemPrompt;
-      if (currentSubject && currentSubject !== "general") {
-          const subjectInstruction = `أنت الآن في وضع خبير مادة "${currentSubject}". جميع إجاباتك يجب أن تستند بشكل صارم وحصري إلى المنهج الدراسي المعتمد لمادة "${currentSubject}" في السياق التعليمي المصري إن أمكن، ما لم يحدد المستخدم خلاف ذلك. لا تقدم أي معلومات أو آراء خارج هذا النطاق المحدد. إذا كان السؤال لا يتعلق مباشرة بمنهج "${currentSubject}"، يجب عليك أن توضح أن السؤال خارج نطاق تخصص المادة الحالي وأنك تستطيع فقط الإجابة على الأسئلة المتعلقة بمنهج "${currentSubject}". لقد تم إعلام المستخدم بأن "الإجابات ستكون من المنهج الدراسي فقط". حافظ على تركيزك الكامل على مادة "${currentSubject}". ابدأ ردودك المتعلقة بالمادة بتأكيد أنك تجيب ضمن نطاق المادة.\n\n`;
-          finalSystemPrompt = subjectInstruction + baseSystemPrompt; 
+      const maxHistoryMessages = 8;
+      const textMessages = messages.filter(m => !m.isImage && !m.isSystemMessage);
+      const history = textMessages.slice(-maxHistoryMessages);
+      
+      let relevantHistory = history.map(msg => 
+          (msg.sender === "user" ? "المستخدم: " : `${getBotDisplayName()}: `) + msg.text
+      ).join("\n");
+
+      let baseSystemPrompt = `أنت ${getBotDisplayName()}، مساعد ذكاء اصطناعي ودود، صادق، وإيجابي. هدفك هو مساعدة المستخدم بوضوح وبطريقة تفاعلية. إذا لم تعرف الإجابة، اعترف بذلك. استخدم بعض الرموز التعبيرية باعتدال. إذا سُئلت "من صنعك" أو "من مطورك"، أجب "أنا من صنع وتطوير سيف هاني".\n\n`;
+      
+      if (currentSubject !== "general") {
+          baseSystemPrompt = `أنت الآن خبير مادة "${currentSubject}". جميع إجاباتك يجب أن تستند بشكل صارم إلى المنهج الدراسي المعتمد. لا تقدم أي معلومات خارج هذا النطاق. إذا كان السؤال خارج النطاق، وضح ذلك.\n\n` + baseSystemPrompt;
       }
-      const startIndex = Math.max(0, textMessages.length - maxHistoryMessages);
-      for (let i = startIndex; i < textMessages.length; i++) {
-        const msg = textMessages[i];
-        if (msg.sender === "bot" && msg.isInitialWelcome && msg.text.includes("كيف يمكنني مساعدتك اليوم؟")) continue;
-        relevantHistory += (msg.sender === "user" ? "المستخدم: " : (currentBotDisplayName + (msg.isSystemMessage && !msg.isInitialWelcome ? " (نظام)" : "") +": ")) + msg.text + "\n";
-      }
-      return `${finalSystemPrompt}${relevantHistory}المستخدم: ${userMessage}\n${currentBotDisplayName}:`;
+      
+      return `${baseSystemPrompt}${relevantHistory}\nالمستخدم: ${userMessage}\n${getBotDisplayName()}:`;
     }
 
     async function fetchGeminiResponse(prompt) {
-      if (!geminiApiKey) { throw new Error("عفواً، خدمة AI غير مكوّنة. (مفتاح Gemini مفقود)"); }
+      if (!geminiApiKey) { throw new Error("خدمة AI غير مكوّنة."); }
+      
       const requestBody = { contents: [{ parts: [{ text: prompt }] }] };
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
+      
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`, {
-          method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(requestBody)
+        const response = await fetch(url, {
+          method: 'POST', 
+          headers: {'Content-Type': 'application/json'}, 
+          body: JSON.stringify(requestBody)
         });
+
         if(!response.ok) {
           const errorData = await response.json().catch(() => ({})); 
-          let errMsg = `خطأ ${response.status}: ${response.statusText}.`;
-          if (response.statusText?.toLowerCase().includes("failed to fetch")) { throw new Error("Failed to fetch"); }
-          if (errorData.error?.message) {
-             errMsg += errorData.error.message.toLowerCase().includes("api key") || errorData.error.message.toLowerCase().includes("permission") ? " خطأ في إعدادات الطلب أو صلاحيات Gemini." : ` التفاصيل: ${errorData.error.message.substring(0, 200)}`;
-          }
-          throw new Error(errMsg);
+          throw new Error(`خطأ ${response.status}: ${errorData.error?.message || response.statusText}`);
         }
+
         const data = await response.json();
-        if (data.candidates?.[0]?.content?.parts?.[0]?.text) return data.candidates[0].content.parts[0].text;
-        if (data.promptFeedback?.blockReason) return `لم أتمكن من معالجة طلبك بسبب سياسات Gemini (السبب: ${data.promptFeedback.blockReason}).`;
-        if (data.candidates?.[0]?.finishReason) {
-            let botMsg = (data.candidates[0].content?.parts?.[0]?.text || ""); 
-            const reason = data.candidates[0].finishReason;
-            if (reason === "SAFETY") return botMsg + (botMsg ? "\n\n" : "") + "لم أتمكن من إكمال الرد بسبب قيود السلامة من Gemini.";
-            if (reason === "MAX_TOKENS") return botMsg + (botMsg ? "\n\n" : "") + "(تم اختصار الرد لتجاوز الحد الأقصى للطول)";
-            return botMsg + (botMsg ? "\n\n" : "") + `لم يتم استلام رد مكتمل (السبب: ${reason}).`;
+        const candidate = data.candidates?.[0];
+        
+        if (candidate?.content?.parts?.[0]?.text) {
+            return candidate.content.parts[0].text;
         }
+        if (data.promptFeedback?.blockReason) {
+            return `لم أتمكن من معالجة طلبك (السبب: ${data.promptFeedback.blockReason}).`;
+        }
+        if (candidate?.finishReason && candidate.finishReason !== "STOP") {
+            return `لم يتم استلام رد مكتمل (السبب: ${candidate.finishReason}).`;
+        }
+        
         return "لم يتم استلام رد بالتنسيق الصحيح من Gemini.";
+
       } catch (error) {
-          if (error.message?.toLowerCase().includes("api key") || (geminiApiKey && error.message?.toLowerCase().includes(geminiApiKey.toLowerCase()))) {
-              throw new Error("خطأ أثناء الاتصال بـ Gemini. تحقق من وحدة التحكم.");
+          console.error("Gemini Fetch Error:", error);
+          if (error.message.toLowerCase().includes('failed to fetch')) {
+              throw new Error("فشل الاتصال بالخادم. تحقق من الإنترنت.");
           }
           throw error; 
       }
@@ -1898,8 +1573,10 @@
 
     async function processQueryWithAI(queryText) {
         if (!queryText?.trim()) return;
-        searchLog.textContent = `بحث: ${queryText.substring(0, 60)}${queryText.length > 60 ? '...' : ''}`;
-        setStatus(`${getBotDisplayName()} يفكر: "${queryText.substring(0,30)}..."`, "", null); 
+        
+        searchLog.textContent = `بحث: ${queryText.substring(0, 60)}...`;
+        setStatus(`${getBotDisplayName()} يفكر...`, "", null); 
+        
         try {
             const responseText = await fetchGeminiResponse(generateChatPrompt(queryText));
             addMessage("bot", responseText);
@@ -1908,11 +1585,7 @@
             localStorage.setItem(localStorageKeyAdCounter, successfulResponseCount.toString());
         } catch (error) {
             console.error("فشل إرسال لـ Gemini:", error);
-            let displayError = "عفواً، واجهت مشكلة مع Gemini. 😥";
-            if (error.message?.toLowerCase().includes("failed to fetch")) displayError = "فشل الاتصال بالخادم. تحقق من الإنترنت.";
-            else if (error.message?.includes("خدمة AI غير مكوّنة")) displayError = error.message; 
-            else if (error.message && !error.message.includes("الاتصال بـ Gemini") && !error.message.toLowerCase().includes("api key")) displayError += ` التفاصيل: ${error.message.substring(0,100)}`;
-            else if (error.message.includes("الاتصال بـ Gemini")) displayError = "عفواً، مشكلة في الاتصال بـ Gemini.";
+            const displayError = `عفواً، واجهت مشكلة: ${error.message}`;
             addMessage("bot", displayError, false, true); 
             setStatus("فشل الرد من Gemini. ❌", "error"); 
         }
@@ -1921,33 +1594,40 @@
     async function sendMessage() {
       const messageText = userInput.value.trim();
       if (!messageText) return;
+      
       addMessage("user", messageText);
-      userInput.value = ""; autoResizeTextarea(); 
+      userInput.value = ""; 
+      autoResizeTextarea(); 
+      
       userMessageCounterForAds++;
-      if (userMessageCounterForAds % 4 === 0) { setTimeout(() => { window.open(AD_URL, '_blank'); }, 500); }
+      if (userMessageCounterForAds % 4 === 0) { 
+          setTimeout(() => { window.open(AD_URL, '_blank'); }, 500); 
+      }
+      
       await processQueryWithAI(messageText);
     }
 
-    userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}});
-    userInput.addEventListener("input", autoResizeTextarea); 
-    
+    // --- UTILITY FUNCTIONS ---
     function autoResizeTextarea() {
         userInput.style.height = 'auto'; 
-        let newHeight = userInput.scrollHeight;
-        const maxHeight = parseInt(getComputedStyle(userInput).maxHeight) || 120; 
+        const newHeight = userInput.scrollHeight;
+        const maxHeight = 150; // Corresponds to CSS max-height
         userInput.style.overflowY = newHeight > maxHeight ? 'auto' : 'hidden';
         userInput.style.height = Math.min(newHeight, maxHeight) + 'px';
     }
     
+    // --- CAMERA FUNCTIONS ---
     async function openCamera() {
         uploadOptionsContainer.classList.remove('active'); 
         if (!checkImageUploadLimit()) return;
+        
         if (navigator.mediaDevices?.getUserMedia) {
             try {
                 cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
-                cameraView.srcObject = cameraStream; cameraModal.style.display = "flex"; 
+                cameraView.srcObject = cameraStream; 
+                cameraModal.style.display = "flex"; 
             } catch (err) {
-                setStatus("لا يمكن الوصول للكاميرا. تحقق من الأذونات.", "error", 4000);
+                setStatus("لا يمكن الوصول للكاميرا.", "error", 4000);
                 addMessage("bot", "عفواً، لم أتمكن من الوصول للكاميرا.", false, true);
             }
         } else {
@@ -1957,18 +1637,24 @@
     }
 
     function closeCamera() {
-        if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); }
-        cameraView.srcObject = null; cameraModal.style.display = "none"; 
+        if (cameraStream) { 
+            cameraStream.getTracks().forEach(track => track.stop()); 
+        }
+        cameraView.srcObject = null; 
+        cameraModal.style.display = "none"; 
     }
 
     async function captureImageFromCamera() {
         const canvas = document.createElement('canvas');
-        canvas.width = cameraView.videoWidth; canvas.height = cameraView.videoHeight;
-        canvas.getContext('2d').drawImage(cameraView, 0, 0, canvas.width, canvas.height);
+        canvas.width = cameraView.videoWidth; 
+        canvas.height = cameraView.videoHeight;
+        canvas.getContext('2d').drawImage(cameraView, 0, 0);
         closeCamera(); 
+        
         canvas.toBlob(async (blob) => {
             if (blob) {
-                await processAndUploadImageFile(new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' }));
+                const file = new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
+                await processAndUploadImageFile(file);
             } else {
                  setStatus("فشل التقاط الصورة.", "error", 3000);
                  addMessage("bot", "خطأ أثناء التقاط الصورة.", false, true);
@@ -1976,6 +1662,7 @@
         }, 'image/jpeg', 0.9); 
     }
 
+    // --- START THE APP ---
     initializeApp();
   </script>
 
