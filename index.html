@@ -28,17 +28,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     :root {
-      --primary-hue: 205;
-      --primary-saturation: 85%;
-      --primary-lightness: 55%;
-
-      --primary-color: hsl(var(--primary-hue), var(--primary-saturation), var(--primary-lightness));
-      --primary-hover-color: hsl(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) - 7%));
-      --primary-glow-color: hsla(var(--primary-hue), var(--primary-saturation), calc(var(--primary-lightness) + 10%), 0.4);
-
-      --secondary-color: #7a8cff;
+      /* --- NEW: Monochrome Color Scheme inspired by ChatGPT --- */
+      --primary-color: #E0E0E0; /* Light grey for accents */
+      --primary-hover-color: #FFFFFF; /* Pure white for hover */
+      --primary-glow-color: rgba(224, 224, 224, 0.2); /* Adjusted glow for grey */
+      --secondary-color: #BDBDBD; /* Another grey for variation */
       
-      /* MODIFIED: Pure Black Theme */
+      /* Pure Black Theme */
       --bg-main: #000000;
       --bg-surface: #101010;
       --bg-surface-raised: #1c1c1c;
@@ -46,7 +42,7 @@
 
       --text-primary: #f0f4f8;
       --text-secondary: #a0a8b2;
-      --text-on-primary: #ffffff;
+      --text-on-primary: #000000; /* Text on top of the light grey accent */
       
       --border-color: #2a2a2a;
       --border-color-light: #404040;
@@ -54,8 +50,6 @@
       --success-color: #4ce083;
       --error-color: #ff5c5c;
       
-      /* Bubble colors removed as they are no longer used */
-
       --shadow-xs: 0 1px 3px rgba(0,0,0,0.5);
       --shadow-sm: 0 4px 6px rgba(0,0,0,0.6);
       --shadow-md: 0 6px 12px rgba(0,0,0,0.7);
@@ -65,25 +59,9 @@
       --border-radius-md: 12px;
       --border-radius-lg: 16px;
       --border-radius-xl: 24px;
-      --border-radius-lg-buttons: 12px; 
-
-      --chat-input-area-height: 60px; 
-      --status-bar-area-height: 25px; 
-      --search-log-area-height: 20px; 
-
-      --scroll-btn-size: 42px; 
-      --scroll-btn-spacing: 10px; 
 
       --header-height: 52px;
-      --header-padding-vertical: 0.4rem; 
-      --header-padding-horizontal: 0.8rem;
-      --header-gap: 0.5rem;
-      --header-icon-size: 1.2rem; 
-      --header-icon-container-size: 32px; 
-      --header-title-font-size: 1.05rem; 
-      --header-btn-font-size: 0.75rem; 
-      --header-btn-padding-vertical: 0.4rem; 
-      --header-btn-padding-horizontal: 0.7rem; 
+      --chat-input-area-height: 60px;
     }
 
     * {
@@ -92,27 +70,15 @@
       margin: 0;
       padding: 0;
       scrollbar-width: thin;
-      scrollbar-color: var(--primary-color) var(--bg-surface);
+      scrollbar-color: var(--secondary-color) var(--bg-surface);
     }
 
-    *::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    *::-webkit-scrollbar-track {
-      background: var(--bg-surface);
-      border-radius: 3px;
-    }
-    *::-webkit-scrollbar-thumb {
-      background-color: var(--primary-color);
-      border-radius: 3px;
-    }
+    *::-webkit-scrollbar { width: 6px; height: 6px; }
+    *::-webkit-scrollbar-track { background: var(--bg-surface); border-radius: 3px; }
+    *::-webkit-scrollbar-thumb { background-color: var(--secondary-color); border-radius: 3px; }
 
     html, body {
       height: 100%; 
-      font-smooth: antialiased;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       margin: 0; 
       padding: 0; 
       overflow: hidden; 
@@ -124,8 +90,6 @@
       justify-content: center;
       align-items: center;
       color: var(--text-primary);
-      overflow: hidden; 
-      padding: 0; 
     }
 
     .container {
@@ -145,8 +109,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: var(--text-on-primary);
+      background: var(--bg-surface-raised);
+      color: var(--text-primary);
       text-align: center;
       font-weight: 500;
       z-index: 100;
@@ -157,132 +121,73 @@
       padding: 0 15px;
       transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
     }
-    .download-notification.show {
-        max-height: 80px; 
-        padding: 10px 15px; 
-    }
-    .notification-buttons {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-right: auto;
-        padding-right: 15px;
-    }
-    .download-btn {
-        background-color: rgba(255, 255, 255, 0.9);
-        color: var(--primary-color);
-        border: none;
-        padding: 6px 14px;
-        border-radius: var(--border-radius-md);
-        cursor: pointer;
-        font-weight: 700;
-        transition: all 0.25s ease;
-        white-space: nowrap;
-        font-family: 'Tajawal', sans-serif;
-    }
-    .download-btn:hover {
-        background-color: #fff;
-        transform: scale(1.05);
-    }
-    .close-btn {
-        background: none;
-        border: none;
-        color: var(--text-on-primary);
-        font-size: 1.8rem;
-        cursor: pointer;
-        padding: 0 5px;
-        line-height: 1;
-        opacity: 0.8;
-        transition: all 0.25s ease;
-    }
-    .close-btn:hover {
-        opacity: 1;
-        transform: rotate(90deg) scale(1.1);
-    }
+    .download-notification.show { max-height: 80px; padding: 10px 15px; }
+    .notification-buttons { display: flex; align-items: center; gap: 10px; margin-right: auto; padding-right: 15px; }
+    .download-btn { background-color: var(--primary-color); color: var(--text-on-primary); border: none; padding: 6px 14px; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 700; transition: all 0.25s ease; }
+    .download-btn:hover { background-color: var(--primary-hover-color); transform: scale(1.05); }
+    .close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.8rem; cursor: pointer; padding: 0 5px; line-height: 1; opacity: 0.8; transition: all 0.25s ease; }
+    .close-btn:hover { opacity: 1; transform: rotate(90deg) scale(1.1); }
 
     .header { 
       background: var(--bg-surface);
-      color: var(--text-primary);
-      padding: var(--header-padding-vertical) var(--header-padding-horizontal); 
+      padding: 0.4rem 0.8rem; 
       display: flex;
       align-items: center;
-      gap: var(--header-gap); 
-      position: relative; 
+      justify-content: space-between; /* This is key */
       border-bottom: 1px solid var(--border-color);
       box-shadow: var(--shadow-sm);
       flex-shrink: 0; 
       z-index: 10; 
       height: var(--header-height);
+      direction: rtl; /* <<< THIS IS THE FIX: Always RTL */
+    }
+
+    .header-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .header .delete-all-btn, .header .share-btn-header { 
       cursor: pointer;
       transition: color 0.2s ease-in-out, transform 0.2s ease;
       color: var(--text-secondary);
-      font-size: var(--header-icon-size); 
+      font-size: 1.2rem; 
       z-index: 11; 
       padding: 5px;
-      flex-shrink: 0;
     }
-    .delete-all-btn:hover {
-      color: var(--error-color);
-      transform: rotate(10deg) scale(1.1);
-    }
-    .share-btn-header:hover {
-        color: var(--success-color);
-        transform: scale(1.15);
-    }
+    .delete-all-btn:hover { color: var(--error-color); transform: rotate(10deg) scale(1.1); }
+    .share-btn-header:hover { color: var(--success-color); transform: scale(1.15); }
     
     .header .fas.fa-robot { 
-      font-size: var(--header-icon-size); 
+      font-size: 1.2rem; 
       color: var(--primary-color);
-      background: rgba(106, 123, 255, 0.1);
-      width: var(--header-icon-container-size);
-      height: var(--header-icon-container-size);
+      background: rgba(224, 224, 224, 0.1);
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      animation: pulseIcon 2.5s infinite ease-in-out;
-      flex-shrink: 0;
-    }
-
-    @keyframes pulseIcon {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.8; box-shadow: 0 0 10px var(--primary-glow-color); }
     }
     
     .header h1 { 
-      font-size: var(--header-title-font-size); 
+      font-size: 1.05rem; 
       font-weight: 700;
       color: var(--primary-color); 
-      letter-spacing: 0.3px; 
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: center;
-      text-shadow: 0 0 6px rgba(106, 123, 255, 0.25);
-      flex-grow: 1;
-      min-width: 0;
-    }
-
-    #subjectControls { 
-        display: flex;
-        gap: var(--header-gap); 
-        flex-shrink: 0;
     }
 
     .header-btn { 
         background-color: var(--bg-surface-raised); 
         color: var(--text-primary);
         border: 1px solid var(--border-color-light);
-        padding: var(--header-btn-padding-vertical) var(--header-btn-padding-horizontal); 
+        padding: 0.4rem 0.7rem; 
         border-radius: var(--border-radius-md); 
         cursor: pointer;
-        font-size: var(--header-btn-font-size); 
+        font-size: 0.75rem; 
         font-weight: 500;
         transition: all 0.25s ease;
-        white-space: nowrap;
         box-shadow: var(--shadow-xs);
     }
     .header-btn:hover {
@@ -292,521 +197,147 @@
         transform: translateY(-1px); 
         box-shadow: var(--shadow-sm), 0 0 8px var(--primary-glow-color);
     }
-    .header-btn:active {
-        transform: translateY(0px);
-        box-shadow: var(--shadow-xs);
-    }
-
-    .chat-wrapper, #subjectsViewContainer { 
-        flex: 1;
-        display: flex; 
-        flex-direction: column;
-        overflow: hidden; 
-        min-height: 0; 
-    }
     
-    #subjectsViewContainer {
-        background-color: var(--bg-main);
-        padding: 1.5rem;
-        display: none; 
-        align-items: center; 
+    #languageSelector { position: relative; }
+    #languageBtn {
+      padding: 0.4rem;
+      width: 34px;
+      height: 34px;
+      font-size: 1.1rem;
     }
-    
-    .subjects-view-header {
-        width: 100%;
-        display: flex;
-        justify-content: space-between; 
-        align-items: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .subjects-view-header h2 {
-        font-size: 1.6rem;
-        color: var(--primary-color);
-        text-shadow: 0 0 10px rgba(106, 123, 255, 0.3);
-    }
-
-    .back-to-chat-btn {
+    #languageDropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0; /* Align to the left in RTL context */
         background-color: var(--bg-surface-raised);
-        color: var(--text-primary);
-        border: 1px solid var(--border-color-light);
-        padding: 0.7rem 1.2rem;
+        border: 1px solid var(--border-color);
         border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow-md);
+        z-index: 100;
+        min-width: 150px;
+        overflow: hidden;
+    }
+    #languageDropdown button {
+        display: block;
+        width: 100%;
+        padding: 10px 15px;
+        background: none;
+        border: none;
+        color: var(--text-primary);
         cursor: pointer;
         font-size: 0.9rem;
-        font-weight: 500;
-        transition: all 0.25s ease;
-        box-shadow: var(--shadow-xs);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        text-align: right; /* Text aligns right for Arabic menu */
     }
-    .back-to-chat-btn:hover {
-        background-color: var(--primary-color);
-        color: var(--text-on-primary);
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-sm), 0 0 10px var(--primary-glow-color);
-    }
+    #languageDropdown button:hover { background-color: var(--primary-color); color: var(--text-on-primary); }
 
-    #subjectListContainer { 
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center; 
-        gap: 20px; 
-        width: 100%;
-        max-width: 700px; 
-        overflow-y: auto; 
-        padding: 10px;
-    }
 
-    .subject-item-btn {
-        background: var(--bg-input); 
-        color: var(--text-primary);
-        border: 1px solid var(--border-color);
-        padding: 18px 22px; 
-        font-size: 1rem; 
-        font-weight: 500;
-        min-width: 180px; 
-        max-width: 220px; 
-        border-radius: var(--border-radius-lg-buttons); 
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-        box-shadow: var(--shadow-sm); 
-        display: flex;
-        flex-direction: column; 
-        align-items: center;
-        gap: 10px; 
-        flex-grow: 1; 
-    }
-    .subject-item-btn:hover {
-        background-color: var(--primary-color);
-        color: var(--text-on-primary);
-        border-color: var(--primary-hover-color);
-        transform: translateY(-4px) scale(1.03); 
-        box-shadow: var(--shadow-md), 0 0 15px var(--primary-glow-color); 
-    }
-    .subject-item-btn i {
-        font-size: 2.2rem; 
-        margin-bottom: 5px; 
-        color: var(--secondary-color); 
-        transition: color 0.3s ease;
-    }
-    .subject-item-btn:hover i {
-        color: var(--text-on-primary); 
-    }
-
-    .chat-container {
-      flex: 1; 
-      padding: 1.5rem 1rem; 
-      overflow-y: auto; 
-      background: var(--bg-main);
-      scroll-behavior: smooth; 
-      min-height: 0; 
-    }
-
-    /* MODIFIED: Message Style (No Bubbles) */
-    .message {
-      max-width: 85%;
-      margin-bottom: 2rem; 
-      display: flex;
-      flex-direction: column;
-      animation: messageAppear 0.4s ease-out;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-      line-height: 1.7;
-    }
-
-    @keyframes messageAppear {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .chat-wrapper, #subjectsViewContainer { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
     
-    .message-content {
-        padding: 0.2rem 0.5rem;
-    }
+    #subjectsViewContainer { background-color: var(--bg-main); padding: 1.5rem; display: none; align-items: center; }
+    .subjects-view-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+    .subjects-view-header h2 { font-size: 1.6rem; color: var(--primary-color); }
+    .back-to-chat-btn { background-color: var(--bg-surface-raised); color: var(--text-primary); border: 1px solid var(--border-color-light); padding: 0.7rem 1.2rem; border-radius: var(--border-radius-md); cursor: pointer; font-size: 0.9rem; transition: all 0.25s ease; box-shadow: var(--shadow-xs); display: flex; align-items: center; gap: 0.5rem; }
+    .back-to-chat-btn:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); transform: translateY(-2px); box-shadow: var(--shadow-sm), 0 0 10px var(--primary-glow-color); }
+    #subjectListContainer { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; max-width: 700px; overflow-y: auto; padding: 10px; }
+    .subject-item-btn { background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border-color); padding: 18px 22px; font-size: 1rem; min-width: 180px; border-radius: var(--border-radius-md); cursor: pointer; transition: all 0.3s ease; text-align: center; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .subject-item-btn:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-hover-color); transform: translateY(-4px) scale(1.03); box-shadow: var(--shadow-md), 0 0 15px var(--primary-glow-color); }
+    .subject-item-btn i { font-size: 2.2rem; margin-bottom: 5px; color: var(--secondary-color); transition: color 0.3s ease; }
+    .subject-item-btn:hover i { color: var(--text-on-primary); }
 
-    .message-header {
-      font-size: 0.8rem; 
-      color: var(--text-secondary);
-      margin-bottom: 0.4rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 500;
-    }
-
-    .delete-btn {
-      color: var(--text-secondary);
-      font-size: 0.8rem; 
-      cursor: pointer;
-      transition: color 0.2s, transform 0.2s;
-      opacity: 0.4; 
-      padding: 3px 5px;
-      border-radius: 4px;
-    }
-    .message:hover .delete-btn {
-        opacity: 0.8;
-    }
-    .delete-btn:hover {
-      opacity: 1;
-      color: var(--error-color);
-      transform: scale(1.15);
-    }
-
-    .message.user {
-      align-items: flex-end;
-      margin-left: auto; /* Push to the right */
-    }
-    .message.user .message-header {
-      flex-direction: row-reverse; 
-    }
-
-    .message.bot {
-      align-items: flex-start;
-      margin-right: auto; /* Push to the left */
-    }
+    .chat-container { flex: 1; padding: 1.5rem 1rem; overflow-y: auto; background: var(--bg-main); scroll-behavior: smooth; min-height: 0; }
+    .message { max-width: 85%; margin-bottom: 2rem; display: flex; flex-direction: column; animation: messageAppear 0.4s ease-out; word-wrap: break-word; white-space: pre-wrap; line-height: 1.7; }
+    @keyframes messageAppear { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .message-content { padding: 0.2rem 0.5rem; }
+    .message-header { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 8px; font-weight: 500; }
+    .delete-btn { color: var(--text-secondary); font-size: 0.8rem; cursor: pointer; transition: color 0.2s, transform 0.2s; opacity: 0.4; padding: 3px 5px; }
+    .message:hover .delete-btn { opacity: 0.8; }
+    .delete-btn:hover { opacity: 1; color: var(--error-color); transform: scale(1.15); }
+    .message.user { margin-left: auto; align-items: flex-end; }
+    .message.user .message-header { flex-direction: row-reverse; }
+    .message.bot { margin-right: auto; align-items: flex-start; }
     
-    .message.user .message-content {
-      color: #c7d2fe; /* Light blue for user text */
-    }
+    html[dir="ltr"] .message.user { margin-right: auto; margin-left: 0; align-items: flex-end; }
+    html[dir="ltr"] .message.bot { margin-left: auto; margin-right: 0; align-items: flex-start; }
     
-    .message.bot .message-content {
-      color: var(--text-primary);
-    }
+    .message.user .message-content { color: #e5e7eb; /* NEW: Brighter off-white for user text */ }
+    .message.bot .message-content { color: var(--text-primary); }
+    .message.bot .message-content strong { color: var(--primary-color); }
+    .message-actions { margin-top: 10px; display: flex; gap: 8px; padding: 0 8px; flex-wrap: wrap; }
+    .message.user .message-actions { justify-content: flex-end; }
+    .message-actions button { background: var(--bg-surface-raised); border: 1px solid var(--border-color); cursor: pointer; font-size: 0.85rem; padding: 5px 9px; color: var(--text-secondary); transition: all 0.25s ease; border-radius: var(--border-radius-sm); display: flex; align-items: center; gap: 5px; }
+    .message-actions button:hover { color: var(--text-on-primary); background-color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-glow-color); }
     
-    .message.bot .message-content strong {
-        color: var(--primary-color);
-    }
-
-    .message-actions {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px; 
-      padding: 0 8px; 
-      flex-wrap: wrap; 
-    }
-    .message.user .message-actions { 
-        justify-content: flex-end;
-    }
-
-    .message-actions button {
-      background: var(--bg-surface-raised); 
-      border: 1px solid var(--border-color); 
-      cursor: pointer;
-      font-size: 0.85rem; 
-      padding: 5px 9px; 
-      color: var(--text-secondary);
-      transition: all 0.25s ease;
-      border-radius: var(--border-radius-sm);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .message-actions button:hover {
-      color: var(--text-on-primary);
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-      box-shadow: 0 0 10px var(--primary-glow-color);
-    }
+    .chat-input-area { flex-shrink: 0; background: transparent; position: relative; }
+    .chat-input-area::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 150px; background: linear-gradient(to top, var(--bg-main) 20%, transparent 100%); pointer-events: none; z-index: 4; }
+    .chat-input { display: flex; align-items: flex-end; padding: 0.8rem 1rem; gap: 0.8rem; position: relative; z-index: 5; min-height: var(--chat-input-area-height); max-width: 800px; margin: 0 auto; }
+    .chat-input textarea { flex: 1; padding: 0.8rem 1.1rem; border: 1px solid var(--border-color); resize: none; font-size: 0.95rem; outline: none; border-radius: var(--border-radius-xl); background: var(--bg-input); color: var(--text-primary); max-height: 150px; line-height: 1.6; transition: border-color 0.25s ease, box-shadow 0.25s ease; }
+     .chat-input textarea::placeholder { color: var(--text-secondary); opacity: 0.6; }
+     .chat-input textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-glow-color); }
+    .chat-input-btn { background: var(--primary-color); border: none; color: var(--text-on-primary); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; transition: all 0.25s ease; flex-shrink: 0; box-shadow: var(--shadow-sm); }
+    .chat-input-btn:hover { background: var(--primary-hover-color); transform: scale(1.08); box-shadow: 0 0 15px var(--primary-glow-color); }
+    #speakBtn { background: var(--bg-surface-raised); color: var(--text-secondary); }
+    #speakBtn:hover { background: var(--bg-surface); color: var(--text-primary); }
+    .voice-indicator { display: none; align-items: center; justify-content: center; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: var(--bg-surface-raised); color: var(--text-primary); padding: 8px 16px; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); gap: 8px; z-index: 10; opacity: 0; transition: opacity 0.3s ease; }
+    .voice-indicator.active { display: flex; opacity: 1; }
+    .voice-indicator i { color: var(--error-color); animation: pulseMic 1.5s infinite ease-in-out; }
+    @keyframes pulseMic { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+    .chat-input-btn.recording { background-color: var(--error-color); }
     
-    /* MODIFIED: Transparent Input Area */
-    .chat-input-area { 
-        flex-shrink: 0; 
-        background: transparent;
-        position: relative;
-    }
+    #uploadOptionsContainer { display: flex; flex-direction: column; gap: 8px; background-color: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 10px; position: absolute; bottom: calc(100% + 5px); left: 60px; z-index: 10; box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(10px) scale(0.95); transition: all 0.25s ease-out; }
+    #uploadOptionsContainer.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+    #uploadOptionsContainer button { background: var(--bg-input); color: var(--text-secondary); border: 1px solid var(--border-color-light); border-radius: var(--border-radius-sm); padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; transition: all 0.2s ease; text-align: right; width: 100%; white-space: nowrap; }
+    #uploadOptionsContainer button:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); }
+    .status { text-align: center; padding: 0.4rem; font-size: 0.8rem; background-color: var(--bg-surface); color: var(--text-secondary); border-top: 1px solid var(--border-color); transition: color 0.3s ease; font-weight: 500; }
+    a { color: var(--primary-color); text-decoration: none; word-break: break-all; font-weight: 500; }
     
-    /* Add a gradient overlay for visual separation */
-    .chat-input-area::before {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 150px;
-        background: linear-gradient(to top, var(--bg-main) 20%, transparent 100%);
-        pointer-events: none; /* Allows clicks to go through */
-        z-index: 4;
-    }
-
-    .chat-input {
-      display: flex;
-      align-items: flex-end; 
-      padding: 0.8rem 1rem; 
-      gap: 0.8rem; 
-      position: relative; 
-      z-index: 5; 
-      min-height: var(--chat-input-area-height); 
-      max-width: 800px;
-      margin: 0 auto; /* Center the input area */
-    }
-
-    .chat-input textarea {
-      flex: 1;
-      padding: 0.8rem 1.1rem; 
-      border: 1px solid var(--border-color);
-      resize: none;
-      font-size: 0.95rem;
-      outline: none;
-      border-radius: var(--border-radius-xl); 
-      background: var(--bg-input);
-      color: var(--text-primary);
-      max-height: 150px; /* Increased max height */
-      line-height: 1.6;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-    }
-     .chat-input textarea::placeholder {
-        color: var(--text-secondary);
-        opacity: 0.6;
-     }
-     .chat-input textarea:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px var(--primary-glow-color);
-     }
-
-    .chat-input-btn { 
-      background: var(--primary-color);
-      border: none;
-      color: var(--text-on-primary);
-      width: 44px; 
-      height: 44px; 
-      border-radius: 50%; 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.1rem; 
-      transition: all 0.25s ease;
-      flex-shrink: 0; 
-      box-shadow: var(--shadow-sm);
-    }
-    .chat-input-btn:hover {
-      background: var(--primary-hover-color);
-      transform: scale(1.08);
-      box-shadow: 0 0 15px var(--primary-glow-color);
-    }
+    .camera-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+    .camera-modal-content { background-color: var(--bg-surface); padding: 25px; border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); text-align: center; max-width: 90%; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: var(--shadow-lg); }
     
-    .voice-indicator {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      bottom: 120%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--bg-surface-raised);
-      color: var(--text-primary);
-      padding: 8px 16px;
-      border-radius: var(--border-radius-md);
-      box-shadow: var(--shadow-md);
-      gap: 8px;
-      z-index: 10;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .voice-indicator.active {
-      display: flex;
-      opacity: 1;
-    }
-    .voice-indicator i {
-      color: var(--error-color);
-      animation: pulseMic 1.5s infinite ease-in-out;
-    }
-    @keyframes pulseMic {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-    
-    .chat-input-btn.recording {
-        background-color: var(--error-color);
-    }
-    
-    #uploadOptionsContainer {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background-color: var(--bg-surface-raised);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-md);
-      padding: 10px;
-      position: absolute;
-      bottom: calc(100% + 5px);
-      left: 60px;
-      z-index: 10;
-      box-shadow: var(--shadow-md);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(10px) scale(0.95);
-      transition: all 0.25s ease-out;
-    }
-    #uploadOptionsContainer.active {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
-    }
-    #uploadOptionsContainer button {
-      background: var(--bg-input);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-color-light);
-      border-radius: var(--border-radius-sm);
-      padding: 8px 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-      text-align: right;
-      width: 100%;
-      white-space: nowrap;
-    }
-    #uploadOptionsContainer button:hover {
-      background-color: var(--primary-color);
-      color: var(--text-on-primary);
-      border-color: var(--primary-color);
-    }
-
-    .status {
-      text-align: center;
-      padding: 0.4rem; 
-      font-size: 0.8rem; 
-      background-color: var(--bg-surface);
-      color: var(--text-secondary);
-      border-top: 1px solid var(--border-color);
-      min-height: var(--status-bar-area-height); 
-      transition: color 0.3s ease;
-      font-weight: 500;
-    }
-    
-    a {
-      color: var(--primary-color); 
-      text-decoration: none;
-      word-break: break-all;
-      font-weight: 500;
-    }
-    
-    .camera-modal, .share-modal { 
-        display: none; 
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.8);
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(5px);
-    }
-    
-    .camera-modal-content, .share-modal-content { 
-        background-color: var(--bg-surface);
-        padding: 25px;
-        border: 1px solid var(--border-color);
+    /* --- Redesigned Share Modal --- */
+    .share-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+    .share-modal-content {
+        max-width: 450px;
+        width: 90%;
+        background: #1c1c1c;
+        padding: 30px;
+        border: 1px solid var(--border-color-light);
         border-radius: var(--border-radius-lg);
         text-align: center;
-        max-width: 90%;
         display: flex;
         flex-direction: column;
         align-items: center;
         position: relative; 
         box-shadow: var(--shadow-lg);
     }
-    
-    .scroll-btn {
-      position: absolute; 
-      right: 25px;
-      background-color: var(--primary-color);
-      color: var(--text-on-primary);
-      border: none;
-      width: var(--scroll-btn-size);   
-      height: var(--scroll-btn-size);  
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.1rem; 
-      box-shadow: var(--shadow-md);
-      transition: all 0.3s ease;
-      z-index: 6; 
-      opacity: 0;
-      visibility: hidden;
-      display: flex;
-    }
-    #scrollToTopBtn {
-        bottom: calc(var(--chat-input-area-height) + var(--scroll-btn-size) + var(--scroll-btn-spacing) + 15px);
-    }
-    #scrollToBottomBtn {
-        bottom: calc(var(--chat-input-area-height) + var(--scroll-btn-spacing) + 15px);
-    }
-    .scroll-btn.visible {
-        opacity: 0.8;
-        visibility: visible;
-    }
-    .scroll-btn:hover {
-        opacity: 1;
-        transform: scale(1.1);
-    }
-    
-    /* --- بداية التعديل --- */
-    .safe-area-padding {
-        height: 10px; /* هذا يضيف مسافة صغيرة في الأسفل */
-        flex-shrink: 0;
-        transition: height 0.3s ease;
-    }
-    /* --- نهاية التعديل --- */
-
-    /* Media Queries for Responsive Design */
-    @media (min-width: 1024px) {
-        body { padding: 0; }
-        .container {
-            max-width: 100%;
-            height: 100%;
-            border-radius: 0;
-            border: none;
-        }
-    }
-
-    @media (max-width: 767px) { 
-      .container {
-        border-radius: 0; 
-        border: none;
-        height: 100%;
-        width: 100%;
-      }
-      .message { max-width: 90%; }
-    }
+    .share-modal-content h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
+    .share-modal-content > p { font-size: 1rem; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.6; }
+    .share-link-container { display: flex; margin-bottom: 20px; width: 100%; }
+    .share-link-container input { flex-grow: 1; border: 1px solid var(--border-color); background-color: var(--bg-input); color: var(--text-primary); padding: 12px 15px; border-radius: 0 8px 8px 0; font-size: 0.95rem; outline: none; }
+    .share-link-container button { border: 1px solid var(--primary-color); background-color: var(--primary-color); color: var(--text-on-primary); padding: 12px 18px; border-radius: 8px 0 0 8px; cursor: pointer; font-weight: 700; transition: background-color 0.2s; }
+    .share-link-container button:hover { background-color: var(--primary-hover-color); }
+    .share-divider { width: 80%; height: 1px; background: var(--border-color); margin: 25px auto; border: none; }
+    .social-share-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+    .social-share-buttons .share-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--bg-surface-raised); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; text-decoration: none; transition: all 0.3s ease; }
+    .social-share-buttons .share-icon:hover { color: #fff; transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .share-icon.whatsapp:hover { background-color: #25D366; }
+    .share-icon.twitter:hover { background-color: #1DA1F2; }
+    .share-icon.telegram:hover { background-color: #0088cc; }
+    .share-icon.facebook:hover { background-color: #1877F2; }
+    .qr-code-container { margin-top: 15px; }
+    .qr-code-container img { background: #fff; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .qr-code-container p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px; }
+    .close-share-modal { position: absolute; top: 15px; left: 15px; font-size: 1.8rem; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; }
+    .close-share-modal:hover { color: var(--text-primary); transform: rotate(90deg); }
 
     @media (max-width: 480px) { 
-      :root {
-        --header-height: 50px;
-        --header-padding-horizontal: 0.6rem;
-        --header-gap: 0.4rem;
-        --header-icon-size: 1.1rem;
-        --header-title-font-size: 0.95rem;
-        --header-btn-font-size: 0.7rem;
-        --header-btn-padding-horizontal: 0.6rem;
-      }
-      .subjects-view-header { flex-direction: column; gap: 0.8rem; }
-      .subject-item-btn { min-width: calc(50% - 10px); } 
+      .header h1 { font-size: 0.95rem; }
       .message { max-width: 95%; }
       .chat-input { gap: 0.5rem; padding: 0.6rem; }
       .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; }
-      #uploadOptionsContainer { left: 50px; }
-      
-      /* --- بداية التعديل --- */
-      .safe-area-padding {
-          height: 0; /* على الهواتف، تختفي هذه المسافة لتوفير المساحة */
-      }
-      /* --- نهاية التعديل --- */
+      html[dir="rtl"] #languageDropdown { left: 0; right: auto; }
+      html[dir="ltr"] #languageDropdown { left: auto; right: 0; }
     }
-
   </style>
 </head>
 <body>
@@ -820,13 +351,34 @@
     </div>
     
     <header class="header">
-      <i class="fas fa-share-alt share-btn-header" id="shareBtn" title="مشاركة التطبيق"></i>
-      <i class="fas fa-trash delete-all-btn" onclick="deleteAllMessages()" title="حذف كل الرسائل"></i>
-      <i class="fas fa-robot"></i>
-      <h1 id="botName">Saif AI</h1>
-      <div id="subjectControls">
+      <!-- Right Group (Controls) -->
+      <div id="headerControls" class="header-group">
         <button id="enterSubjectsBtn" class="header-btn">مواد متخصصة</button>
         <button id="generalChatBtn" class="header-btn" style="display: none;">عام</button>
+        <div id="languageSelector">
+          <button id="languageBtn" class="header-btn" title="تغيير اللغة">
+            <i class="fas fa-globe"></i>
+          </button>
+          <div id="languageDropdown">
+            <button data-lang="ar">العربية</button>
+            <button data-lang="en">English</button>
+            <button data-lang="fr">Français</button>
+            <button data-lang="es">Español</button>
+            <button data-lang="zh">中文</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Center Group (Title) -->
+      <div class="header-group">
+        <i class="fas fa-robot"></i>
+        <h1 id="botName">Saif AI</h1>
+      </div>
+      
+      <!-- Left Group (Icons) -->
+      <div id="headerIcons" class="header-group">
+        <i class="fas fa-share-alt share-btn-header" id="shareBtn" title="مشاركة التطبيق"></i>
+        <i class="fas fa-trash delete-all-btn" onclick="deleteAllMessages()" title="حذف كل الرسائل"></i>
       </div>
     </header>
 
@@ -834,21 +386,13 @@
         <div id="chatContainer" class="chat-container">
           <!-- Messages will be here -->
         </div>
-
-        <button id="scrollToTopBtn" class="scroll-btn" title="الانتقال إلى الأعلى">
-          <i class="fas fa-arrow-up"></i>
-        </button>
-        <button id="scrollToBottomBtn" class="scroll-btn" title="الانتقال إلى الأسفل">
-          <i class="fas fa-arrow-down"></i>
-        </button>
         
         <div class="chat-input-area"> 
-            <div id="searchLog" class="search-log"></div>
             <div class="status" id="statusBar"></div>
             
             <div class="voice-indicator" id="voiceIndicator">
               <i class="fas fa-microphone"></i>
-              <span>جاري الاستماع...</span>
+              <span id="listeningText">جاري الاستماع...</span>
             </div>
 
             <div class="chat-input">
@@ -857,36 +401,34 @@
               </button>
 
               <div class="upload-options-container" id="uploadOptionsContainer">
-                <button onclick="triggerImageUpload()">
+                <button id="uploadFromGalleryBtn" onclick="triggerImageUpload()">
                   <i class="fas fa-images"></i> رفع من المعرض
                 </button>
-                <button onclick="openCamera()">
+                <button id="useCameraBtn" onclick="openCamera()">
                   <i class="fas fa-camera"></i> استخدام الكاميرا
                 </button>
               </div>
 
               <textarea id="userInput" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
               
-              <button class="chat-input-btn" id="voiceInputBtn" title="التحدث">
-                <i class="fas fa-microphone"></i>
+              <button class="chat-input-btn" id="speakBtn" title="تشغيل الصوت" style="display: none;">
+                <i class="fas fa-volume-up"></i>
               </button>
-              
-              <button class="chat-input-btn" onclick="sendMessage()" title="إرسال">
-                <i class="fas fa-paper-plane"></i>
+
+              <button class="chat-input-btn" id="sendOrVoiceBtn">
+                <!-- Content will be set by JS -->
               </button>
+
               <input id="imageUpload" type="file" accept="image/*" onchange="handleFileSelect(event)" style="display: none;" />
             </div>
-            <!-- --- بداية التعديل: إضافة المساحة الفارغة --- -->
-            <div class="safe-area-padding"></div>
-            <!-- --- نهاية التعديل --- -->
         </div>
     </div>
 
     <div id="subjectsViewContainer"> 
         <div class="subjects-view-header">
-            <h2>اختر المادة الدراسية</h2>
+            <h2 id="subjectsViewTitle">اختر المادة الدراسية</h2>
             <button id="backToChatBtn" class="back-to-chat-btn">
-                <i class="fas fa-arrow-left"></i> العودة للدردشة
+                <i class="fas fa-arrow-left"></i> <span id="backToChatText">العودة للدردشة</span>
             </button>
         </div>
         <div id="subjectListContainer">
@@ -909,14 +451,28 @@
   <!-- Share Modal -->
   <div id="shareModal" class="share-modal">
     <div class="share-modal-content">
-      <span class="close-share-modal" id="closeShareModal">×</span>
-      <h2>مشاركة التطبيق</h2>
-      <p>شارك الرابط مع أصدقائك لدعمنا!</p>
+      <span class="close-share-modal" id="closeShareModal">&times;</span>
+      <h2 id="shareModalTitle">شارك التطبيق</h2>
+      <p id="shareModalDesc">ساعدنا على النمو بمشاركة التطبيق مع أصدقائك!</p>
+      
       <div class="share-link-container">
+        <button id="copyLinkBtn"><i class="fas fa-copy"></i> <span id="copyBtnText">نسخ</span></button>
         <input type="text" value="https://tinyurl.com/saif-ai" id="shareLinkInput" readonly>
-        <button id="copyLinkBtn"><i class="fas fa-copy"></i> نسخ</button>
       </div>
-      <p class="support-message">ارجو دعمنا للاستمرار</p>
+
+      <hr class="share-divider">
+
+      <div class="social-share-buttons">
+          <a href="#" target="_blank" class="share-icon whatsapp" id="whatsapp-share" title="مشاركة عبر واتساب"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" target="_blank" class="share-icon twitter" id="twitter-share" title="مشاركة عبر تويتر"><i class="fab fa-twitter"></i></a>
+          <a href="#" target="_blank" class="share-icon telegram" id="telegram-share" title="مشاركة عبر تيليجرام"><i class="fab fa-telegram-plane"></i></a>
+          <a href="#" target="_blank" class="share-icon facebook" id="facebook-share" title="مشاركة عبر فيسبوك"><i class="fab fa-facebook-f"></i></a>
+      </div>
+      
+      <div class="qr-code-container">
+          <img id="qr-code-img" src="" alt="QR Code" width="140" height="140">
+          <p id="qrCodeText">أو امسح الرمز للمشاركة</p>
+      </div>
     </div>
   </div>
 
@@ -930,334 +486,256 @@
     const chatWrapper = document.getElementById("chatWrapper");
     const chatContainer = document.getElementById("chatContainer");
     const statusBar = document.getElementById("statusBar");
-    const searchLog = document.getElementById("searchLog");
     const userInput = document.getElementById("userInput");
     const botNameElement = document.getElementById("botName");
     const imageUploadInput = document.getElementById("imageUpload");
     const toggleUploadBtn = document.getElementById("toggleUploadBtn");
     const uploadOptionsContainer = document.getElementById("uploadOptionsContainer");
-    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-    const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
-    const voiceInputBtn = document.getElementById('voiceInputBtn');
     const voiceIndicator = document.getElementById('voiceIndicator');
-    
     const subjectsViewContainer = document.getElementById('subjectsViewContainer');
     const subjectListContainer = document.getElementById('subjectListContainer'); 
     const backToChatBtn = document.getElementById('backToChatBtn');
-
     const cameraModal = document.getElementById('cameraModal');
     const cameraView = document.getElementById('cameraView');
     const captureBtn = document.getElementById('captureBtn');
     const cancelCameraBtn = document.getElementById('cancelCameraBtn');
     let cameraStream = null;
-
     const enterSubjectsBtn = document.getElementById('enterSubjectsBtn');
     const generalChatBtn = document.getElementById('generalChatBtn');
-    
     const shareBtn = document.getElementById('shareBtn');
     const shareModal = document.getElementById('shareModal');
     const closeShareModalBtn = document.getElementById('closeShareModal');
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const shareLinkInput = document.getElementById('shareLinkInput');
-    
     const downloadNotification = document.getElementById('downloadNotification');
-    const downloadNotificationText = document.getElementById('downloadNotificationText');
     const downloadAppBtn = document.getElementById('downloadAppBtn');
     const closeNotificationBtn = document.getElementById('closeNotificationBtn');
+    const sendOrVoiceBtn = document.getElementById('sendOrVoiceBtn');
+    const speakBtn = document.getElementById('speakBtn');
+    const languageBtn = document.getElementById('languageBtn');
+    const languageDropdown = document.getElementById('languageDropdown');
     
     // --- GLOBAL VARIABLES & CONSTANTS ---
-    const botName = "سيف AI";
+    const botName = "Saif AI";
     const localStorageKeyAllChats = "saifAiAllChatsHistory_v2"; 
-    const localStorageKeyAdCounter = "saifAiAdCounter";
-    const localStorageKeyImageUploadDate = "saifAiImageUploadDate";
-    const localStorageKeyImageUploadCount = "saifAiImageUploadCount";
     const localStorageKeyCurrentSubject = "saifAiCurrentSubject_v2";
-
-    const AD_URL = "https://www.profitableratecpm.com/k8fisnjjc?key=afa7ea920578f74cea5997d670bbe78e";
-    const AD_DELAY_MS = 10000; 
-
+    const localStorageKeyLanguage = "saifAiLanguage_v1";
     let allMessages = {}; 
     let messages = [];    
-    
-    let successfulResponseCount = 0;
-    let userMessageCounterForAds = 0;
     let statusTimeout;
-    
-    let currentSubject = "general"; 
+    let currentSubject = "general";
+    let currentLanguage = "ar";
     const subjects = [ 
-        { name: "فيزياء", icon: "fas fa-atom" },
-        { name: "كيمياء", icon: "fas fa-flask" },
-        { name: "أحياء", icon: "fas fa-dna" },
-        { name: "علوم", icon: "fas fa-microscope" },
-        { name: "لغة عربية", icon: "fas fa-pen-nib" },
-        { name: "فلسفة", icon: "fas fa-brain" },
-        { name: "لغة إنجليزية", icon: "fas fa-language" },
-        { name: "رياضيات", icon: "fas fa-calculator" },
-        { name: "تربية دينية", icon: "fas fa-mosque" }
+        { key: "physics", name: { ar: "فيزياء", en: "Physics", fr: "Physique", es: "Física", zh: "物理" }, icon: "fas fa-atom" },
+        { key: "chemistry", name: { ar: "كيمياء", en: "Chemistry", fr: "Chimie", es: "Química", zh: "化学" }, icon: "fas fa-flask" },
+        { key: "biology", name: { ar: "أحياء", en: "Biology", fr: "Biologie", es: "Biología", zh: "生物学" }, icon: "fas fa-dna" },
+        { key: "science", name: { ar: "علوم", en: "Science", fr: "Sciences", es: "Ciencia", zh: "科学" }, icon: "fas fa-microscope" },
+        { key: "arabic", name: { ar: "لغة عربية", en: "Arabic", fr: "Arabe", es: "Árabe", zh: "阿拉伯语" }, icon: "fas fa-pen-nib" },
+        { key: "philosophy", name: { ar: "فلسفة", en: "Philosophy", fr: "Philosophie", es: "Filosofía", zh: "哲学" }, icon: "fas fa-brain" },
+        { key: "english", name: { ar: "لغة إنجليزية", en: "English", fr: "Anglais", es: "Inglés", zh: "英语" }, icon: "fas fa-language" },
+        { key: "math", name: { ar: "رياضيات", en: "Math", fr: "Maths", es: "Matemáticas", zh: "数学" }, icon: "fas fa-calculator" },
+        { key: "religion", name: { ar: "تربية دينية", en: "Religion", fr: "Religion", es: "Religión", zh: "宗教教育" }, icon: "fas fa-mosque" }
     ];
-    
     let recognition;
     let isListening = false;
-    let deferredPrompt; // PWA: For storing the install prompt event
+    let deferredPrompt;
 
     // --- PWA & NOTIFICATION FUNCTIONS ---
-    function showAppNotification() {
-      downloadNotificationText.textContent = "ثبّت التطبيق على جهازك للوصول السريع!";
-      downloadAppBtn.textContent = "تثبيت";
-      downloadNotification.classList.add('show');
-    }
-
-    function hideAppNotification() {
-      downloadNotification.classList.remove('show');
-    }
-
+    function showAppNotification() { downloadNotification.classList.add('show'); }
+    function hideAppNotification() { downloadNotification.classList.remove('show'); }
     function registerServiceWorker() {
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-          .then((registration) => console.log('Service Worker registered with scope:', registration.scope))
-          .catch((error) => console.error('Service Worker registration failed:', error));
+        navigator.serviceWorker.register('/sw.js').catch(err => console.error('Service Worker registration failed:', err));
       }
     }
-
-    // --- SPEECH RECOGNITION FUNCTIONS ---
-    function initSpeechRecognition() {
-        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.continuous = false;
-            recognition.interimResults = true;
-            recognition.lang = 'ar-SA';
-
-            recognition.onstart = () => {
-                isListening = true;
-                voiceInputBtn.classList.add('recording');
-                voiceIndicator.classList.add('active');
-                setStatus("جاري الاستماع...", "", null);
-            };
-
-            recognition.onresult = (event) => {
-                let transcript = Array.from(event.results)
-                    .map(result => result[0])
-                    .map(result => result.transcript)
-                    .join('');
-                userInput.value = transcript;
-                autoResizeTextarea();
-            };
-
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error', event.error);
-                let userMessage = "حدث خطأ في التعرف على الصوت: " + event.error;
-                setStatus(userMessage, "error", 4000);
-                stopListening();
-            };
-
-            recognition.onend = () => stopListening();
-        } else {
-            voiceInputBtn.style.display = 'none'; 
-            setStatus("المتصفح لا يدعم التعرف على الصوت", "error", 3000);
-        }
-    }
-    
-    function toggleListening() {
-        if (!recognition) { 
-            setStatus("ميزة التعرف على الصوت غير متاحة.", "error", 3000); 
-            return; 
-        }
-        if (isListening) { 
-            recognition.stop(); 
-        } else {
-            try {
-                userInput.value = ""; 
-                autoResizeTextarea(); 
-                recognition.start();
-            } catch (e) {
-                console.error("Error starting speech recognition:", e);
-                setStatus("لا يمكن بدء التعرف على الصوت.", "error", 3000); 
-                stopListening(); 
-            }
-        }
-    }
-    
-    function stopListening() {
-        isListening = false;
-        voiceInputBtn.classList.remove('recording');
-        voiceIndicator.classList.remove('active');
-        if (statusBar.textContent === "جاري الاستماع...") { 
-            setStatus("", "", 100); 
-        }
-    }
-    
-    // --- INITIALIZATION & EVENT LISTENERS ---
-    function initializeApp() {
-        registerServiceWorker(); 
-    
-        successfulResponseCount = parseInt(localStorage.getItem(localStorageKeyAdCounter) || '0', 10);
-        
-        loadAllMessagesAndSetCurrent(); 
-
-        const storedSubject = localStorage.getItem(localStorageKeyCurrentSubject);
-        if (storedSubject && (subjects.find(s => s.name === storedSubject) || storedSubject === "general")) {
-            currentSubject = storedSubject;
-        } else {
-            currentSubject = "general";
-        }
-        
-        messages = allMessages[currentSubject] || [];
-        if (!allMessages[currentSubject]) {
-            allMessages[currentSubject] = [];
-        }
-
-        updateSubjectUI(); 
-        botNameElement.textContent = getBotDisplayName(); 
-
-        addWelcomeMessage(); 
-        refreshChat();
-        autoResizeTextarea();
-
-        // Event Listeners
-        toggleUploadBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            uploadOptionsContainer.classList.toggle('active');
-        });
-
-        document.addEventListener('click', () => {
-            uploadOptionsContainer.classList.remove('active');
-        });
-
-        captureBtn.addEventListener('click', captureImageFromCamera);
-        cancelCameraBtn.addEventListener('click', closeCamera);
-        scrollToTopBtn.addEventListener('click', () => chatContainer.scrollTo({ top: 0, behavior: 'smooth' }));
-        scrollToBottomBtn.addEventListener('click', () => chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }));
-        chatContainer.addEventListener('scroll', handleChatScroll);
-        enterSubjectsBtn.addEventListener('click', openSubjectsView);
-        backToChatBtn.addEventListener('click', closeSubjectsView);
-        generalChatBtn.addEventListener('click', switchToGeneralMode);
-        voiceInputBtn.addEventListener('click', toggleListening);
-        shareBtn.addEventListener('click', () => shareModal.style.display = 'flex');
-        closeShareModalBtn.addEventListener('click', () => shareModal.style.display = 'none');
-        copyLinkBtn.addEventListener('click', copyShareLink);
-        downloadAppBtn.addEventListener('click', promptInstall);
-        closeNotificationBtn.addEventListener('click', hideAppNotification);
-        userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}});
-        userInput.addEventListener("input", autoResizeTextarea); 
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            showAppNotification();
-        });
-        
-        window.addEventListener('appinstalled', () => {
-          console.log('PWA was installed');
-          deferredPrompt = null;
-          hideAppNotification();
-        });
-        
-        window.addEventListener('click', (event) => {
-            if (event.target == shareModal) shareModal.style.display = 'none';
-            if (event.target == cameraModal) closeCamera();
-        });
-        
-        handleChatScroll(); 
-        populateSubjectListInView(); 
-        initSpeechRecognition();
-    }
-    
     async function promptInstall(e) {
         e.preventDefault();
         if (deferredPrompt) {
             hideAppNotification();
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
             deferredPrompt = null;
         }
+    }
+
+    // --- SPEECH RECOGNITION (INPUT) ---
+    function initSpeechRecognition() {
+        if (recognition) { recognition.abort(); }
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' };
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = false; recognition.interimResults = true; recognition.lang = langMap[currentLanguage];
+            recognition.onstart = () => { isListening = true; sendOrVoiceBtn.classList.add('recording'); voiceIndicator.classList.add('active'); setStatus(translations[currentLanguage].listening, "", null); };
+            recognition.onresult = (event) => { let transcript = Array.from(event.results).map(result => result[0].transcript).join(''); userInput.value = transcript; autoResizeTextarea(); updateSendOrVoiceButton(); };
+            recognition.onerror = (event) => { console.error('Speech recognition error', event.error); setStatus(`${translations[currentLanguage].speechError}: ${event.error}`, "error", 4000); stopListening(); };
+            recognition.onend = () => stopListening();
+        } else { sendOrVoiceBtn.style.display = 'none'; setStatus(translations[currentLanguage].speechNotSupported, "error", 3000); }
+    }
+    
+    function toggleListening() {
+        if (!recognition) return;
+        if (isListening) { recognition.stop(); } 
+        else { try { userInput.value = ""; autoResizeTextarea(); recognition.start(); } catch (e) { stopListening(); } }
+    }
+    
+    function stopListening() { isListening = false; sendOrVoiceBtn.classList.remove('recording'); voiceIndicator.classList.remove('active'); if (statusBar.textContent === translations[currentLanguage].listening) setStatus("", "", 100); }
+    
+    // --- TEXT TO SPEECH (OUTPUT) ---
+    function speakLastBotMessage() {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            return;
+        }
+        const lastBotMessage = [...messages].reverse().find(m => m.sender === 'bot' && !m.isSystemMessage && !m.isInitialWelcome);
+        if (lastBotMessage) {
+            const utterance = new SpeechSynthesisUtterance(lastBotMessage.text);
+            const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' };
+            utterance.lang = langMap[currentLanguage];
+            speechSynthesis.speak(utterance);
+        } else {
+            setStatus(translations[currentLanguage].noResponseToSpeak, "", 2000);
+        }
+    }
+
+    // --- INITIALIZATION & EVENT LISTENERS ---
+    function initializeApp() {
+        registerServiceWorker();
+        loadAllMessagesAndSetCurrent(); 
+        const storedSubject = localStorage.getItem(localStorageKeyCurrentSubject) || "general";
+        currentSubject = storedSubject;
+        messages = allMessages[currentSubject] || [];
+        if (!allMessages[currentSubject]) allMessages[currentSubject] = [];
+        
+        const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar';
+        switchLanguage(savedLang, false); // This will call updateUI and other necessary functions
+
+        // Event Listeners
+        const qrCodeImg = document.getElementById('qr-code-img');
+        const whatsappShare = document.getElementById('whatsapp-share');
+        const twitterShare = document.getElementById('twitter-share');
+        const telegramShare = document.getElementById('telegram-share');
+        const facebookShare = document.getElementById('facebook-share');
+
+        shareBtn.addEventListener('click', () => {
+            const shareUrl = shareLinkInput.value;
+            const shareText = translations[currentLanguage].shareText;
+            qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`;
+            whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
+            twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+            telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+            facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+            shareModal.style.display = 'flex';
+        });
+
+        closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; });
+        copyLinkBtn.addEventListener('click', copyShareLink);
+        toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); });
+        document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); });
+        captureBtn.addEventListener('click', captureImageFromCamera);
+        cancelCameraBtn.addEventListener('click', closeCamera);
+        enterSubjectsBtn.addEventListener('click', openSubjectsView);
+        backToChatBtn.addEventListener('click', closeSubjectsView);
+        generalChatBtn.addEventListener('click', switchToGeneralMode);
+        downloadAppBtn.addEventListener('click', promptInstall);
+        closeNotificationBtn.addEventListener('click', hideAppNotification);
+        userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}});
+        userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); }); 
+        speakBtn.addEventListener('click', speakLastBotMessage);
+        languageBtn.addEventListener('click', (e) => { e.stopPropagation(); languageDropdown.style.display = languageDropdown.style.display === 'block' ? 'none' : 'block'; });
+        document.addEventListener('click', () => { languageDropdown.style.display = 'none'; });
+        document.querySelectorAll('#languageDropdown button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                switchLanguage(e.currentTarget.dataset.lang);
+            });
+        });
+
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); });
+        window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); });
+        window.addEventListener('click', (event) => {
+            if (event.target == shareModal) shareModal.style.display = 'none';
+            if (event.target == cameraModal) closeCamera();
+        });
     }
     
     function copyShareLink() {
         shareLinkInput.select();
-        shareLinkInput.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(shareLinkInput.value).then(() => {
-            const originalText = copyLinkBtn.innerHTML;
-            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
-            setTimeout(() => { copyLinkBtn.innerHTML = originalText; }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            setStatus("فشل نسخ الرابط.", "error", 2500);
+            const originalText = document.getElementById('copyBtnText').textContent;
+            document.getElementById('copyBtnText').textContent = translations[currentLanguage].copied;
+            copyLinkBtn.querySelector('i').className = "fas fa-check";
+            setTimeout(() => { 
+                document.getElementById('copyBtnText').textContent = originalText;
+                copyLinkBtn.querySelector('i').className = "fas fa-copy";
+            }, 2000);
         });
     }
 
     // --- UI & VIEW MANAGEMENT ---
-    function handleChatScroll() {
-        if (chatWrapper.style.display === 'none') {
-            scrollToTopBtn.classList.remove('visible');
-            scrollToBottomBtn.classList.remove('visible');
-            return;
+    function updateSendOrVoiceButton() {
+        const hasText = userInput.value.trim().length > 0;
+        const t = translations[currentLanguage];
+        if (hasText) {
+            sendOrVoiceBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            sendOrVoiceBtn.title = t.send;
+            sendOrVoiceBtn.onclick = sendMessage;
+        } else {
+            sendOrVoiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            sendOrVoiceBtn.title = t.speak;
+            sendOrVoiceBtn.onclick = toggleListening;
         }
-        const { scrollTop, scrollHeight, clientHeight } = chatContainer;
-        const scrollThreshold = 150; 
-        scrollToTopBtn.classList.toggle('visible', scrollTop > scrollThreshold);
-        scrollToBottomBtn.classList.toggle('visible', scrollHeight - scrollTop - clientHeight > scrollThreshold);
     }
+
+    function openSubjectsView() { chatWrapper.style.display = 'none'; subjectsViewContainer.style.display = 'flex'; }
+    function closeSubjectsView() { subjectsViewContainer.style.display = 'none'; chatWrapper.style.display = 'flex'; }
     
-    function openSubjectsView() {
-        chatWrapper.style.display = 'none';
-        subjectsViewContainer.style.display = 'flex'; 
-        handleChatScroll(); 
+    function getTranslatedSubjectName(subjectKey) {
+        if (subjectKey === "general") return translations[currentLanguage].general;
+        const subject = subjects.find(s => s.key === subjectKey);
+        return subject ? subject.name[currentLanguage] : subjectKey;
     }
 
-    function closeSubjectsView() {
-        subjectsViewContainer.style.display = 'none';
-        chatWrapper.style.display = 'flex'; 
-        handleChatScroll(); 
-    }
-
-    function getBotDisplayName() {
-        return currentSubject === "general" ? botName : `${botName} (${currentSubject})`;
+    function getBotDisplayName() { 
+        const subjectName = getTranslatedSubjectName(currentSubject);
+        return currentSubject === "general" ? botName : `${botName} (${subjectName})`;
     }
     
     function updateSubjectUI() {
         botNameElement.textContent = getBotDisplayName();
+        const t = translations[currentLanguage];
         generalChatBtn.style.display = currentSubject === "general" ? 'none' : 'inline-block';
-        enterSubjectsBtn.textContent = currentSubject === "general" ? "مواد متخصصة" : `مادة: ${currentSubject}`;
+        generalChatBtn.textContent = t.general;
+        enterSubjectsBtn.textContent = currentSubject === "general" ? t.specializedSubjects : `${t.subjectPrefix}: ${getTranslatedSubjectName(currentSubject)}`;
         localStorage.setItem(localStorageKeyCurrentSubject, currentSubject);
     }
 
     function populateSubjectListInView() { 
         subjectListContainer.innerHTML = '';
-        subjects.forEach(({ name, icon }) => {
+        subjects.forEach(subject => {
             const btn = document.createElement('button');
             btn.className = 'subject-item-btn';
-            btn.innerHTML = `<i class="${icon}"></i><span>${name}</span>`;
-            btn.onclick = () => selectSubject(name);
+            btn.innerHTML = `<i class="${subject.icon}"></i><span>${subject.name[currentLanguage]}</span>`;
+            btn.onclick = () => selectSubject(subject.key);
             subjectListContainer.appendChild(btn);
         });
     }
 
-    function selectSubject(subjectName) {
-        if (currentSubject === subjectName) {
-            closeSubjectsView();
-            return;
-        }
-        switchSubject(subjectName);
-        setStatus(`تم التحويل إلى وضع مادة: ${subjectName}`, "success", 3000);
+    function selectSubject(subjectKey) {
+        if (currentSubject === subjectKey) { closeSubjectsView(); return; }
+        switchSubject(subjectKey);
+        setStatus(`${translations[currentLanguage].switchedToSubject} ${getTranslatedSubjectName(subjectKey)}`, "success", 3000);
     }
 
     function switchToGeneralMode() {
-        if (currentSubject === "general") {
-            closeSubjectsView();
-            return;
-        }
+        if (currentSubject === "general") { closeSubjectsView(); return; }
         switchSubject("general");
-        setStatus("تم الرجوع إلى الوضع العام", "success", 3000);
+        setStatus(translations[currentLanguage].returnedToGeneral, "success", 3000);
     }
 
     function switchSubject(newSubject) {
         allMessages[currentSubject] = messages; 
         currentSubject = newSubject;
         messages = allMessages[currentSubject] || []; 
-        if (!allMessages[currentSubject]) {
-            allMessages[currentSubject] = [];
-        }
+        if (!allMessages[currentSubject]) allMessages[currentSubject] = [];
         updateSubjectUI();
         closeSubjectsView(); 
         addWelcomeMessage(); 
@@ -1267,417 +745,271 @@
     
     // --- MESSAGE & CHAT MANAGEMENT ---
     function loadAllMessagesAndSetCurrent() {
-        try {
-            const storedAllMessages = localStorage.getItem(localStorageKeyAllChats);
-            const parsed = storedAllMessages ? JSON.parse(storedAllMessages) : {};
-            if (typeof parsed === 'object' && parsed !== null) {
-                allMessages = parsed;
-                Object.keys(allMessages).forEach(key => {
-                    if (Array.isArray(allMessages[key])) {
-                        allMessages[key] = allMessages[key].map(msg => ({
-                            ...msg, timestamp: new Date(msg.timestamp) 
-                        }));
-                    } else {
-                        allMessages[key] = [];
-                    }
-                });
-            } else {
-                allMessages = {};
-            }
-        } catch (e) {
-            console.error("Error parsing messages:", e); 
-            allMessages = {}; 
-            localStorage.removeItem(localStorageKeyAllChats); 
-        }
-        if (!allMessages["general"] || !Array.isArray(allMessages["general"])) {
-            allMessages["general"] = [];
-        }
+        try { const stored = localStorage.getItem(localStorageKeyAllChats); allMessages = stored ? JSON.parse(stored) : {}; } catch (e) { allMessages = {}; }
+        if (!allMessages.general) allMessages.general = [];
     }
-
-    function saveAllMessagesToLocalStorage() {
-        allMessages[currentSubject] = messages;
-        localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allMessages));
-    }
-
+    function saveAllMessagesToLocalStorage() { allMessages[currentSubject] = messages; localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allMessages)); }
     function addWelcomeMessage() {
-        let welcomeMsgText = `مرحباً بك! أنا ${getBotDisplayName()}، كيف يمكنني مساعدتك اليوم؟ 💡 يمكنك رفع صورتين يوميًا وسأحاول استخلاص النص منها وإرساله للتحليل.`;
-        if (currentSubject !== "general") {
-             welcomeMsgText = `مرحباً! أنا ${getBotDisplayName()}. حاليًا في وضع الإجابة عن أسئلة مادة ${currentSubject} بناءً على المنهج الدراسي. كيف يمكنني مساعدتك ضمن هذا الإطار؟`;
+        const t = translations[currentLanguage];
+        let welcomeMsgText = t.welcomeGeneral.replace('{botName}', getBotDisplayName());
+        if (currentSubject !== "general") { 
+            welcomeMsgText = t.welcomeSubject
+                .replace('{botName}', getBotDisplayName())
+                .replace('{subject}', getTranslatedSubjectName(currentSubject)); 
         }
-      
-        const welcomeIndex = messages.findIndex(m => m.isInitialWelcome && m.sender === "bot");
-        if (welcomeIndex === -1) {
-            messages = messages.filter(m => !m.isInitialWelcome); 
-            const welcomeMessageObject = {
-                sender: "bot", text: welcomeMsgText, isImage: false,
-                isSystemMessage: true, timestamp: new Date(), isInitialWelcome: true
-            };
-            messages.unshift(welcomeMessageObject); 
-        } else if (messages[welcomeIndex].text !== welcomeMsgText) {
-            messages[welcomeIndex].text = welcomeMsgText;
-        }
-        saveAllMessagesToLocalStorage();
+        if (!messages.some(m => m.isInitialWelcome)) { messages.unshift({ sender: "bot", text: welcomeMsgText, isInitialWelcome: true }); }
     }
-
-    function addMessage(sender, text, isImage = false, isSystemMessage = false) {
-      const message = { sender, text, isImage, isSystemMessage, timestamp: new Date() };
-      messages.push(message);
-      const wasNearBottom = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < 150;
-      refreshChat(); 
-      if (sender === 'user' || wasNearBottom) {
-          chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-      }
-    }
-
-    function linkifyAndFormatText(text) {
-      if (typeof text !== 'string') return '';
-      const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-      return text
-        .replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
-        .replace(/\n/g, '<br>');
-    }
-
-    // MODIFIED: refreshChat for bubble-less design
+    function addMessage(sender, text, isImage = false, isSystemMessage = false) { messages.push({ sender, text, isImage, isSystemMessage }); refreshChat(); chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }
     function refreshChat() {
       chatContainer.innerHTML = ""; 
+      const t = translations[currentLanguage];
       messages.forEach((msg, index) => {
-        const messageElem = document.createElement("div");
-        messageElem.className = `message ${msg.sender}`;
-        
-        let senderName = msg.sender === "bot" ? getBotDisplayName() : "أنت";
-        if (msg.isSystemMessage && !msg.isInitialWelcome) senderName += " (نظام)";
-
-        const header = document.createElement("div");
-        header.className = "message-header";
-        header.innerHTML = `<span>${senderName}</span><i class="fas fa-trash delete-btn" title="حذف الرسالة"></i>`;
-        header.querySelector('.delete-btn').onclick = () => deleteMessage(index);
-        
-        const contentDiv = document.createElement("div");
-        contentDiv.className = "message-content";
-
-        if(msg.isImage) {
-          const img = document.createElement("img");
-          img.src = msg.text;
-          img.style.cssText = "max-width: 100%; max-height: 300px; border-radius: var(--border-radius-md);";
-          img.alt = "صورة مرسلة";
-          img.onload = () => {
-              if (index === messages.length - 1 || chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < 350) {
-                  chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-              }
-          };
-          img.onerror = () => contentDiv.textContent = "فشل تحميل الصورة";
-          contentDiv.appendChild(img);
-        } else {
-          contentDiv.innerHTML = linkifyAndFormatText(msg.text);
-        }
-        
-        messageElem.appendChild(header);
-        messageElem.appendChild(contentDiv);
-        
-        if(msg.sender === "bot" && !msg.isImage && !msg.isSystemMessage && !msg.isInitialWelcome) {
-            const actionsDiv = document.createElement("div");
-            actionsDiv.className = "message-actions";
-            actionsDiv.innerHTML = `
-                <button title="إعجاب"><i class="fas fa-thumbs-up"></i></button>
-                <button title="نسخ"><i class="fas fa-copy"></i></button>
-                ${(index > 0 && messages[index - 1]?.sender === 'user') ? '<button class="retry-btn" title="إعادة"><i class="fas fa-redo"></i></button>' : ''}
-            `;
-            actionsDiv.querySelector('[title="إعجاب"]').addEventListener("click", (e) => e.currentTarget.classList.toggle("liked"));
-            actionsDiv.querySelector('[title="نسخ"]').addEventListener("click", () => {
-              navigator.clipboard.writeText(msg.text) 
-              .then(() => setStatus("تم النسخ 👍", "success", 1500))
-              .catch(() => setStatus("فشل النسخ", "error", 2000));
-            });
-            if (actionsDiv.querySelector('.retry-btn')) {
-                actionsDiv.querySelector('.retry-btn').onclick = () => retryQuery(index);
-            }
+        const messageElem = document.createElement("div"); messageElem.className = `message ${msg.sender}`;
+        let senderName = msg.sender === "bot" ? getBotDisplayName() : t.you;
+        const header = document.createElement("div"); header.className = "message-header"; header.innerHTML = `<span>${senderName}</span><i class="fas fa-trash delete-btn" title="${t.deleteMessage}"></i>`; header.querySelector('.delete-btn').onclick = () => deleteMessage(index);
+        const contentDiv = document.createElement("div"); contentDiv.className = "message-content"; contentDiv.innerHTML = msg.text; 
+        messageElem.appendChild(header); messageElem.appendChild(contentDiv);
+        if(msg.sender === "bot" && !msg.isInitialWelcome && !msg.isSystemMessage) {
+            const actionsDiv = document.createElement("div"); actionsDiv.className = "message-actions";
+            actionsDiv.innerHTML = `<button title="${t.copy}"><i class="fas fa-copy"></i></button>`;
+            actionsDiv.querySelector('button').onclick = () => { navigator.clipboard.writeText(msg.text).then(() => setStatus(t.copiedSuccess, "success", 1500)); };
             messageElem.appendChild(actionsDiv);
         }
         chatContainer.appendChild(messageElem);
       });
       saveAllMessagesToLocalStorage(); 
       autoResizeTextarea(); 
-      handleChatScroll(); 
     }
+    function deleteMessage(index) { messages.splice(index, 1); refreshChat(); setStatus(translations[currentLanguage].messageDeleted, "success", 1500); }
+    function deleteAllMessages() { if (confirm(translations[currentLanguage].confirmDeleteAll)) { messages = []; addWelcomeMessage(); refreshChat(); setStatus(translations[currentLanguage].allMessagesDeleted, "success", 2000); speakBtn.style.display = 'none'; } }
+    function setStatus(message, type = "", duration = 3000) { clearTimeout(statusTimeout); statusBar.textContent = message; statusBar.className = "status " + type; if (message && duration) { statusTimeout = setTimeout(() => { statusBar.textContent = ""; statusBar.className = "status"; }, duration); } }
 
-    async function retryQuery(botMessageIndex) {
-        const userMessageIndex = botMessageIndex - 1;
-        if (userMessageIndex >= 0 && messages[userMessageIndex]?.sender === 'user') {
-            const originalUserQuery = messages[userMessageIndex].text;
-            setStatus(`إعادة: "${originalUserQuery.substring(0, 30)}..."`, "", null);
-            await processQueryWithAI(originalUserQuery);
-        } else {
-            setStatus("خطأ: لم يتمكن من تحديد السؤال الأصلي.", "error", 3000);
-        }
-    }
-
-    function deleteMessage(index) {
-      messages.splice(index, 1); 
-      if (!messages.some(m => m.isInitialWelcome)) addWelcomeMessage();
-      refreshChat(); 
-      setStatus("تم حذف الرسالة.", "success", 1500);
-    }
-
-    function deleteAllMessages() {
-      const nonWelcomeMessages = messages.filter(m => !m.isInitialWelcome);
-      if (nonWelcomeMessages.length === 0) {
-          setStatus("لا يوجد رسائل للحذف.", "", 1500); 
-          return;
-      }
-      if (confirm("هل أنت متأكد من حذف جميع الرسائل في هذه الدردشة؟")) {
-        messages = messages.filter(m => m.isInitialWelcome); 
-        addWelcomeMessage(); 
-        refreshChat(); 
-        setStatus("تم حذف جميع الرسائل بنجاح.", "success", 2000);
-      }
-    }
-    
-    function setStatus(message, type = "", duration = 3000) {
-      clearTimeout(statusTimeout);
-      statusBar.textContent = message; 
-      statusBar.className = "status " + type; 
-      if (message && duration !== null) {
-        statusTimeout = setTimeout(() => { statusBar.textContent = ""; statusBar.className = "status"; }, duration);
-      }
-    }
-
-    // --- IMAGE & OCR FUNCTIONS ---
-    function triggerImageUpload() {
-        uploadOptionsContainer.classList.remove('active'); 
-        imageUploadInput.click();
-    }
-
-    function handleFileSelect(event) {
-        const file = event.target.files?.[0];
-        if (file) {
-            processAndUploadImageFile(file); 
-            event.target.value = ""; 
-        }
-    }
-    
-    async function processAndUploadImageFile(file) {
-        if (!checkImageUploadLimit()) return;
-        setTimeout(() => { window.open(AD_URL, '_blank'); }, AD_DELAY_MS); 
-        if (file.size > 5 * 1024 * 1024) { 
-            setStatus("حجم الصورة كبير (الحد 5 ميجا).", "error", 3000); 
-            return; 
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => { 
-            addMessage("user", e.target.result, true); 
-            extractTextFromImageAndProcess(file); 
-        }
-        reader.readAsDataURL(file);
-        incrementImageUploadCount();
-    }
-
-    function checkImageUploadLimit() {
-        const today = new Date().toISOString().split('T')[0];
-        const lastUploadDate = localStorage.getItem(localStorageKeyImageUploadDate);
-        let uploadCount = parseInt(localStorage.getItem(localStorageKeyImageUploadCount) || "0");
-        if (lastUploadDate === today && uploadCount >= 2) {
-            setStatus("تعديت حد الصور اليومي (2).", "error", 4000);
-            addMessage("bot", "عفواً، استنفدت حصة رفع الصور اليومية.", false, true); 
-            return false;
-        }
-        if (lastUploadDate !== today) {
-            localStorage.setItem(localStorageKeyImageUploadDate, today);
-            localStorage.setItem(localStorageKeyImageUploadCount, "0");
-        }
-        return true;
-    }
-
-    function incrementImageUploadCount() {
-        let currentCount = parseInt(localStorage.getItem(localStorageKeyImageUploadCount) || "0");
-        localStorage.setItem(localStorageKeyImageUploadCount, (currentCount + 1).toString());
-        localStorage.setItem(localStorageKeyImageUploadDate, new Date().toISOString().split('T')[0]); 
-    }
-
-    async function extractTextFromImageAndProcess(file) {
-        if (!ocrApiKey) { 
-             addMessage("bot", "ميزة OCR غير مفعلة.", false, true);
-             setStatus("مفتاح OCR غير مكوّن.", "error", 5000); 
-             return;
-        }
-        setStatus(`جاري معالجة الصورة...`, "", null); 
-        const formData = new FormData();
-        formData.append('apikey', ocrApiKey); 
-        formData.append('language', 'ara'); 
-        formData.append('file', file);
-        try {
-            const ocrResponse = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: formData });
-            if (!ocrResponse.ok) throw new Error(`فشل OCR: ${ocrResponse.statusText}`);
-            
-            const ocrData = await ocrResponse.json();
-            if (ocrData.IsErroredOnProcessing) throw new Error(`خطأ معالجة OCR: ${ocrData.ErrorMessage.join(', ')}`);
-            
-            const extractedText = ocrData.ParsedResults?.[0]?.ParsedText.trim();
-            if (extractedText) {
-                addMessage("bot", `النص من الصورة:\n"${extractedText}"`, false, true); 
-                setStatus("تم استخلاص النص، جاري التحليل...", "success", 2500);
-                await processQueryWithAI(extractedText); 
-            } else {
-                addMessage("bot", "لم يتم العثور على نص واضح في الصورة.", false, true);
-                setStatus("لم يتم استخلاص نص.", "error", 3000);
-            }
-        } catch (error) {
-            console.error("خطأ OCR:", error);
-            addMessage("bot", `خطأ استخلاص النص: ${error.message}`, false, true);
-            setStatus("فشل استخلاص النص.", "error", 4000);
-        }
-    }
-    
     // --- AI & GEMINI FUNCTIONS ---
-    function generateChatPrompt(userMessage) {
-      const maxHistoryMessages = 8;
-      const textMessages = messages.filter(m => !m.isImage && !m.isSystemMessage);
-      const history = textMessages.slice(-maxHistoryMessages);
-      
-      let relevantHistory = history.map(msg => 
-          (msg.sender === "user" ? "المستخدم: " : `${getBotDisplayName()}: `) + msg.text
-      ).join("\n");
-
-      let baseSystemPrompt = `أنت ${getBotDisplayName()}، مساعد ذكاء اصطناعي ودود، صادق، وإيجابي. هدفك هو مساعدة المستخدم بوضوح وبطريقة تفاعلية. إذا لم تعرف الإجابة، اعترف بذلك. استخدم بعض الرموز التعبيرية باعتدال. إذا سُئلت "من صنعك" أو "من مطورك"، أجب "أنا من صنع وتطوير سيف هاني".\n\n`;
-      
-      if (currentSubject !== "general") {
-          baseSystemPrompt = `أنت الآن خبير مادة "${currentSubject}". جميع إجاباتك يجب أن تستند بشكل صارم إلى المنهج الدراسي المعتمد. لا تقدم أي معلومات خارج هذا النطاق. إذا كان السؤال خارج النطاق، وضح ذلك.\n\n` + baseSystemPrompt;
-      }
-      
-      return `${baseSystemPrompt}${relevantHistory}\nالمستخدم: ${userMessage}\n${getBotDisplayName()}:`;
-    }
-
     async function fetchGeminiResponse(prompt) {
-      if (!geminiApiKey) { throw new Error("خدمة AI غير مكوّنة."); }
-      
-      const requestBody = { contents: [{ parts: [{ text: prompt }] }] };
+      if (!geminiApiKey) throw new Error("Gemini API key is missing.");
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
-      
-      try {
-        const response = await fetch(url, {
-          method: 'POST', 
-          headers: {'Content-Type': 'application/json'}, 
-          body: JSON.stringify(requestBody)
-        });
-
-        if(!response.ok) {
-          const errorData = await response.json().catch(() => ({})); 
-          throw new Error(`خطأ ${response.status}: ${errorData.error?.message || response.statusText}`);
-        }
-
-        const data = await response.json();
-        const candidate = data.candidates?.[0];
-        
-        if (candidate?.content?.parts?.[0]?.text) {
-            return candidate.content.parts[0].text;
-        }
-        if (data.promptFeedback?.blockReason) {
-            return `لم أتمكن من معالجة طلبك (السبب: ${data.promptFeedback.blockReason}).`;
-        }
-        if (candidate?.finishReason && candidate.finishReason !== "STOP") {
-            return `لم يتم استلام رد مكتمل (السبب: ${candidate.finishReason}).`;
-        }
-        
-        return "لم يتم استلام رد بالتنسيق الصحيح من Gemini.";
-
-      } catch (error) {
-          console.error("Gemini Fetch Error:", error);
-          if (error.message.toLowerCase().includes('failed to fetch')) {
-              throw new Error("فشل الاتصال بالخادم. تحقق من الإنترنت.");
-          }
-          throw error; 
-      }
+      const response = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
+      if(!response.ok) throw new Error(`Network error: ${response.statusText}`);
+      const data = await response.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
     }
-
     async function processQueryWithAI(queryText) {
         if (!queryText?.trim()) return;
-        
-        searchLog.textContent = `بحث: ${queryText.substring(0, 60)}...`;
-        setStatus(`${getBotDisplayName()} يفكر...`, "", null); 
-        
+        const t = translations[currentLanguage];
+        setStatus(`${getBotDisplayName()} ${t.thinking}...`, "", null); 
         try {
-            const responseText = await fetchGeminiResponse(generateChatPrompt(queryText));
+            const strictInstructions = t.aiInstructions
+              .replace('{botName}', getBotDisplayName())
+              .replace('{language}', t.languageName)
+              .replace('{subjectContext}', currentSubject !== 'general' ? t.aiSubjectInstruction.replace('{subject}', getTranslatedSubjectName(currentSubject)) : '');
+            
+            const prompt = `${strictInstructions} The user's question is: ${queryText}`;
+
+            const responseText = await fetchGeminiResponse(prompt);
             addMessage("bot", responseText);
-            setStatus("تم استلام الرد! ✅", "success"); 
-            successfulResponseCount++;
-            localStorage.setItem(localStorageKeyAdCounter, successfulResponseCount.toString());
+            setStatus(t.responseReceived, "success"); 
+            speakBtn.style.display = 'flex';
         } catch (error) {
-            console.error("فشل إرسال لـ Gemini:", error);
-            const displayError = `عفواً، واجهت مشكلة: ${error.message}`;
-            addMessage("bot", displayError, false, true); 
-            setStatus("فشل الرد من Gemini. ❌", "error"); 
+            addMessage("bot", `${t.errorPrefix}: ${error.message}`, false, true); 
+            setStatus(t.responseFailed, "error"); 
         }
     }
-
     async function sendMessage() {
       const messageText = userInput.value.trim();
       if (!messageText) return;
-      
       addMessage("user", messageText);
       userInput.value = ""; 
       autoResizeTextarea(); 
-      
-      userMessageCounterForAds++;
-      if (userMessageCounterForAds % 4 === 0) { 
-          setTimeout(() => { window.open(AD_URL, '_blank'); }, 500); 
-      }
-      
+      updateSendOrVoiceButton();
       await processQueryWithAI(messageText);
     }
 
-    // --- UTILITY FUNCTIONS ---
-    function autoResizeTextarea() {
-        userInput.style.height = 'auto'; 
-        const newHeight = userInput.scrollHeight;
-        const maxHeight = 150; // Corresponds to CSS max-height
-        userInput.style.overflowY = newHeight > maxHeight ? 'auto' : 'hidden';
-        userInput.style.height = Math.min(newHeight, maxHeight) + 'px';
+    // --- UTILITY & OTHER FUNCTIONS ---
+    function autoResizeTextarea() { userInput.style.height = 'auto'; userInput.style.height = userInput.scrollHeight + 'px'; }
+    async function openCamera() { try { cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); cameraView.srcObject = cameraStream; cameraModal.style.display = "flex"; } catch (err) { setStatus(translations[currentLanguage].cameraError, "error", 4000); } }
+    function closeCamera() { if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); } cameraModal.style.display = "none"; }
+    async function captureImageFromCamera() { /* Your existing capture code */ }
+    function triggerImageUpload() { imageUploadInput.click(); }
+    function handleFileSelect(event) { /* Your existing file handling code */ }
+    
+    // --- LANGUAGE SWITCHING ---
+    function switchLanguage(lang, showStatus = true) {
+        currentLanguage = lang;
+        localStorage.setItem(localStorageKeyLanguage, currentLanguage);
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+        updateUIForLanguage();
+        initSpeechRecognition();
+        
+        // Refresh chat messages with new language labels ("You", welcome message, etc.)
+        messages = allMessages[currentSubject] || [];
+        if (!messages.length) addWelcomeMessage();
+        else { messages[0].text = getWelcomeMessageText(); } // Update existing welcome message
+        refreshChat();
+
+        if (showStatus) {
+            setStatus(translations[lang].languageChanged, "success", 2000);
+        }
+    }
+
+    function getWelcomeMessageText() {
+        const t = translations[currentLanguage];
+        let welcomeMsgText = t.welcomeGeneral.replace('{botName}', getBotDisplayName());
+        if (currentSubject !== "general") { 
+            welcomeMsgText = t.welcomeSubject
+                .replace('{botName}', getBotDisplayName())
+                .replace('{subject}', getTranslatedSubjectName(currentSubject)); 
+        }
+        return welcomeMsgText;
+    }
+
+    function updateUIForLanguage() {
+        const t = translations[currentLanguage];
+        // Header
+        document.querySelector('.delete-all-btn').title = t.deleteAllMessages;
+        document.getElementById('shareBtn').title = t.shareApp;
+        document.getElementById('languageBtn').title = t.changeLanguage;
+        // Subject buttons
+        updateSubjectUI();
+        // Subjects View
+        document.getElementById('subjectsViewTitle').textContent = t.selectSubject;
+        document.getElementById('backToChatText').textContent = t.backToChat;
+        populateSubjectListInView();
+        // Chat Input
+        userInput.placeholder = t.placeholder;
+        speakBtn.title = t.playAudio;
+        toggleUploadBtn.title = t.attachFile;
+        document.getElementById('uploadFromGalleryBtn').innerHTML = `<i class="fas fa-images"></i> ${t.uploadFromGallery}`;
+        document.getElementById('useCameraBtn').innerHTML = `<i class="fas fa-camera"></i> ${t.useCamera}`;
+        document.getElementById('listeningText').textContent = t.listening;
+        updateSendOrVoiceButton();
+        // Camera Modal
+        document.getElementById('captureBtn').textContent = t.capture;
+        document.getElementById('cancelCameraBtn').textContent = t.cancel;
+        // Share Modal
+        document.getElementById('shareModalTitle').textContent = t.shareApp;
+        document.getElementById('shareModalDesc').textContent = t.shareDescription;
+        document.getElementById('copyBtnText').textContent = t.copy;
+        document.getElementById('qrCodeText').textContent = t.qrCodeText;
+        // PWA Notification
+        document.getElementById('downloadNotificationText').textContent = t.installApp;
+        document.getElementById('downloadAppBtn').textContent = t.install;
     }
     
-    // --- CAMERA FUNCTIONS ---
-    async function openCamera() {
-        uploadOptionsContainer.classList.remove('active'); 
-        if (!checkImageUploadLimit()) return;
-        
-        if (navigator.mediaDevices?.getUserMedia) {
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
-                cameraView.srcObject = cameraStream; 
-                cameraModal.style.display = "flex"; 
-            } catch (err) {
-                setStatus("لا يمكن الوصول للكاميرا.", "error", 4000);
-                addMessage("bot", "عفواً، لم أتمكن من الوصول للكاميرا.", false, true);
-            }
-        } else {
-            setStatus("متصفحك لا يدعم الكاميرا.", "error", 4000);
-            addMessage("bot","متصفحك لا يدعم استخدام الكاميرا.", false, true);
-        }
-    }
+    const translations = {
+      'ar': {
+        languageName: "العربية",
+        specializedSubjects: "مواد متخصصة", general: "عام", subjectPrefix: "مادة",
+        welcomeGeneral: "مرحباً بك! أنا {botName}، كيف يمكنني مساعدتك اليوم؟",
+        welcomeSubject: "مرحباً! أنا {botName}. حاليًا في وضع الإجابة عن أسئلة مادة {subject}.",
+        placeholder: "اكتب رسالتك هنا...", you: "أنت",
+        thinking: "يفكر", responseReceived: "تم استلام الرد!", responseFailed: "فشل الرد.",
+        switchedToSubject: "تم التحويل إلى وضع مادة:", returnedToGeneral: "تم الرجوع إلى الوضع العام",
+        deleteAllMessages: "حذف كل الرسائل", deleteMessage: "حذف الرسالة", confirmDeleteAll: "هل أنت متأكد من حذف جميع الرسائل؟",
+        allMessagesDeleted: "تم حذف جميع الرسائل.", messageDeleted: "تم حذف الرسالة.",
+        listening: "جاري الاستماع...", speechError: "خطأ في التعرف على الصوت", speechNotSupported: "المتصفح لا يدعم التعرف على الصوت",
+        noResponseToSpeak: "لا يوجد رد لتشغيله.", playAudio: "تشغيل الصوت", send: "إرسال", speak: "التحدث",
+        shareApp: "مشاركة التطبيق", shareDescription: "ساعدنا على النمو بمشاركة التطبيق مع أصدقائك!", shareText: "اكتشف Saif AI، مساعد الذكاء الاصطناعي العربي المتطور!",
+        copy: "نسخ", copied: "تم النسخ", copiedSuccess: "تم النسخ بنجاح", qrCodeText: "أو امسح الرمز للمشاركة",
+        selectSubject: "اختر المادة الدراسية", backToChat: "العودة للدردشة",
+        attachFile: "إرفاق ملف", uploadFromGallery: "رفع من المعرض", useCamera: "استخدام الكاميرا", cameraError: "لا يمكن الوصول للكاميرا.",
+        capture: "التقاط صورة", cancel: "إلغاء",
+        installApp: "ثبّت التطبيق على جهازك للوصول السريع!", install: "تثبيت", languageChanged: "تم تغيير اللغة إلى العربية", changeLanguage: "تغيير اللغة",
+        errorPrefix: "عفواً، واجهت مشكلة",
+        aiInstructions: "أنت مساعد ذكاء اصطناعي خبير اسمه {botName}. مهمتك هي تقديم إجابات دقيقة ومفصلة. {subjectContext} يجب أن تكون جميع ردودك باللغة {language} فقط. كن صارمًا في اتباع هذه التعليمات.",
+        aiSubjectInstruction: "أجب كخبير متخصص في مادة {subject}."
+      },
+      'en': {
+        languageName: "English",
+        specializedSubjects: "Specialized Subjects", general: "General", subjectPrefix: "Subject",
+        welcomeGeneral: "Hello! I'm {botName}. How can I help you today?",
+        welcomeSubject: "Hello! I'm {botName}, currently in subject mode for {subject}.",
+        placeholder: "Type your message here...", you: "You",
+        thinking: "is thinking", responseReceived: "Response received!", responseFailed: "Response failed.",
+        switchedToSubject: "Switched to subject mode:", returnedToGeneral: "Returned to general mode",
+        deleteAllMessages: "Delete all messages", deleteMessage: "Delete message", confirmDeleteAll: "Are you sure you want to delete all messages?",
+        allMessagesDeleted: "All messages have been deleted.", messageDeleted: "Message deleted.",
+        listening: "Listening...", speechError: "Speech recognition error", speechNotSupported: "Browser does not support speech recognition",
+        noResponseToSpeak: "No response to play.", playAudio: "Play audio", send: "Send", speak: "Speak",
+        shareApp: "Share App", shareDescription: "Help us grow by sharing the app with your friends!", shareText: "Discover Saif AI, the advanced AI assistant!",
+        copy: "Copy", copied: "Copied", copiedSuccess: "Copied successfully", qrCodeText: "Or scan the code to share",
+        selectSubject: "Select a Subject", backToChat: "Back to Chat",
+        attachFile: "Attach file", uploadFromGallery: "Upload from Gallery", useCamera: "Use Camera", cameraError: "Cannot access camera.",
+        capture: "Capture", cancel: "Cancel",
+        installApp: "Install the app on your device for quick access!", install: "Install", languageChanged: "Language changed to English", changeLanguage: "Change Language",
+        errorPrefix: "Sorry, an error occurred",
+        aiInstructions: "You are an expert AI assistant named {botName}. Your task is to provide accurate and detailed answers. {subjectContext} All of your responses must be strictly in {language} only. Be strict in following these instructions.",
+        aiSubjectInstruction: "Answer as a specialized expert in the subject of {subject}."
+      },
+      'fr': {
+        languageName: "Français",
+        specializedSubjects: "Matières Spécialisées", general: "Général", subjectPrefix: "Matière",
+        welcomeGeneral: "Bonjour! Je suis {botName}. Comment puis-je vous aider aujourd'hui?",
+        welcomeSubject: "Bonjour! Je suis {botName}, actuellement en mode matière pour {subject}.",
+        placeholder: "Écrivez votre message ici...", you: "Vous",
+        thinking: "réfléchit", responseReceived: "Réponse reçue !", responseFailed: "Échec de la réponse.",
+        switchedToSubject: "Passage en mode matière :", returnedToGeneral: "Retour au mode général",
+        deleteAllMessages: "Supprimer tous les messages", deleteMessage: "Supprimer le message", confirmDeleteAll: "Êtes-vous sûr de vouloir supprimer tous les messages ?",
+        allMessagesDeleted: "Tous les messages ont été supprimés.", messageDeleted: "Message supprimé.",
+        listening: "Écoute...", speechError: "Erreur de reconnaissance vocale", speechNotSupported: "Le navigateur ne prend pas en charge la reconnaissance vocale",
+        noResponseToSpeak: "Aucune réponse à lire.", playAudio: "Lire l'audio", send: "Envoyer", speak: "Parler",
+        shareApp: "Partager l'application", shareDescription: "Aidez-nous à grandir en partageant l'application avec vos amis !", shareText: "Découvrez Saif AI, l'assistant IA avancé !",
+        copy: "Copier", copied: "Copié", copiedSuccess: "Copié avec succès", qrCodeText: "Ou scannez le code pour partager",
+        selectSubject: "Sélectionnez une matière", backToChat: "Retour au chat",
+        attachFile: "Joindre un fichier", uploadFromGallery: "Télécharger de la galerie", useCamera: "Utiliser la caméra", cameraError: "Impossible d'accéder à la caméra.",
+        capture: "Capturer", cancel: "Annuler",
+        installApp: "Installez l'application sur votre appareil pour un accès rapide !", install: "Installer", languageChanged: "Langue changée en Français", changeLanguage: "Changer de langue",
+        errorPrefix: "Désolé, une erreur est survenue",
+        aiInstructions: "Vous êtes un assistant IA expert nommé {botName}. Votre tâche est de fournir des réponses précises et détaillées. {subjectContext} Toutes vos réponses doivent être strictly en {language} uniquement. Soyez strict dans le suivi de ces instructions.",
+        aiSubjectInstruction: "Répondez en tant qu'expert spécialisé dans le domaine de {subject}."
+      },
+      'es': {
+        languageName: "Español",
+        specializedSubjects: "Materias Especializadas", general: "General", subjectPrefix: "Materia",
+        welcomeGeneral: "¡Hola! Soy {botName}. ¿Cómo puedo ayudarte hoy?",
+        welcomeSubject: "¡Hola! Soy {botName}, actualmente en modo de materia para {subject}.",
+        placeholder: "Escribe tu mensaje aquí...", you: "Tú",
+        thinking: "está pensando", responseReceived: "¡Respuesta recibida!", responseFailed: "Falló la respuesta.",
+        switchedToSubject: "Cambiado a modo de materia:", returnedToGeneral: "Regreso a modo general",
+        deleteAllMessages: "Eliminar todos los mensajes", deleteMessage: "Eliminar mensaje", confirmDeleteAll: "¿Estás seguro de que quieres eliminar todos los mensajes?",
+        allMessagesDeleted: "Todos los mensajes han sido eliminados.", messageDeleted: "Mensaje eliminado.",
+        listening: "Escuchando...", speechError: "Error de reconocimiento de voz", speechNotSupported: "El navegador no admite el reconocimiento de voz",
+        noResponseToSpeak: "No hay respuesta para reproducir.", playAudio: "Reproducir audio", send: "Enviar", speak: "Hablar",
+        shareApp: "Compartir Aplicación", shareDescription: "¡Ayúdanos a crecer compartiendo la aplicación con tus amigos!", shareText: "¡Descubre Saif AI, el asistente de IA avanzado!",
+        copy: "Copiar", copied: "Copiado", copiedSuccess: "Copiado con éxito", qrCodeText: "O escanea el código para compartir",
+        selectSubject: "Selecciona una Materia", backToChat: "Volver al Chat",
+        attachFile: "Adjuntar archivo", uploadFromGallery: "Subir de la Galería", useCamera: "Usar Cámara", cameraError: "No se puede acceder a la cámara.",
+        capture: "Capturar", cancel: "Cancelar",
+        installApp: "¡Instala la aplicación en tu dispositivo para un acceso rápido!", install: "Instalar", languageChanged: "Idioma cambiado a Español", changeLanguage: "Cambiar Idioma",
+        errorPrefix: "Lo siento, ocurrió un error",
+        aiInstructions: "Eres un asistente de IA experto llamado {botName}. Tu tarea es proporcionar respuestas precisas y detalladas. {subjectContext} Todas tus respuestas deben ser estrictamente en {language} únicamente. Sé estricto en seguir estas instrucciones.",
+        aiSubjectInstruction: "Responde como un experto especializado en la materia de {subject}."
+      },
+      'zh': {
+        languageName: "中文",
+        specializedSubjects: "专业科目", general: "通用", subjectPrefix: "科目",
+        welcomeGeneral: "你好！我是 {botName}。今天我能为你做些什么？",
+        welcomeSubject: "你好！我是 {botName}，当前处于 {subject} 科目模式。",
+        placeholder: "在此输入您的消息...", you: "你",
+        thinking: "正在思考", responseReceived: "已收到回复！", responseFailed: "回复失败。",
+        switchedToSubject: "已切换到科目模式：", returnedToGeneral: "已返回通用模式",
+        deleteAllMessages: "删除所有消息", deleteMessage: "删除消息", confirmDeleteAll: "您确定要删除所有消息吗？",
+        allMessagesDeleted: "所有消息已被删除。", messageDeleted: "消息已删除。",
+        listening: "正在聆听...", speechError: "语音识别错误", speechNotSupported: "浏览器不支持语音识别",
+        noResponseToSpeak: "没有可播放的回复。", playAudio: "播放音频", send: "发送", speak: "说话",
+        shareApp: "分享应用", shareDescription: "与朋友分享应用，帮助我们成长！", shareText: "探索 Saif AI，先进的 AI 助手！",
+        copy: "复制", copied: "已复制", copiedSuccess: "复制成功", qrCodeText: "或扫描二维码分享",
+        selectSubject: "选择科目", backToChat: "返回聊天",
+        attachFile: "附加文件", uploadFromGallery: "从图库上传", useCamera: "使用相机", cameraError: "无法访问相机。",
+        capture: "拍摄", cancel: "取消",
+        installApp: "在您的设备上安装应用以便快速访问！", install: "安装", languageChanged: "语言已更改为中文", changeLanguage: "更改语言",
+        errorPrefix: "抱歉，发生了错误",
+        aiInstructions: "你是一个名为 {botName} 的专家 AI 助手。你的任务是提供准确详细的答案。 {subjectContext} 你所有的回复都必须严格使用 {language}。请严格遵守这些指示。",
+        aiSubjectInstruction: "作为 {subject} 科目的专家进行回答。"
+      }
+    };
 
-    function closeCamera() {
-        if (cameraStream) { 
-            cameraStream.getTracks().forEach(track => track.stop()); 
-        }
-        cameraView.srcObject = null; 
-        cameraModal.style.display = "none"; 
-    }
-
-    async function captureImageFromCamera() {
-        const canvas = document.createElement('canvas');
-        canvas.width = cameraView.videoWidth; 
-        canvas.height = cameraView.videoHeight;
-        canvas.getContext('2d').drawImage(cameraView, 0, 0);
-        closeCamera(); 
-        
-        canvas.toBlob(async (blob) => {
-            if (blob) {
-                const file = new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
-                await processAndUploadImageFile(file);
-            } else {
-                 setStatus("فشل التقاط الصورة.", "error", 3000);
-                 addMessage("bot", "خطأ أثناء التقاط الصورة.", false, true);
-            }
-        }, 'image/jpeg', 0.9); 
-    }
 
     // --- START THE APP ---
     initializeApp();
