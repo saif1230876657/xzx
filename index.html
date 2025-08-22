@@ -61,7 +61,6 @@
       --border-radius-xl: 24px;
 
       --header-height: 52px;
-      --chat-input-area-height: 60px;
     }
 
     * {
@@ -129,17 +128,19 @@
     .close-btn:hover { opacity: 1; transform: rotate(90deg) scale(1.1); }
 
     .header { 
-      background: var(--bg-surface);
+      background: transparent;
       padding: 0.4rem 0.8rem; 
       display: flex;
       align-items: center;
-      justify-content: space-between; /* This is key */
-      border-bottom: 1px solid var(--border-color);
-      box-shadow: var(--shadow-sm);
+      justify-content: space-between;
       flex-shrink: 0; 
       z-index: 10; 
       height: var(--header-height);
-      direction: rtl; /* <<< THIS IS THE FIX: Always RTL */
+      direction: rtl; /* Always RTL */
+      position: absolute; /* Floating Header */
+      top: 0;
+      left: 0;
+      right: 0;
     }
 
     .header-group {
@@ -209,7 +210,7 @@
         display: none;
         position: absolute;
         top: calc(100% + 5px);
-        left: 0; /* Align to the left in RTL context */
+        left: 0;
         background-color: var(--bg-surface-raised);
         border: 1px solid var(--border-color);
         border-radius: var(--border-radius-md);
@@ -227,12 +228,19 @@
         color: var(--text-primary);
         cursor: pointer;
         font-size: 0.9rem;
-        text-align: right; /* Text aligns right for Arabic menu */
+        text-align: right;
     }
     #languageDropdown button:hover { background-color: var(--primary-color); color: var(--text-on-primary); }
 
 
-    .chat-wrapper, #subjectsViewContainer { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+    .chat-wrapper { 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        overflow: hidden; 
+        min-height: 0;
+        padding-top: var(--header-height); /* Space for floating header */
+    }
     
     #subjectsViewContainer { background-color: var(--bg-main); padding: 1.5rem; display: none; align-items: center; }
     .subjects-view-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
@@ -268,48 +276,135 @@
     .message-actions button { background: var(--bg-surface-raised); border: 1px solid var(--border-color); cursor: pointer; font-size: 0.85rem; padding: 5px 9px; color: var(--text-secondary); transition: all 0.25s ease; border-radius: var(--border-radius-sm); display: flex; align-items: center; gap: 5px; }
     .message-actions button:hover { color: var(--text-on-primary); background-color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-glow-color); }
     
-    .chat-input-area { flex-shrink: 0; background: transparent; position: relative; }
-    .chat-input-area::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 150px; background: linear-gradient(to top, var(--bg-main) 20%, transparent 100%); pointer-events: none; z-index: 4; }
-    .chat-input { display: flex; align-items: flex-end; padding: 0.8rem 1rem; gap: 0.8rem; position: relative; z-index: 5; min-height: var(--chat-input-area-height); max-width: 800px; margin: 0 auto; }
-    .chat-input textarea { flex: 1; padding: 0.8rem 1.1rem; border: 1px solid var(--border-color); resize: none; font-size: 0.95rem; outline: none; border-radius: var(--border-radius-xl); background: var(--bg-input); color: var(--text-primary); max-height: 150px; line-height: 1.6; transition: border-color 0.25s ease, box-shadow 0.25s ease; }
-     .chat-input textarea::placeholder { color: var(--text-secondary); opacity: 0.6; }
-     .chat-input textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-glow-color); }
-    .chat-input-btn { background: var(--primary-color); border: none; color: var(--text-on-primary); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; transition: all 0.25s ease; flex-shrink: 0; box-shadow: var(--shadow-sm); }
-    .chat-input-btn:hover { background: var(--primary-hover-color); transform: scale(1.08); box-shadow: 0 0 15px var(--primary-glow-color); }
-    #speakBtn { background: var(--bg-surface-raised); color: var(--text-secondary); }
-    #speakBtn:hover { background: var(--bg-surface); color: var(--text-primary); }
+    .chat-input-area { 
+        flex-shrink: 0; 
+        background: transparent; 
+        position: relative; 
+        padding: 0.8rem 1rem;
+    }
+    .chat-input-area::before { 
+        content: ''; 
+        position: absolute; 
+        bottom: 0; 
+        left: 0; 
+        right: 0; 
+        height: 150px; 
+        background: linear-gradient(to top, var(--bg-main) 20%, transparent 100%); 
+        pointer-events: none; 
+        z-index: 4; 
+    }
+    .chat-input-wrapper {
+        position: relative;
+        z-index: 5;
+        max-width: 800px;
+        margin: 0 auto;
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-xl);
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        display: flex;
+        align-items: flex-end; /* Align buttons at the bottom */
+    }
+    .chat-input-wrapper:focus-within {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-glow-color);
+    }
+    .chat-input-wrapper textarea { 
+        flex: 1; 
+        padding: 0.8rem 48px; /* Room for buttons on both sides */
+        border: none;
+        resize: none; 
+        font-size: 0.95rem; 
+        outline: none; 
+        background: transparent; 
+        color: var(--text-primary); 
+        max-height: 150px; 
+        line-height: 1.6; 
+    }
+    .chat-input-wrapper textarea::placeholder { color: var(--text-secondary); opacity: 0.6; }
+
+    .chat-input-btn { 
+        background: transparent; 
+        border: none; 
+        color: var(--text-secondary); 
+        width: 44px; 
+        height: 44px; 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        cursor: pointer; 
+        font-size: 1.1rem; 
+        transition: all 0.25s ease; 
+        flex-shrink: 0;
+        position: absolute;
+        bottom: 0px;
+    }
+    .chat-input-btn:hover { color: var(--text-primary); transform: scale(1.1); }
+    
+    #toggleUploadBtn { right: 0; }
+    html[dir="ltr"] #toggleUploadBtn { left: 0; right: auto; }
+    
+    #sendOrVoiceBtn { left: 0; }
+    html[dir="ltr"] #sendOrVoiceBtn { right: 0; left: auto; }
+    #sendOrVoiceBtn:hover { color: var(--primary-hover-color); }
+    
+    #speakBtn {
+        position: absolute;
+        bottom: 0px;
+        left: 48px;
+        display: none; /* Hidden by default */
+    }
+    html[dir="ltr"] #speakBtn { right: 48px; left: auto; }
+
     .voice-indicator { display: none; align-items: center; justify-content: center; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: var(--bg-surface-raised); color: var(--text-primary); padding: 8px 16px; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); gap: 8px; z-index: 10; opacity: 0; transition: opacity 0.3s ease; }
     .voice-indicator.active { display: flex; opacity: 1; }
     .voice-indicator i { color: var(--error-color); animation: pulseMic 1.5s infinite ease-in-out; }
     @keyframes pulseMic { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-    .chat-input-btn.recording { background-color: var(--error-color); }
+    .chat-input-btn.recording { color: var(--error-color); }
     
-    #uploadOptionsContainer { display: flex; flex-direction: column; gap: 8px; background-color: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 10px; position: absolute; bottom: calc(100% + 5px); left: 60px; z-index: 10; box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(10px) scale(0.95); transition: all 0.25s ease-out; }
+    #uploadOptionsContainer { display: flex; flex-direction: column; gap: 8px; background-color: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 10px; position: absolute; bottom: calc(100% + 5px); right: 5px; z-index: 10; box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(10px) scale(0.95); transition: all 0.25s ease-out; }
+    html[dir="ltr"] #uploadOptionsContainer { left: 5px; right: auto; }
     #uploadOptionsContainer.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
     #uploadOptionsContainer button { background: var(--bg-input); color: var(--text-secondary); border: 1px solid var(--border-color-light); border-radius: var(--border-radius-sm); padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; transition: all 0.2s ease; text-align: right; width: 100%; white-space: nowrap; }
+    html[dir="ltr"] #uploadOptionsContainer button { text-align: left; }
     #uploadOptionsContainer button:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); }
-    .status { text-align: center; padding: 0.4rem; font-size: 0.8rem; background-color: var(--bg-surface); color: var(--text-secondary); border-top: 1px solid var(--border-color); transition: color 0.3s ease; font-weight: 500; }
-    a { color: var(--primary-color); text-decoration: none; word-break: break-all; font-weight: 500; }
     
+    .status { text-align: center; padding: 0.4rem; font-size: 0.8rem; background-color: var(--bg-surface); color: var(--text-secondary); border-top: 1px solid var(--border-color); transition: color 0.3s ease; font-weight: 500; }
+    
+    /* NEW: Suggestions Feature */
+    #suggestionsContainer {
+        display: none; /* Hidden by default */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 12px;
+        padding: 0 1rem 1rem;
+        max-width: 800px;
+        margin: auto;
+    }
+    .suggestion-btn {
+        background-color: var(--bg-surface-raised);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        padding: 12px;
+        font-size: 0.9rem;
+        border-radius: var(--border-radius-md);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: right;
+    }
+    html[dir="ltr"] .suggestion-btn { text-align: left; }
+    .suggestion-btn:hover {
+        background-color: var(--bg-input);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
     .camera-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .camera-modal-content { background-color: var(--bg-surface); padding: 25px; border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); text-align: center; max-width: 90%; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: var(--shadow-lg); }
     
     /* --- Redesigned Share Modal --- */
     .share-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-    .share-modal-content {
-        max-width: 450px;
-        width: 90%;
-        background: #1c1c1c;
-        padding: 30px;
-        border: 1px solid var(--border-color-light);
-        border-radius: var(--border-radius-lg);
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative; 
-        box-shadow: var(--shadow-lg);
-    }
+    .share-modal-content { max-width: 450px; width: 90%; background: #1c1c1c; padding: 30px; border: 1px solid var(--border-color-light); border-radius: var(--border-radius-lg); text-align: center; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: var(--shadow-lg); }
     .share-modal-content h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
     .share-modal-content > p { font-size: 1rem; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.6; }
     .share-link-container { display: flex; margin-bottom: 20px; width: 100%; }
@@ -333,10 +428,11 @@
     @media (max-width: 480px) { 
       .header h1 { font-size: 0.95rem; }
       .message { max-width: 95%; }
-      .chat-input { gap: 0.5rem; padding: 0.6rem; }
+      .chat-input-wrapper textarea { padding: 0.8rem 44px; }
       .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; }
-      html[dir="rtl"] #languageDropdown { left: 0; right: auto; }
-      html[dir="ltr"] #languageDropdown { left: auto; right: 0; }
+      #speakBtn { left: 42px; }
+      html[dir="ltr"] #speakBtn { right: 42px; left: auto; }
+      #suggestionsContainer { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -387,6 +483,9 @@
           <!-- Messages will be here -->
         </div>
         
+        <!-- NEW: Suggestions will be here -->
+        <div id="suggestionsContainer"></div>
+        
         <div class="chat-input-area"> 
             <div class="status" id="statusBar"></div>
             
@@ -395,11 +494,21 @@
               <span id="listeningText">جاري الاستماع...</span>
             </div>
 
-            <div class="chat-input">
+            <div class="chat-input-wrapper">
               <button class="chat-input-btn" id="toggleUploadBtn" title="إرفاق ملف">
                 <i class="fas fa-plus"></i>
               </button>
 
+              <textarea id="userInput" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
+              
+              <button class="chat-input-btn" id="speakBtn" title="تشغيل الصوت">
+                <i class="fas fa-volume-up"></i>
+              </button>
+
+              <button class="chat-input-btn" id="sendOrVoiceBtn">
+                <!-- Content will be set by JS -->
+              </button>
+              
               <div class="upload-options-container" id="uploadOptionsContainer">
                 <button id="uploadFromGalleryBtn" onclick="triggerImageUpload()">
                   <i class="fas fa-images"></i> رفع من المعرض
@@ -408,16 +517,6 @@
                   <i class="fas fa-camera"></i> استخدام الكاميرا
                 </button>
               </div>
-
-              <textarea id="userInput" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
-              
-              <button class="chat-input-btn" id="speakBtn" title="تشغيل الصوت" style="display: none;">
-                <i class="fas fa-volume-up"></i>
-              </button>
-
-              <button class="chat-input-btn" id="sendOrVoiceBtn">
-                <!-- Content will be set by JS -->
-              </button>
 
               <input id="imageUpload" type="file" accept="image/*" onchange="handleFileSelect(event)" style="display: none;" />
             </div>
@@ -514,6 +613,7 @@
     const speakBtn = document.getElementById('speakBtn');
     const languageBtn = document.getElementById('languageBtn');
     const languageDropdown = document.getElementById('languageDropdown');
+    const suggestionsContainer = document.getElementById('suggestionsContainer');
     
     // --- GLOBAL VARIABLES & CONSTANTS ---
     const botName = "Saif AI";
@@ -539,6 +639,7 @@
     let recognition;
     let isListening = false;
     let deferredPrompt;
+    let speechEndTimeout; // NEW: Timeout for speech recognition pause detection
 
     // --- PWA & NOTIFICATION FUNCTIONS ---
     function showAppNotification() { downloadNotification.classList.add('show'); }
@@ -561,24 +662,75 @@
     // --- SPEECH RECOGNITION (INPUT) ---
     function initSpeechRecognition() {
         if (recognition) { recognition.abort(); }
-        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
             const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' };
-            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.continuous = false; recognition.interimResults = true; recognition.lang = langMap[currentLanguage];
-            recognition.onstart = () => { isListening = true; sendOrVoiceBtn.classList.add('recording'); voiceIndicator.classList.add('active'); setStatus(translations[currentLanguage].listening, "", null); };
-            recognition.onresult = (event) => { let transcript = Array.from(event.results).map(result => result[0].transcript).join(''); userInput.value = transcript; autoResizeTextarea(); updateSendOrVoiceButton(); };
-            recognition.onerror = (event) => { console.error('Speech recognition error', event.error); setStatus(`${translations[currentLanguage].speechError}: ${event.error}`, "error", 4000); stopListening(); };
-            recognition.onend = () => stopListening();
-        } else { sendOrVoiceBtn.style.display = 'none'; setStatus(translations[currentLanguage].speechNotSupported, "error", 3000); }
+            recognition = new SpeechRecognition();
+            recognition.continuous = true; // Set to true to control stop manually
+            recognition.interimResults = true;
+            recognition.lang = langMap[currentLanguage];
+
+            recognition.onstart = () => {
+                isListening = true;
+                sendOrVoiceBtn.classList.add('recording');
+                voiceIndicator.classList.add('active');
+                setStatus(translations[currentLanguage].listening, "", null);
+            };
+
+            recognition.onresult = (event) => {
+                clearTimeout(speechEndTimeout); // Reset timer on new speech
+                let transcript = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join('');
+                userInput.value = transcript;
+                autoResizeTextarea();
+                updateSendOrVoiceButton();
+                
+                // Set a timer to stop if user pauses
+                speechEndTimeout = setTimeout(() => {
+                    if (isListening) recognition.stop();
+                }, 1500); // 1.5 second pause
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error', event.error);
+                if (event.error !== 'no-speech') {
+                    setStatus(`${translations[currentLanguage].speechError}: ${event.error}`, "error", 4000);
+                }
+                stopListening();
+            };
+
+            recognition.onend = () => {
+                stopListening();
+            };
+        } else {
+            sendOrVoiceBtn.style.display = 'none';
+            setStatus(translations[currentLanguage].speechNotSupported, "error", 3000);
+        }
     }
     
     function toggleListening() {
         if (!recognition) return;
-        if (isListening) { recognition.stop(); } 
-        else { try { userInput.value = ""; autoResizeTextarea(); recognition.start(); } catch (e) { stopListening(); } }
+        if (isListening) { 
+            recognition.stop();
+        } else { 
+            try { 
+                userInput.value = ""; 
+                autoResizeTextarea(); 
+                recognition.start(); 
+            } catch (e) { 
+                stopListening(); 
+            }
+        }
     }
     
-    function stopListening() { isListening = false; sendOrVoiceBtn.classList.remove('recording'); voiceIndicator.classList.remove('active'); if (statusBar.textContent === translations[currentLanguage].listening) setStatus("", "", 100); }
+    function stopListening() {
+        clearTimeout(speechEndTimeout);
+        isListening = false;
+        sendOrVoiceBtn.classList.remove('recording');
+        voiceIndicator.classList.remove('active');
+        if (statusBar.textContent === translations[currentLanguage].listening) setStatus("", "", 100);
+    }
     
     // --- TEXT TO SPEECH (OUTPUT) ---
     function speakLastBotMessage() {
@@ -607,7 +759,7 @@
         if (!allMessages[currentSubject]) allMessages[currentSubject] = [];
         
         const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar';
-        switchLanguage(savedLang, false); // This will call updateUI and other necessary functions
+        switchLanguage(savedLang, false);
 
         // Event Listeners
         const qrCodeImg = document.getElementById('qr-code-img');
@@ -750,13 +902,7 @@
     }
     function saveAllMessagesToLocalStorage() { allMessages[currentSubject] = messages; localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allMessages)); }
     function addWelcomeMessage() {
-        const t = translations[currentLanguage];
-        let welcomeMsgText = t.welcomeGeneral.replace('{botName}', getBotDisplayName());
-        if (currentSubject !== "general") { 
-            welcomeMsgText = t.welcomeSubject
-                .replace('{botName}', getBotDisplayName())
-                .replace('{subject}', getTranslatedSubjectName(currentSubject)); 
-        }
+        const welcomeMsgText = getWelcomeMessageText();
         if (!messages.some(m => m.isInitialWelcome)) { messages.unshift({ sender: "bot", text: welcomeMsgText, isInitialWelcome: true }); }
     }
     function addMessage(sender, text, isImage = false, isSystemMessage = false) { messages.push({ sender, text, isImage, isSystemMessage }); refreshChat(); chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }
@@ -777,6 +923,7 @@
         }
         chatContainer.appendChild(messageElem);
       });
+      toggleSuggestionsVisibility(); 
       saveAllMessagesToLocalStorage(); 
       autoResizeTextarea(); 
     }
@@ -842,10 +989,9 @@
         updateUIForLanguage();
         initSpeechRecognition();
         
-        // Refresh chat messages with new language labels ("You", welcome message, etc.)
         messages = allMessages[currentSubject] || [];
         if (!messages.length) addWelcomeMessage();
-        else { messages[0].text = getWelcomeMessageText(); } // Update existing welcome message
+        else { messages[0].text = getWelcomeMessageText(); } 
         refreshChat();
 
         if (showStatus) {
@@ -863,6 +1009,33 @@
         }
         return welcomeMsgText;
     }
+    
+    // --- SUGGESTIONS FEATURE ---
+    function populateSuggestions() {
+        suggestionsContainer.innerHTML = '';
+        const suggestionKeys = ['suggestion1', 'suggestion2', 'suggestion3', 'suggestion4'];
+        suggestionKeys.forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = 'suggestion-btn';
+            const text = translations[currentLanguage][key];
+            btn.textContent = text;
+            btn.onclick = () => {
+                userInput.value = text;
+                sendMessage();
+            };
+            suggestionsContainer.appendChild(btn);
+        });
+    }
+
+    function toggleSuggestionsVisibility() {
+        const hasUserMessages = messages.some(m => !m.isInitialWelcome);
+        if (!hasUserMessages) {
+            suggestionsContainer.style.display = 'grid';
+        } else {
+            suggestionsContainer.style.display = 'none';
+        }
+    }
+
 
     function updateUIForLanguage() {
         const t = translations[currentLanguage];
@@ -884,6 +1057,8 @@
         document.getElementById('useCameraBtn').innerHTML = `<i class="fas fa-camera"></i> ${t.useCamera}`;
         document.getElementById('listeningText').textContent = t.listening;
         updateSendOrVoiceButton();
+        // Suggestions
+        populateSuggestions();
         // Camera Modal
         document.getElementById('captureBtn').textContent = t.capture;
         document.getElementById('cancelCameraBtn').textContent = t.cancel;
@@ -918,7 +1093,8 @@
         installApp: "ثبّت التطبيق على جهازك للوصول السريع!", install: "تثبيت", languageChanged: "تم تغيير اللغة إلى العربية", changeLanguage: "تغيير اللغة",
         errorPrefix: "عفواً، واجهت مشكلة",
         aiInstructions: "أنت مساعد ذكاء اصطناعي خبير اسمه {botName}. مهمتك هي تقديم إجابات دقيقة ومفصلة. {subjectContext} يجب أن تكون جميع ردودك باللغة {language} فقط. كن صارمًا في اتباع هذه التعليمات.",
-        aiSubjectInstruction: "أجب كخبير متخصص في مادة {subject}."
+        aiSubjectInstruction: "أجب كخبير متخصص في مادة {subject}.",
+        suggestion1: "اشرح لي مفهوم التوتر السطحي", suggestion2: "اكتب قصة قصيرة عن مستكشف فضاء", suggestion3: "ما هي عاصمة أستراليا؟", suggestion4: "ترجم 'صباح الخير' إلى الإسبانية"
       },
       'en': {
         languageName: "English",
@@ -940,7 +1116,8 @@
         installApp: "Install the app on your device for quick access!", install: "Install", languageChanged: "Language changed to English", changeLanguage: "Change Language",
         errorPrefix: "Sorry, an error occurred",
         aiInstructions: "You are an expert AI assistant named {botName}. Your task is to provide accurate and detailed answers. {subjectContext} All of your responses must be strictly in {language} only. Be strict in following these instructions.",
-        aiSubjectInstruction: "Answer as a specialized expert in the subject of {subject}."
+        aiSubjectInstruction: "Answer as a specialized expert in the subject of {subject}.",
+        suggestion1: "Explain the concept of surface tension", suggestion2: "Write a short story about a space explorer", suggestion3: "What is the capital of Australia?", suggestion4: "Translate 'Good morning' into Spanish"
       },
       'fr': {
         languageName: "Français",
@@ -962,7 +1139,8 @@
         installApp: "Installez l'application sur votre appareil pour un accès rapide !", install: "Installer", languageChanged: "Langue changée en Français", changeLanguage: "Changer de langue",
         errorPrefix: "Désolé, une erreur est survenue",
         aiInstructions: "Vous êtes un assistant IA expert nommé {botName}. Votre tâche est de fournir des réponses précises et détaillées. {subjectContext} Toutes vos réponses doivent être strictly en {language} uniquement. Soyez strict dans le suivi de ces instructions.",
-        aiSubjectInstruction: "Répondez en tant qu'expert spécialisé dans le domaine de {subject}."
+        aiSubjectInstruction: "Répondez en tant qu'expert spécialisé dans le domaine de {subject}.",
+        suggestion1: "Expliquez le concept de tension superficielle", suggestion2: "Écrivez une nouvelle sur un explorateur de l'espace", suggestion3: "Quelle est la capitale de l'Australie?", suggestion4: "Traduisez 'Bonjour' en espagnol"
       },
       'es': {
         languageName: "Español",
@@ -984,7 +1162,8 @@
         installApp: "¡Instala la aplicación en tu dispositivo para un acceso rápido!", install: "Instalar", languageChanged: "Idioma cambiado a Español", changeLanguage: "Cambiar Idioma",
         errorPrefix: "Lo siento, ocurrió un error",
         aiInstructions: "Eres un asistente de IA experto llamado {botName}. Tu tarea es proporcionar respuestas precisas y detalladas. {subjectContext} Todas tus respuestas deben ser estrictamente en {language} únicamente. Sé estricto en seguir estas instrucciones.",
-        aiSubjectInstruction: "Responde como un experto especializado en la materia de {subject}."
+        aiSubjectInstruction: "Responde como un experto especializado en la materia de {subject}.",
+        suggestion1: "Explica el concepto de tensión superficial", suggestion2: "Escribe un cuento sobre un explorador espacial", suggestion3: "¿Cuál es la capital de Australia?", suggestion4: "Traduce 'Buenos días' al español"
       },
       'zh': {
         languageName: "中文",
@@ -1006,7 +1185,8 @@
         installApp: "在您的设备上安装应用以便快速访问！", install: "安装", languageChanged: "语言已更改为中文", changeLanguage: "更改语言",
         errorPrefix: "抱歉，发生了错误",
         aiInstructions: "你是一个名为 {botName} 的专家 AI 助手。你的任务是提供准确详细的答案。 {subjectContext} 你所有的回复都必须严格使用 {language}。请严格遵守这些指示。",
-        aiSubjectInstruction: "作为 {subject} 科目的专家进行回答。"
+        aiSubjectInstruction: "作为 {subject} 科目的专家进行回答。",
+        suggestion1: "解释一下表面张力的概念", suggestion2: "写一个关于太空探险家的短篇故事", suggestion3: "澳大利亚的首都是哪里？", suggestion4: "把‘早上好’翻译成西班牙语"
       }
     };
 
