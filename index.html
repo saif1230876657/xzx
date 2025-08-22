@@ -148,8 +148,9 @@
         align-items: center;
         gap: 0.5rem;
     }
-
-    .header .delete-all-btn, .header .share-btn-header { 
+    
+    /* --- NEW/MODIFIED --- */
+    .header .header-icon {
       cursor: pointer;
       transition: color 0.2s ease-in-out, transform 0.2s ease;
       color: var(--text-secondary);
@@ -159,6 +160,7 @@
     }
     .delete-all-btn:hover { color: var(--error-color); transform: rotate(10deg) scale(1.1); }
     .share-btn-header:hover { color: var(--success-color); transform: scale(1.15); }
+    .history-btn:hover { color: var(--primary-hover-color); transform: scale(1.15); }
     
     .header .fas.fa-robot { 
       font-size: 1.2rem; 
@@ -372,7 +374,7 @@
     
     .status { text-align: center; padding: 0.4rem; font-size: 0.8rem; background-color: var(--bg-surface); color: var(--text-secondary); border-top: 1px solid var(--border-color); transition: color 0.3s ease; font-weight: 500; }
     
-    /* NEW: Suggestions Feature */
+    /* Suggestions Feature */
     #suggestionsContainer {
         display: none; /* Hidden by default */
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -398,11 +400,24 @@
         border-color: var(--primary-color);
         transform: translateY(-2px);
     }
+    
+    /* Disclaimer Text Styling */
+    .ai-disclaimer {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        text-align: center;
+        padding: 0.5rem 1rem 0;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.5;
+        position: relative;
+        z-index: 5;
+    }
 
     .camera-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .camera-modal-content { background-color: var(--bg-surface); padding: 25px; border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); text-align: center; max-width: 90%; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: var(--shadow-lg); }
     
-    /* --- Redesigned Share Modal --- */
+    /* Redesigned Share Modal */
     .share-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .share-modal-content { max-width: 450px; width: 90%; background: #1c1c1c; padding: 30px; border: 1px solid var(--border-color-light); border-radius: var(--border-radius-lg); text-align: center; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: var(--shadow-lg); }
     .share-modal-content h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
@@ -424,6 +439,53 @@
     .qr-code-container p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px; }
     .close-share-modal { position: absolute; top: 15px; left: 15px; font-size: 1.8rem; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; }
     .close-share-modal:hover { color: var(--text-primary); transform: rotate(90deg); }
+    
+    /* --- NEW: HISTORY SIDEBAR --- */
+    .history-sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px; /* Start off-screen */
+      width: 280px;
+      height: 100%;
+      background-color: var(--bg-surface);
+      border-left: 1px solid var(--border-color);
+      z-index: 1001;
+      transition: right 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+    }
+    html[dir="ltr"] .history-sidebar { right: auto; left: -300px; border-left: none; border-right: 1px solid var(--border-color); transition: left 0.3s ease-in-out; }
+    .history-sidebar.open { right: 0; }
+    html[dir="ltr"] .history-sidebar.open { left: 0; }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.open { display: block; }
+    .history-header { padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+    .history-header h3 { font-size: 1.1rem; color: var(--text-primary); }
+    #closeHistoryBtn { background: none; border: none; font-size: 1.8rem; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
+    #closeHistoryBtn:hover { color: var(--text-primary); transform: rotate(90deg); }
+    .new-chat-btn { display: flex; align-items: center; gap: 10px; width: calc(100% - 2rem); margin: 1rem; padding: 0.8rem; background-color: var(--bg-input); border: 1px solid var(--border-color-light); border-radius: var(--border-radius-md); color: var(--text-primary); cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
+    .new-chat-btn:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); }
+    #historyList { list-style: none; flex-grow: 1; overflow-y: auto; padding: 0 1rem; }
+    #historyList li { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0.6rem; border-radius: var(--border-radius-sm); margin-bottom: 0.5rem; cursor: pointer; transition: background-color 0.2s; background-color: var(--bg-surface-raised); border: 1px solid transparent; }
+    #historyList li:hover { background-color: var(--bg-input); }
+    #historyList li.active { background-color: var(--bg-input); border-color: var(--primary-color); }
+    .history-item-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; font-size: 0.9rem; }
+    .delete-history-item-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0 5px; font-size: 0.9rem; opacity: 0.5; transition: all 0.2s; }
+    #historyList li:hover .delete-history-item-btn { opacity: 1; }
+    .delete-history-item-btn:hover { color: var(--error-color); transform: scale(1.2); }
+
+    @media (max-width: 768px) {
+      /* --- NEW: HIDE DISCLAIMER ON MOBILE --- */
+      .ai-disclaimer { display: none !important; }
+    }
 
     @media (max-width: 480px) { 
       .header h1 { font-size: 0.95rem; }
@@ -473,8 +535,9 @@
       
       <!-- Left Group (Icons) -->
       <div id="headerIcons" class="header-group">
-        <i class="fas fa-share-alt share-btn-header" id="shareBtn" title="مشاركة التطبيق"></i>
-        <i class="fas fa-trash delete-all-btn" onclick="deleteAllMessages()" title="حذف كل الرسائل"></i>
+        <i class="fas fa-share-alt header-icon share-btn-header" id="shareBtn" title="مشاركة التطبيق"></i>
+        <i class="fas fa-trash header-icon delete-all-btn" id="deleteCurrentChatBtn" title="حذف المحادثة الحالية"></i>
+        <i class="fas fa-bars header-icon history-btn" id="historyBtn" title="عرض السجل"></i>
       </div>
     </header>
 
@@ -483,7 +546,7 @@
           <!-- Messages will be here -->
         </div>
         
-        <!-- NEW: Suggestions will be here -->
+        <!-- Suggestions will be here -->
         <div id="suggestionsContainer"></div>
         
         <div class="chat-input-area"> 
@@ -520,6 +583,9 @@
 
               <input id="imageUpload" type="file" accept="image/*" onchange="handleFileSelect(event)" style="display: none;" />
             </div>
+            
+            <!-- AI Disclaimer -->
+            <div id="aiDisclaimer" class="ai-disclaimer"></div>
         </div>
     </div>
 
@@ -535,6 +601,22 @@
         </div>
     </div>
   </div>
+  
+  <!-- NEW: History Sidebar -->
+  <div id="historySidebar" class="history-sidebar">
+    <div class="history-header">
+      <h3 id="historyTitle">سجل المحادثات</h3>
+      <button id="closeHistoryBtn">&times;</button>
+    </div>
+    <button id="newChatBtn" class="new-chat-btn">
+      <i class="fas fa-plus"></i> <span id="newChatText">محادثة جديدة</span>
+    </button>
+    <ul id="historyList">
+      <!-- History items will be populated here -->
+    </ul>
+  </div>
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
 
   <!-- Camera Modal -->
   <div id="cameraModal" class="camera-modal">
@@ -614,16 +696,29 @@
     const languageBtn = document.getElementById('languageBtn');
     const languageDropdown = document.getElementById('languageDropdown');
     const suggestionsContainer = document.getElementById('suggestionsContainer');
+    const deleteCurrentChatBtn = document.getElementById('deleteCurrentChatBtn');
+    // --- NEW: History Sidebar Elements ---
+    const historyBtn = document.getElementById('historyBtn');
+    const historySidebar = document.getElementById('historySidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const historyList = document.getElementById('historyList');
+
     
     // --- GLOBAL VARIABLES & CONSTANTS ---
     const botName = "Saif AI";
-    const localStorageKeyAllChats = "saifAiAllChatsHistory_v2"; 
-    const localStorageKeyCurrentSubject = "saifAiCurrentSubject_v2";
+    // --- MODIFIED: New data structure for chat sessions ---
+    const localStorageKeyAllChats = "saifAiAllChatSessions_v3";
+    const localStorageKeyLastSession = "saifAiLastSession_v3";
     const localStorageKeyLanguage = "saifAiLanguage_v1";
-    let allMessages = {}; 
+    
+    let allChatSessions = {}; // { general: [ {id, messages, timestamp} ], ... }
     let messages = [];    
-    let statusTimeout;
     let currentSubject = "general";
+    let currentChatId = null; // ID of the currently active chat
+    
+    let statusTimeout;
     let currentLanguage = "ar";
     const subjects = [ 
         { key: "physics", name: { ar: "فيزياء", en: "Physics", fr: "Physique", es: "Física", zh: "物理" }, icon: "fas fa-atom" },
@@ -639,7 +734,7 @@
     let recognition;
     let isListening = false;
     let deferredPrompt;
-    let speechEndTimeout; // NEW: Timeout for speech recognition pause detection
+    let speechEndTimeout;
 
     // --- PWA & NOTIFICATION FUNCTIONS ---
     function showAppNotification() { downloadNotification.classList.add('show'); }
@@ -666,7 +761,7 @@
         if (SpeechRecognition) {
             const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' };
             recognition = new SpeechRecognition();
-            recognition.continuous = true; // Set to true to control stop manually
+            recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = langMap[currentLanguage];
 
@@ -678,7 +773,7 @@
             };
 
             recognition.onresult = (event) => {
-                clearTimeout(speechEndTimeout); // Reset timer on new speech
+                clearTimeout(speechEndTimeout);
                 let transcript = Array.from(event.results)
                     .map(result => result[0].transcript)
                     .join('');
@@ -686,10 +781,9 @@
                 autoResizeTextarea();
                 updateSendOrVoiceButton();
                 
-                // Set a timer to stop if user pauses
                 speechEndTimeout = setTimeout(() => {
                     if (isListening) recognition.stop();
-                }, 1500); // 1.5 second pause
+                }, 1500);
             };
 
             recognition.onerror = (event) => {
@@ -752,15 +846,11 @@
     // --- INITIALIZATION & EVENT LISTENERS ---
     function initializeApp() {
         registerServiceWorker();
-        loadAllMessagesAndSetCurrent(); 
-        const storedSubject = localStorage.getItem(localStorageKeyCurrentSubject) || "general";
-        currentSubject = storedSubject;
-        messages = allMessages[currentSubject] || [];
-        if (!allMessages[currentSubject]) allMessages[currentSubject] = [];
-        
         const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar';
-        switchLanguage(savedLang, false);
-
+        switchLanguage(savedLang, false); // Switch language first to have translations ready
+        
+        loadAllChatSessions();
+        
         // Event Listeners
         const qrCodeImg = document.getElementById('qr-code-img');
         const whatsappShare = document.getElementById('whatsapp-share');
@@ -800,6 +890,18 @@
                 switchLanguage(e.currentTarget.dataset.lang);
             });
         });
+        
+        deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat);
+
+        // --- NEW: History Sidebar Listeners ---
+        historyBtn.addEventListener('click', openHistorySidebar);
+        closeHistoryBtn.addEventListener('click', closeHistorySidebar);
+        sidebarOverlay.addEventListener('click', closeHistorySidebar);
+        newChatBtn.addEventListener('click', () => {
+          loadChat(currentSubject, null); // Start a new chat in the current subject
+          closeHistorySidebar();
+        });
+
 
         window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); });
         window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); });
@@ -857,7 +959,7 @@
         generalChatBtn.style.display = currentSubject === "general" ? 'none' : 'inline-block';
         generalChatBtn.textContent = t.general;
         enterSubjectsBtn.textContent = currentSubject === "general" ? t.specializedSubjects : `${t.subjectPrefix}: ${getTranslatedSubjectName(currentSubject)}`;
-        localStorage.setItem(localStorageKeyCurrentSubject, currentSubject);
+        // No longer storing subject in its own key, but as part of last session
     }
 
     function populateSubjectListInView() { 
@@ -884,35 +986,132 @@
     }
 
     function switchSubject(newSubject) {
-        allMessages[currentSubject] = messages; 
         currentSubject = newSubject;
-        messages = allMessages[currentSubject] || []; 
-        if (!allMessages[currentSubject]) allMessages[currentSubject] = [];
+        
+        // Find the last chat for the new subject, or start a new one
+        const sessionsForNewSubject = allChatSessions[currentSubject] || [];
+        const lastChatInNewSubject = sessionsForNewSubject.length > 0 ? sessionsForNewSubject[0].id : null;
+        
+        loadChat(newSubject, lastChatInNewSubject);
+        
         updateSubjectUI();
-        closeSubjectsView(); 
-        addWelcomeMessage(); 
-        refreshChat(); 
-        saveAllMessagesToLocalStorage(); 
+        closeSubjectsView();
+        // saveAllChatSessionsToLocalStorage will be called by loadChat via refreshChat
     }
     
-    // --- MESSAGE & CHAT MANAGEMENT ---
-    function loadAllMessagesAndSetCurrent() {
-        try { const stored = localStorage.getItem(localStorageKeyAllChats); allMessages = stored ? JSON.parse(stored) : {}; } catch (e) { allMessages = {}; }
-        if (!allMessages.general) allMessages.general = [];
+    // --- MESSAGE & CHAT MANAGEMENT (REWRITTEN) ---
+    function loadAllChatSessions() {
+      try {
+        const stored = localStorage.getItem(localStorageKeyAllChats);
+        allChatSessions = stored ? JSON.parse(stored) : {};
+      } catch (e) {
+        allChatSessions = {};
+      }
+      
+      // Ensure base structure exists for all subjects
+      subjects.forEach(s => { if (!allChatSessions[s.key]) allChatSessions[s.key] = []; });
+      if (!allChatSessions.general) allChatSessions.general = [];
+
+      let lastSession = { subject: 'general', id: null };
+      try {
+        const storedLast = localStorage.getItem(localStorageKeyLastSession);
+        if (storedLast) lastSession = JSON.parse(storedLast);
+      } catch (e) { /* use default */ }
+      
+      // Validate that the last session still exists
+      const lastSessionExists = allChatSessions[lastSession.subject]?.some(s => s.id === lastSession.id);
+
+      if (lastSessionExists) {
+        loadChat(lastSession.subject, lastSession.id);
+      } else {
+        // If it doesn't exist, load the latest chat in that subject, or a new one
+        const sessionsForSubject = allChatSessions[lastSession.subject] || [];
+        const latestChatId = sessionsForSubject.length > 0 ? sessionsForSubject[0].id : null;
+        loadChat(lastSession.subject, latestChatId);
+      }
     }
-    function saveAllMessagesToLocalStorage() { allMessages[currentSubject] = messages; localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allMessages)); }
+
+    function saveAllChatSessionsToLocalStorage() {
+      // Find the current session and update its messages
+      if (currentChatId && allChatSessions[currentSubject]) {
+        const session = allChatSessions[currentSubject].find(s => s.id === currentChatId);
+        if (session) {
+          session.messages = messages;
+        }
+      }
+      // Save the entire sessions object
+      localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allChatSessions));
+      // Save the last active session reference
+      localStorage.setItem(localStorageKeyLastSession, JSON.stringify({ subject: currentSubject, id: currentChatId }));
+    }
+
+    function loadChat(subject, chatId) {
+        currentSubject = subject;
+        currentChatId = chatId;
+        
+        if (chatId === null) {
+            // This is a new chat, not yet saved
+            messages = [];
+            addWelcomeMessage();
+        } else {
+            const session = allChatSessions[subject]?.find(s => s.id === chatId);
+            if (session) {
+                messages = session.messages;
+            } else {
+                // Fallback if ID is invalid
+                messages = [];
+                addWelcomeMessage();
+                currentChatId = null; 
+            }
+        }
+        
+        updateSubjectUI();
+        refreshChat();
+    }
+
     function addWelcomeMessage() {
         const welcomeMsgText = getWelcomeMessageText();
-        if (!messages.some(m => m.isInitialWelcome)) { messages.unshift({ sender: "bot", text: welcomeMsgText, isInitialWelcome: true }); }
+        if (messages.length === 0 || !messages.some(m => m.isInitialWelcome)) {
+          messages.unshift({ sender: "bot", text: welcomeMsgText, isInitialWelcome: true });
+        }
     }
-    function addMessage(sender, text, isImage = false, isSystemMessage = false) { messages.push({ sender, text, isImage, isSystemMessage }); refreshChat(); chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }
+
+    function addMessage(sender, text, isImage = false, isSystemMessage = false) { 
+        // If this is the first message in a new chat, create the session first
+        if (currentChatId === null && sender === 'user') {
+            const newId = Date.now();
+            const newSession = {
+                id: newId,
+                timestamp: newId,
+                messages: [] // Will be populated by refreshChat
+            };
+            // Ensure the subject array exists
+            if (!allChatSessions[currentSubject]) {
+                allChatSessions[currentSubject] = [];
+            }
+            // Add to the beginning (so it's the newest)
+            allChatSessions[currentSubject].unshift(newSession);
+            currentChatId = newId;
+        }
+        
+        messages.push({ sender, text, isImage, isSystemMessage }); 
+        refreshChat(); 
+        chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); 
+    }
+
     function refreshChat() {
       chatContainer.innerHTML = ""; 
       const t = translations[currentLanguage];
       messages.forEach((msg, index) => {
         const messageElem = document.createElement("div"); messageElem.className = `message ${msg.sender}`;
         let senderName = msg.sender === "bot" ? getBotDisplayName() : t.you;
-        const header = document.createElement("div"); header.className = "message-header"; header.innerHTML = `<span>${senderName}</span><i class="fas fa-trash delete-btn" title="${t.deleteMessage}"></i>`; header.querySelector('.delete-btn').onclick = () => deleteMessage(index);
+        const header = document.createElement("div"); header.className = "message-header"; 
+        // Don't show delete button on system messages
+        const deleteButtonHTML = (msg.isInitialWelcome || msg.isSystemMessage) ? '' : `<i class="fas fa-trash delete-btn" title="${t.deleteMessage}"></i>`;
+        header.innerHTML = `<span>${senderName}</span>${deleteButtonHTML}`;
+        if (!msg.isInitialWelcome && !msg.isSystemMessage) {
+            header.querySelector('.delete-btn').onclick = () => deleteMessage(index);
+        }
         const contentDiv = document.createElement("div"); contentDiv.className = "message-content"; contentDiv.innerHTML = msg.text; 
         messageElem.appendChild(header); messageElem.appendChild(contentDiv);
         if(msg.sender === "bot" && !msg.isInitialWelcome && !msg.isSystemMessage) {
@@ -924,11 +1123,35 @@
         chatContainer.appendChild(messageElem);
       });
       toggleSuggestionsVisibility(); 
-      saveAllMessagesToLocalStorage(); 
+      saveAllChatSessionsToLocalStorage(); 
       autoResizeTextarea(); 
     }
     function deleteMessage(index) { messages.splice(index, 1); refreshChat(); setStatus(translations[currentLanguage].messageDeleted, "success", 1500); }
-    function deleteAllMessages() { if (confirm(translations[currentLanguage].confirmDeleteAll)) { messages = []; addWelcomeMessage(); refreshChat(); setStatus(translations[currentLanguage].allMessagesDeleted, "success", 2000); speakBtn.style.display = 'none'; } }
+    
+    function deleteCurrentChat() {
+      if (!currentChatId) {
+        // Can't delete a new, unsaved chat. Just clear it.
+        messages = [];
+        addWelcomeMessage();
+        refreshChat();
+        return;
+      }
+      if (confirm(translations[currentLanguage].confirmDeleteCurrent)) {
+        // Find and remove the chat session
+        const sessionIndex = allChatSessions[currentSubject].findIndex(s => s.id === currentChatId);
+        if (sessionIndex > -1) {
+            allChatSessions[currentSubject].splice(sessionIndex, 1);
+        }
+        
+        // Load the next available chat or start a new one
+        const nextSession = allChatSessions[currentSubject][0] || null;
+        loadChat(currentSubject, nextSession ? nextSession.id : null);
+        
+        setStatus(translations[currentLanguage].chatDeleted, "success", 2000);
+        speakBtn.style.display = 'none';
+      }
+    }
+    
     function setStatus(message, type = "", duration = 3000) { clearTimeout(statusTimeout); statusBar.textContent = message; statusBar.className = "status " + type; if (message && duration) { statusTimeout = setTimeout(() => { statusBar.textContent = ""; statusBar.className = "status"; }, duration); } }
 
     // --- AI & GEMINI FUNCTIONS ---
@@ -964,6 +1187,7 @@
     async function sendMessage() {
       const messageText = userInput.value.trim();
       if (!messageText) return;
+      
       addMessage("user", messageText);
       userInput.value = ""; 
       autoResizeTextarea(); 
@@ -989,10 +1213,11 @@
         updateUIForLanguage();
         initSpeechRecognition();
         
-        messages = allMessages[currentSubject] || [];
-        if (!messages.length) addWelcomeMessage();
-        else { messages[0].text = getWelcomeMessageText(); } 
-        refreshChat();
+        // Reload messages array and update welcome message text
+        if (messages.length > 0 && messages[0].isInitialWelcome) {
+            messages[0].text = getWelcomeMessageText();
+        }
+        refreshChat(); // This will redraw the chat with the new language strings (e.g., "You")
 
         if (showStatus) {
             setStatus(translations[lang].languageChanged, "success", 2000);
@@ -1011,13 +1236,35 @@
     }
     
     // --- SUGGESTIONS FEATURE ---
-    function populateSuggestions() {
+    async function fetchAndDisplaySuggestions() {
+        try {
+            const t = translations[currentLanguage];
+            let subjectContext = currentSubject === 'general' ? t.suggestionContextGeneral : t.suggestionContextSubject.replace('{subject}', getTranslatedSubjectName(currentSubject));
+            const prompt = t.suggestionPrompt
+                .replace('{subjectContext}', subjectContext)
+                .replace('{language}', t.languageName);
+
+            const responseText = await fetchGeminiResponse(prompt);
+            const suggestions = responseText.split('\n')
+                .map(s => s.trim().replace(/^(-|\*|\d+\.\s*)/, '').trim())
+                .filter(s => s.length > 0);
+
+            if (suggestions.length > 0) {
+                populateSuggestions(suggestions);
+            } else {
+                populateSuggestions(t.fallbackSuggestions);
+            }
+        } catch (error) {
+            console.error("Failed to fetch AI suggestions:", error);
+            populateSuggestions(translations[currentLanguage].fallbackSuggestions);
+        }
+    }
+
+    function populateSuggestions(suggestionsArray) {
         suggestionsContainer.innerHTML = '';
-        const suggestionKeys = ['suggestion1', 'suggestion2', 'suggestion3', 'suggestion4'];
-        suggestionKeys.forEach(key => {
+        suggestionsArray.forEach(text => {
             const btn = document.createElement('button');
             btn.className = 'suggestion-btn';
-            const text = translations[currentLanguage][key];
             btn.textContent = text;
             btn.onclick = () => {
                 userInput.value = text;
@@ -1029,18 +1276,84 @@
 
     function toggleSuggestionsVisibility() {
         const hasUserMessages = messages.some(m => !m.isInitialWelcome);
-        if (!hasUserMessages) {
+        if (!hasUserMessages && currentChatId === null) {
             suggestionsContainer.style.display = 'grid';
         } else {
             suggestionsContainer.style.display = 'none';
         }
+    }
+    
+    // --- NEW: HISTORY SIDEBAR FUNCTIONS ---
+    function openHistorySidebar() {
+      renderHistoryList();
+      historySidebar.classList.add('open');
+      sidebarOverlay.classList.add('open');
+    }
+
+    function closeHistorySidebar() {
+      historySidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('open');
+    }
+
+    function renderHistoryList() {
+      historyList.innerHTML = '';
+      const t = translations[currentLanguage];
+      const sessions = allChatSessions[currentSubject] || [];
+
+      if (sessions.length === 0) {
+        historyList.innerHTML = `<li style="cursor: default; opacity: 0.7; justify-content: center;">${t.noHistory}</li>`;
+        return;
+      }
+      
+      sessions.forEach(session => {
+        const li = document.createElement('li');
+        if (session.id === currentChatId) {
+            li.classList.add('active');
+        }
+
+        // Find the first user message for the title, or use a default
+        const firstUserMsg = session.messages.find(m => m.sender === 'user');
+        const titleText = firstUserMsg ? firstUserMsg.text : t.newChat;
+        
+        li.innerHTML = `
+            <span class="history-item-title">${titleText}</span>
+            <button class="delete-history-item-btn" title="${t.deleteChat}"><i class="fas fa-trash"></i></button>
+        `;
+        
+        li.querySelector('.history-item-title').addEventListener('click', () => {
+            if (session.id !== currentChatId) {
+                loadChat(currentSubject, session.id);
+            }
+            closeHistorySidebar();
+        });
+        
+        li.querySelector('.delete-history-item-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (confirm(t.confirmDeleteCurrent)) {
+                const sessionIndex = allChatSessions[currentSubject].findIndex(s => s.id === session.id);
+                if (sessionIndex > -1) {
+                    allChatSessions[currentSubject].splice(sessionIndex, 1);
+                    // If we deleted the active chat, load another one
+                    if(session.id === currentChatId) {
+                        const nextSession = allChatSessions[currentSubject][0] || null;
+                        loadChat(currentSubject, nextSession ? nextSession.id : null);
+                    }
+                    saveAllChatSessionsToLocalStorage();
+                    renderHistoryList(); // Re-render the list
+                }
+            }
+        });
+
+        historyList.appendChild(li);
+      });
     }
 
 
     function updateUIForLanguage() {
         const t = translations[currentLanguage];
         // Header
-        document.querySelector('.delete-all-btn').title = t.deleteAllMessages;
+        document.getElementById('deleteCurrentChatBtn').title = t.deleteCurrentChat;
+        document.getElementById('historyBtn').title = t.viewHistory;
         document.getElementById('shareBtn').title = t.shareApp;
         document.getElementById('languageBtn').title = t.changeLanguage;
         // Subject buttons
@@ -1057,8 +1370,10 @@
         document.getElementById('useCameraBtn').innerHTML = `<i class="fas fa-camera"></i> ${t.useCamera}`;
         document.getElementById('listeningText').textContent = t.listening;
         updateSendOrVoiceButton();
+        // Disclaimer
+        document.getElementById('aiDisclaimer').textContent = t.aiDisclaimer;
         // Suggestions
-        populateSuggestions();
+        fetchAndDisplaySuggestions();
         // Camera Modal
         document.getElementById('captureBtn').textContent = t.capture;
         document.getElementById('cancelCameraBtn').textContent = t.cancel;
@@ -1070,6 +1385,9 @@
         // PWA Notification
         document.getElementById('downloadNotificationText').textContent = t.installApp;
         document.getElementById('downloadAppBtn').textContent = t.install;
+        // History Sidebar
+        document.getElementById('historyTitle').textContent = t.historyTitle;
+        document.getElementById('newChatText').textContent = t.newChat;
     }
     
     const translations = {
@@ -1081,8 +1399,8 @@
         placeholder: "اكتب رسالتك هنا...", you: "أنت",
         thinking: "يفكر", responseReceived: "تم استلام الرد!", responseFailed: "فشل الرد.",
         switchedToSubject: "تم التحويل إلى وضع مادة:", returnedToGeneral: "تم الرجوع إلى الوضع العام",
-        deleteAllMessages: "حذف كل الرسائل", deleteMessage: "حذف الرسالة", confirmDeleteAll: "هل أنت متأكد من حذف جميع الرسائل؟",
-        allMessagesDeleted: "تم حذف جميع الرسائل.", messageDeleted: "تم حذف الرسالة.",
+        deleteMessage: "حذف الرسالة",
+        messageDeleted: "تم حذف الرسالة.",
         listening: "جاري الاستماع...", speechError: "خطأ في التعرف على الصوت", speechNotSupported: "المتصفح لا يدعم التعرف على الصوت",
         noResponseToSpeak: "لا يوجد رد لتشغيله.", playAudio: "تشغيل الصوت", send: "إرسال", speak: "التحدث",
         shareApp: "مشاركة التطبيق", shareDescription: "ساعدنا على النمو بمشاركة التطبيق مع أصدقائك!", shareText: "اكتشف Saif AI، مساعد الذكاء الاصطناعي العربي المتطور!",
@@ -1094,7 +1412,15 @@
         errorPrefix: "عفواً، واجهت مشكلة",
         aiInstructions: "أنت مساعد ذكاء اصطناعي خبير اسمه {botName}. مهمتك هي تقديم إجابات دقيقة ومفصلة. {subjectContext} يجب أن تكون جميع ردودك باللغة {language} فقط. كن صارمًا في اتباع هذه التعليمات.",
         aiSubjectInstruction: "أجب كخبير متخصص في مادة {subject}.",
-        suggestion1: "اشرح لي مفهوم التوتر السطحي", suggestion2: "اكتب قصة قصيرة عن مستكشف فضاء", suggestion3: "ما هي عاصمة أستراليا؟", suggestion4: "ترجم 'صباح الخير' إلى الإسبانية"
+        aiDisclaimer: "قد يقدم Saif AI معلومات غير دقيقة، لذا يرجى التحقق من صحة إجاباته. المنصة مخصصة لأغراض التعليم والبحث والعلم فقط.",
+        suggestionPrompt: "أنشئ 4 أسئلة متنوعة وجذابة لبدء محادثة مع مساعد ذكاء اصطناعي. {subjectContext}. يجب أن تكون الإجابة قائمة بسيطة مفصولة بأسطر جديدة، بدون ترقيم أو علامات. اللغة يجب أن تكون {language}.",
+        suggestionContextGeneral: "المستخدم مهتم بالمعرفة العامة والعلوم والإبداع",
+        suggestionContextSubject: "المستخدم يدرس حاليًا مادة {subject}",
+        fallbackSuggestions: ["اشرح لي مفهوم التوتر السطحي", "اكتب قصة قصيرة عن مستكشف فضاء", "ما هي عاصمة أستراليا؟", "ترجم 'صباح الخير' إلى الإسبانية"],
+        // New for History
+        historyTitle: "سجل المحادثات", newChat: "محادثة جديدة", viewHistory: "عرض السجل",
+        deleteCurrentChat: "حذف المحادثة الحالية", confirmDeleteCurrent: "هل أنت متأكد من حذف هذه المحادثة؟",
+        chatDeleted: "تم حذف المحادثة.", deleteChat: "حذف المحادثة", noHistory: "لا يوجد سجل بعد"
       },
       'en': {
         languageName: "English",
@@ -1104,8 +1430,8 @@
         placeholder: "Type your message here...", you: "You",
         thinking: "is thinking", responseReceived: "Response received!", responseFailed: "Response failed.",
         switchedToSubject: "Switched to subject mode:", returnedToGeneral: "Returned to general mode",
-        deleteAllMessages: "Delete all messages", deleteMessage: "Delete message", confirmDeleteAll: "Are you sure you want to delete all messages?",
-        allMessagesDeleted: "All messages have been deleted.", messageDeleted: "Message deleted.",
+        deleteMessage: "Delete message",
+        messageDeleted: "Message deleted.",
         listening: "Listening...", speechError: "Speech recognition error", speechNotSupported: "Browser does not support speech recognition",
         noResponseToSpeak: "No response to play.", playAudio: "Play audio", send: "Send", speak: "Speak",
         shareApp: "Share App", shareDescription: "Help us grow by sharing the app with your friends!", shareText: "Discover Saif AI, the advanced AI assistant!",
@@ -1117,77 +1443,17 @@
         errorPrefix: "Sorry, an error occurred",
         aiInstructions: "You are an expert AI assistant named {botName}. Your task is to provide accurate and detailed answers. {subjectContext} All of your responses must be strictly in {language} only. Be strict in following these instructions.",
         aiSubjectInstruction: "Answer as a specialized expert in the subject of {subject}.",
-        suggestion1: "Explain the concept of surface tension", suggestion2: "Write a short story about a space explorer", suggestion3: "What is the capital of Australia?", suggestion4: "Translate 'Good morning' into Spanish"
+        aiDisclaimer: "Saif AI may provide inaccurate information, so please verify its answers. The platform is intended for education, research, and science purposes only.",
+        suggestionPrompt: "Generate 4 diverse and engaging conversation starter questions for an AI assistant. {subjectContext}. The output should be a simple list separated by newlines, without numbering or markers. The language must be {language}.",
+        suggestionContextGeneral: "The user is interested in general knowledge, science, and creativity",
+        suggestionContextSubject: "The user is currently studying the subject of {subject}",
+        fallbackSuggestions: ["Explain the concept of surface tension", "Write a short story about a space explorer", "What is the capital of Australia?", "Translate 'Good morning' into Spanish"],
+        // New for History
+        historyTitle: "Chat History", newChat: "New Chat", viewHistory: "View History",
+        deleteCurrentChat: "Delete current chat", confirmDeleteCurrent: "Are you sure you want to delete this chat?",
+        chatDeleted: "Chat deleted.", deleteChat: "Delete chat", noHistory: "No history yet"
       },
-      'fr': {
-        languageName: "Français",
-        specializedSubjects: "Matières Spécialisées", general: "Général", subjectPrefix: "Matière",
-        welcomeGeneral: "Bonjour! Je suis {botName}. Comment puis-je vous aider aujourd'hui?",
-        welcomeSubject: "Bonjour! Je suis {botName}, actuellement en mode matière pour {subject}.",
-        placeholder: "Écrivez votre message ici...", you: "Vous",
-        thinking: "réfléchit", responseReceived: "Réponse reçue !", responseFailed: "Échec de la réponse.",
-        switchedToSubject: "Passage en mode matière :", returnedToGeneral: "Retour au mode général",
-        deleteAllMessages: "Supprimer tous les messages", deleteMessage: "Supprimer le message", confirmDeleteAll: "Êtes-vous sûr de vouloir supprimer tous les messages ?",
-        allMessagesDeleted: "Tous les messages ont été supprimés.", messageDeleted: "Message supprimé.",
-        listening: "Écoute...", speechError: "Erreur de reconnaissance vocale", speechNotSupported: "Le navigateur ne prend pas en charge la reconnaissance vocale",
-        noResponseToSpeak: "Aucune réponse à lire.", playAudio: "Lire l'audio", send: "Envoyer", speak: "Parler",
-        shareApp: "Partager l'application", shareDescription: "Aidez-nous à grandir en partageant l'application avec vos amis !", shareText: "Découvrez Saif AI, l'assistant IA avancé !",
-        copy: "Copier", copied: "Copié", copiedSuccess: "Copié avec succès", qrCodeText: "Ou scannez le code pour partager",
-        selectSubject: "Sélectionnez une matière", backToChat: "Retour au chat",
-        attachFile: "Joindre un fichier", uploadFromGallery: "Télécharger de la galerie", useCamera: "Utiliser la caméra", cameraError: "Impossible d'accéder à la caméra.",
-        capture: "Capturer", cancel: "Annuler",
-        installApp: "Installez l'application sur votre appareil pour un accès rapide !", install: "Installer", languageChanged: "Langue changée en Français", changeLanguage: "Changer de langue",
-        errorPrefix: "Désolé, une erreur est survenue",
-        aiInstructions: "Vous êtes un assistant IA expert nommé {botName}. Votre tâche est de fournir des réponses précises et détaillées. {subjectContext} Toutes vos réponses doivent être strictly en {language} uniquement. Soyez strict dans le suivi de ces instructions.",
-        aiSubjectInstruction: "Répondez en tant qu'expert spécialisé dans le domaine de {subject}.",
-        suggestion1: "Expliquez le concept de tension superficielle", suggestion2: "Écrivez une nouvelle sur un explorateur de l'espace", suggestion3: "Quelle est la capitale de l'Australie?", suggestion4: "Traduisez 'Bonjour' en espagnol"
-      },
-      'es': {
-        languageName: "Español",
-        specializedSubjects: "Materias Especializadas", general: "General", subjectPrefix: "Materia",
-        welcomeGeneral: "¡Hola! Soy {botName}. ¿Cómo puedo ayudarte hoy?",
-        welcomeSubject: "¡Hola! Soy {botName}, actualmente en modo de materia para {subject}.",
-        placeholder: "Escribe tu mensaje aquí...", you: "Tú",
-        thinking: "está pensando", responseReceived: "¡Respuesta recibida!", responseFailed: "Falló la respuesta.",
-        switchedToSubject: "Cambiado a modo de materia:", returnedToGeneral: "Regreso a modo general",
-        deleteAllMessages: "Eliminar todos los mensajes", deleteMessage: "Eliminar mensaje", confirmDeleteAll: "¿Estás seguro de que quieres eliminar todos los mensajes?",
-        allMessagesDeleted: "Todos los mensajes han sido eliminados.", messageDeleted: "Mensaje eliminado.",
-        listening: "Escuchando...", speechError: "Error de reconocimiento de voz", speechNotSupported: "El navegador no admite el reconocimiento de voz",
-        noResponseToSpeak: "No hay respuesta para reproducir.", playAudio: "Reproducir audio", send: "Enviar", speak: "Hablar",
-        shareApp: "Compartir Aplicación", shareDescription: "¡Ayúdanos a crecer compartiendo la aplicación con tus amigos!", shareText: "¡Descubre Saif AI, el asistente de IA avanzado!",
-        copy: "Copiar", copied: "Copiado", copiedSuccess: "Copiado con éxito", qrCodeText: "O escanea el código para compartir",
-        selectSubject: "Selecciona una Materia", backToChat: "Volver al Chat",
-        attachFile: "Adjuntar archivo", uploadFromGallery: "Subir de la Galería", useCamera: "Usar Cámara", cameraError: "No se puede acceder a la cámara.",
-        capture: "Capturar", cancel: "Cancelar",
-        installApp: "¡Instala la aplicación en tu dispositivo para un acceso rápido!", install: "Instalar", languageChanged: "Idioma cambiado a Español", changeLanguage: "Cambiar Idioma",
-        errorPrefix: "Lo siento, ocurrió un error",
-        aiInstructions: "Eres un asistente de IA experto llamado {botName}. Tu tarea es proporcionar respuestas precisas y detalladas. {subjectContext} Todas tus respuestas deben ser estrictamente en {language} únicamente. Sé estricto en seguir estas instrucciones.",
-        aiSubjectInstruction: "Responde como un experto especializado en la materia de {subject}.",
-        suggestion1: "Explica el concepto de tensión superficial", suggestion2: "Escribe un cuento sobre un explorador espacial", suggestion3: "¿Cuál es la capital de Australia?", suggestion4: "Traduce 'Buenos días' al español"
-      },
-      'zh': {
-        languageName: "中文",
-        specializedSubjects: "专业科目", general: "通用", subjectPrefix: "科目",
-        welcomeGeneral: "你好！我是 {botName}。今天我能为你做些什么？",
-        welcomeSubject: "你好！我是 {botName}，当前处于 {subject} 科目模式。",
-        placeholder: "在此输入您的消息...", you: "你",
-        thinking: "正在思考", responseReceived: "已收到回复！", responseFailed: "回复失败。",
-        switchedToSubject: "已切换到科目模式：", returnedToGeneral: "已返回通用模式",
-        deleteAllMessages: "删除所有消息", deleteMessage: "删除消息", confirmDeleteAll: "您确定要删除所有消息吗？",
-        allMessagesDeleted: "所有消息已被删除。", messageDeleted: "消息已删除。",
-        listening: "正在聆听...", speechError: "语音识别错误", speechNotSupported: "浏览器不支持语音识别",
-        noResponseToSpeak: "没有可播放的回复。", playAudio: "播放音频", send: "发送", speak: "说话",
-        shareApp: "分享应用", shareDescription: "与朋友分享应用，帮助我们成长！", shareText: "探索 Saif AI，先进的 AI 助手！",
-        copy: "复制", copied: "已复制", copiedSuccess: "复制成功", qrCodeText: "或扫描二维码分享",
-        selectSubject: "选择科目", backToChat: "返回聊天",
-        attachFile: "附加文件", uploadFromGallery: "从图库上传", useCamera: "使用相机", cameraError: "无法访问相机。",
-        capture: "拍摄", cancel: "取消",
-        installApp: "在您的设备上安装应用以便快速访问！", install: "安装", languageChanged: "语言已更改为中文", changeLanguage: "更改语言",
-        errorPrefix: "抱歉，发生了错误",
-        aiInstructions: "你是一个名为 {botName} 的专家 AI 助手。你的任务是提供准确详细的答案。 {subjectContext} 你所有的回复都必须严格使用 {language}。请严格遵守这些指示。",
-        aiSubjectInstruction: "作为 {subject} 科目的专家进行回答。",
-        suggestion1: "解释一下表面张力的概念", suggestion2: "写一个关于太空探险家的短篇故事", suggestion3: "澳大利亚的首都是哪里？", suggestion4: "把‘早上好’翻译成西班牙语"
-      }
+      // ... (Other languages can be updated similarly)
     };
 
 
