@@ -28,38 +28,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     :root {
-      /* --- NEW: Monochrome Color Scheme inspired by ChatGPT --- */
-      --primary-color: #E0E0E0; /* Light grey for accents */
-      --primary-hover-color: #FFFFFF; /* Pure white for hover */
-      --primary-glow-color: rgba(224, 224, 224, 0.2); /* Adjusted glow for grey */
-      --secondary-color: #BDBDBD; /* Another grey for variation */
-      
-      /* Pure Black Theme */
+      --primary-color: #E0E0E0;
+      --primary-hover-color: #FFFFFF;
+      --primary-glow-color: rgba(224, 224, 224, 0.2);
+      --secondary-color: #BDBDBD;
       --bg-main: #000000;
       --bg-surface: #101010;
       --bg-surface-raised: #1c1c1c;
       --bg-input: #1c1c1c;
-
       --text-primary: #f0f4f8;
       --text-secondary: #a0a8b2;
-      --text-on-primary: #000000; /* Text on top of the light grey accent */
-      
+      --text-on-primary: #000000;
       --border-color: #2a2a2a;
       --border-color-light: #404040;
-      
       --success-color: #4ce083;
       --error-color: #ff5c5c;
-      
       --shadow-xs: 0 1px 3px rgba(0,0,0,0.5);
       --shadow-sm: 0 4px 6px rgba(0,0,0,0.6);
       --shadow-md: 0 6px 12px rgba(0,0,0,0.7);
       --shadow-lg: 0 12px 24px rgba(0,0,0,0.8);
-      
       --border-radius-sm: 8px;
       --border-radius-md: 12px;
       --border-radius-lg: 16px;
       --border-radius-xl: 24px;
-
       --header-height: 52px;
     }
 
@@ -136,8 +127,7 @@
       flex-shrink: 0; 
       z-index: 10; 
       height: var(--header-height);
-      direction: rtl; /* Always RTL */
-      position: absolute; /* Floating Header */
+      position: absolute;
       top: 0;
       left: 0;
       right: 0;
@@ -147,9 +137,9 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        position: relative;
     }
     
-    /* --- NEW/MODIFIED --- */
     .header .header-icon {
       cursor: pointer;
       transition: color 0.2s ease-in-out, transform 0.2s ease;
@@ -158,7 +148,8 @@
       z-index: 11; 
       padding: 5px;
     }
-    .delete-all-btn:hover { color: var(--error-color); transform: rotate(10deg) scale(1.1); }
+    
+    .settings-btn:hover { color: var(--primary-hover-color); transform: rotate(15deg) scale(1.1); }
     .share-btn-header:hover { color: var(--success-color); transform: scale(1.15); }
     .history-btn:hover { color: var(--primary-hover-color); transform: scale(1.15); }
     
@@ -201,28 +192,22 @@
         box-shadow: var(--shadow-sm), 0 0 8px var(--primary-glow-color);
     }
     
-    #languageSelector { position: relative; }
-    #languageBtn {
-      padding: 0.4rem;
-      width: 34px;
-      height: 34px;
-      font-size: 1.1rem;
-    }
-    #languageDropdown {
+    .dropdown-menu {
         display: none;
         position: absolute;
         top: calc(100% + 5px);
-        left: 0;
         background-color: var(--bg-surface-raised);
         border: 1px solid var(--border-color);
         border-radius: var(--border-radius-md);
         box-shadow: var(--shadow-md);
         z-index: 100;
-        min-width: 150px;
+        min-width: 180px;
         overflow: hidden;
     }
-    #languageDropdown button {
-        display: block;
+    .dropdown-menu button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         width: 100%;
         padding: 10px 15px;
         background: none;
@@ -232,8 +217,16 @@
         font-size: 0.9rem;
         text-align: right;
     }
-    #languageDropdown button:hover { background-color: var(--primary-color); color: var(--text-on-primary); }
-
+    html[dir="ltr"] .dropdown-menu button { text-align: left; }
+    .dropdown-menu button:hover { background-color: var(--primary-color); color: var(--text-on-primary); }
+    .dropdown-menu button i { width: 15px; text-align: center; }
+    .dropdown-menu button.danger:hover { background-color: var(--error-color); color: white; }
+    #languageBtn {
+      padding: 0.4rem;
+      width: 34px;
+      height: 34px;
+      font-size: 1.1rem;
+    }
 
     .chat-wrapper { 
         flex: 1; 
@@ -241,11 +234,40 @@
         flex-direction: column; 
         overflow: hidden; 
         min-height: 0;
-        padding-top: var(--header-height); /* Space for floating header */
+        padding-top: var(--header-height);
+        position: relative;
     }
+
+    #welcomeAnimationContainer {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+    .welcome-svg {
+      width: 100px;
+      height: 100px;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.5s forwards;
+    }
+    .welcome-svg path {
+      stroke: var(--primary-color);
+      stroke-width: 1;
+      fill: transparent;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 3s ease-in-out forwards;
+    }
+    @keyframes fadeIn { to { opacity: 0.4; } }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
     
-    #subjectsViewContainer { background-color: var(--bg-main); padding: 1.5rem; display: none; align-items: center; }
-    .subjects-view-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+    #subjectsViewContainer { background-color: var(--bg-main); padding: 1.5rem; display: none; flex-direction: column; align-items: center; }
+    .subjects-view-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); max-width: 700px; }
     .subjects-view-header h2 { font-size: 1.6rem; color: var(--primary-color); }
     .back-to-chat-btn { background-color: var(--bg-surface-raised); color: var(--text-primary); border: 1px solid var(--border-color-light); padding: 0.7rem 1.2rem; border-radius: var(--border-radius-md); cursor: pointer; font-size: 0.9rem; transition: all 0.25s ease; box-shadow: var(--shadow-xs); display: flex; align-items: center; gap: 0.5rem; }
     .back-to-chat-btn:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); transform: translateY(-2px); box-shadow: var(--shadow-sm), 0 0 10px var(--primary-glow-color); }
@@ -255,10 +277,23 @@
     .subject-item-btn i { font-size: 2.2rem; margin-bottom: 5px; color: var(--secondary-color); transition: color 0.3s ease; }
     .subject-item-btn:hover i { color: var(--text-on-primary); }
 
-    .chat-container { flex: 1; padding: 1.5rem 1rem; overflow-y: auto; background: var(--bg-main); scroll-behavior: smooth; min-height: 0; }
+    .chat-container { 
+      flex: 1; 
+      padding: 1.5rem 1rem 150px 1rem;
+      overflow-y: auto; 
+      background: var(--bg-main); 
+      scroll-behavior: smooth; 
+      min-height: 0; 
+    }
+
     .message { max-width: 85%; margin-bottom: 2rem; display: flex; flex-direction: column; animation: messageAppear 0.4s ease-out; word-wrap: break-word; white-space: pre-wrap; line-height: 1.7; }
     @keyframes messageAppear { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     .message-content { padding: 0.2rem 0.5rem; }
+    .typing-indicator span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: var(--text-secondary); margin: 0 2px; animation: typing-bounce 1.4s infinite ease-in-out both; }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
     .message-header { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 8px; font-weight: 500; }
     .delete-btn { color: var(--text-secondary); font-size: 0.8rem; cursor: pointer; transition: color 0.2s, transform 0.2s; opacity: 0.4; padding: 3px 5px; }
     .message:hover .delete-btn { opacity: 0.8; }
@@ -267,10 +302,10 @@
     .message.user .message-header { flex-direction: row-reverse; }
     .message.bot { margin-right: auto; align-items: flex-start; }
     
-    html[dir="ltr"] .message.user { margin-right: auto; margin-left: 0; align-items: flex-end; }
-    html[dir="ltr"] .message.bot { margin-left: auto; margin-right: 0; align-items: flex-start; }
+    html[dir="ltr"] .message.user { margin-right: auto; margin-left: 0; align-items: flex-start; }
+    html[dir="ltr"] .message.bot { margin-left: auto; margin-right: 0; align-items: flex-end; }
     
-    .message.user .message-content { color: #e5e7eb; /* NEW: Brighter off-white for user text */ }
+    .message.user .message-content { color: #e5e7eb; }
     .message.bot .message-content { color: var(--text-primary); }
     .message.bot .message-content strong { color: var(--primary-color); }
     .message-actions { margin-top: 10px; display: flex; gap: 8px; padding: 0 8px; flex-wrap: wrap; }
@@ -279,68 +314,37 @@
     .message-actions button:hover { color: var(--text-on-primary); background-color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-glow-color); }
     
     .chat-input-area { 
-        flex-shrink: 0; 
+        position: absolute; bottom: 0; left: 0; right: 0;
         background: transparent; 
-        position: relative; 
-        padding: 0.8rem 1rem;
+        padding: 0.8rem 1rem; z-index: 5;
     }
     .chat-input-area::before { 
-        content: ''; 
-        position: absolute; 
-        bottom: 0; 
-        left: 0; 
-        right: 0; 
+        content: ''; position: absolute; bottom: 0; left: 0; right: 0; 
         height: 150px; 
         background: linear-gradient(to top, var(--bg-main) 20%, transparent 100%); 
-        pointer-events: none; 
-        z-index: 4; 
+        pointer-events: none; z-index: 4; 
     }
     .chat-input-wrapper {
-        position: relative;
-        z-index: 5;
-        max-width: 800px;
-        margin: 0 auto;
-        background: var(--bg-input);
-        border: 1px solid var(--border-color);
+        position: relative; z-index: 5; max-width: 800px; margin: 0 auto;
+        background: var(--bg-input); border: 1px solid var(--border-color);
         border-radius: var(--border-radius-xl);
         transition: border-color 0.25s ease, box-shadow 0.25s ease;
-        display: flex;
-        align-items: flex-end; /* Align buttons at the bottom */
+        display: flex; align-items: flex-end; box-shadow: var(--shadow-md);
     }
-    .chat-input-wrapper:focus-within {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px var(--primary-glow-color);
-    }
+    .chat-input-wrapper:focus-within { border-color: var(--primary-color); box-shadow: var(--shadow-md), 0 0 0 3px var(--primary-glow-color); }
     .chat-input-wrapper textarea { 
-        flex: 1; 
-        padding: 0.8rem 48px; /* Room for buttons on both sides */
-        border: none;
-        resize: none; 
-        font-size: 0.95rem; 
-        outline: none; 
-        background: transparent; 
-        color: var(--text-primary); 
-        max-height: 150px; 
-        line-height: 1.6; 
+        flex: 1; padding: 0.8rem 48px; border: none; resize: none; 
+        font-size: 0.95rem; outline: none; background: transparent; 
+        color: var(--text-primary); max-height: 150px; line-height: 1.6; 
     }
     .chat-input-wrapper textarea::placeholder { color: var(--text-secondary); opacity: 0.6; }
 
     .chat-input-btn { 
-        background: transparent; 
-        border: none; 
-        color: var(--text-secondary); 
-        width: 44px; 
-        height: 44px; 
-        border-radius: 50%; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        cursor: pointer; 
-        font-size: 1.1rem; 
-        transition: all 0.25s ease; 
-        flex-shrink: 0;
-        position: absolute;
-        bottom: 0px;
+        background: transparent; border: none; color: var(--text-secondary); 
+        width: 44px; height: 44px; border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center; 
+        cursor: pointer; font-size: 1.1rem; transition: all 0.25s ease; 
+        flex-shrink: 0; position: absolute; bottom: 0px;
     }
     .chat-input-btn:hover { color: var(--text-primary); transform: scale(1.1); }
     
@@ -351,12 +355,7 @@
     html[dir="ltr"] #sendOrVoiceBtn { right: 0; left: auto; }
     #sendOrVoiceBtn:hover { color: var(--primary-hover-color); }
     
-    #speakBtn {
-        position: absolute;
-        bottom: 0px;
-        left: 48px;
-        display: none; /* Hidden by default */
-    }
+    #speakBtn { position: absolute; bottom: 0px; left: 48px; display: none; }
     html[dir="ltr"] #speakBtn { right: 48px; left: auto; }
 
     .voice-indicator { display: none; align-items: center; justify-content: center; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: var(--bg-surface-raised); color: var(--text-primary); padding: 8px 16px; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); gap: 8px; z-index: 10; opacity: 0; transition: opacity 0.3s ease; }
@@ -372,52 +371,25 @@
     html[dir="ltr"] #uploadOptionsContainer button { text-align: left; }
     #uploadOptionsContainer button:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); }
     
-    .status { text-align: center; padding: 0.4rem; font-size: 0.8rem; background-color: var(--bg-surface); color: var(--text-secondary); border-top: 1px solid var(--border-color); transition: color 0.3s ease; font-weight: 500; }
-    
-    /* Suggestions Feature */
     #suggestionsContainer {
-        display: none; /* Hidden by default */
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 12px;
-        padding: 0 1rem 1rem;
-        max-width: 800px;
-        margin: auto;
+        display: none; flex-direction: row; gap: 8px;
+        padding-bottom: 8px; max-width: 800px; margin: 0 auto;
+        overflow-x: auto; white-space: nowrap; scrollbar-width: none;
     }
+    #suggestionsContainer::-webkit-scrollbar { display: none; }
     .suggestion-btn {
-        background-color: var(--bg-surface-raised);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        padding: 12px;
-        font-size: 0.9rem;
-        border-radius: var(--border-radius-md);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-align: right;
+        background-color: var(--bg-surface-raised); border: 1px solid var(--border-color);
+        color: var(--text-secondary); padding: 6px 12px; font-size: 0.85rem;
+        border-radius: var(--border-radius-xl); cursor: pointer;
+        transition: all 0.2s ease; flex-shrink: 0;
     }
-    html[dir="ltr"] .suggestion-btn { text-align: left; }
-    .suggestion-btn:hover {
-        background-color: var(--bg-input);
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
-    }
+    .suggestion-btn:hover { background-color: var(--bg-input); border-color: var(--primary-color); color: var(--text-primary); transform: translateY(-2px); }
     
-    /* Disclaimer Text Styling */
-    .ai-disclaimer {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-        text-align: center;
-        padding: 0.5rem 1rem 0;
-        max-width: 800px;
-        margin: 0 auto;
-        line-height: 1.5;
-        position: relative;
-        z-index: 5;
-    }
+    .ai-disclaimer { font-size: 0.75rem; color: var(--text-secondary); text-align: center; padding: 0.5rem 1rem 0; max-width: 800px; margin: 0 auto; line-height: 1.5; position: relative; z-index: 5; }
 
     .camera-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .camera-modal-content { background-color: var(--bg-surface); padding: 25px; border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); text-align: center; max-width: 90%; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: var(--shadow-lg); }
     
-    /* Redesigned Share Modal */
     .share-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .share-modal-content { max-width: 450px; width: 90%; background: #1c1c1c; padding: 30px; border: 1px solid var(--border-color-light); border-radius: var(--border-radius-lg); text-align: center; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: var(--shadow-lg); }
     .share-modal-content h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); }
@@ -430,42 +402,18 @@
     .social-share-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
     .social-share-buttons .share-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--bg-surface-raised); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; text-decoration: none; transition: all 0.3s ease; }
     .social-share-buttons .share-icon:hover { color: #fff; transform: translateY(-4px); box-shadow: var(--shadow-md); }
-    .share-icon.whatsapp:hover { background-color: #25D366; }
-    .share-icon.twitter:hover { background-color: #1DA1F2; }
-    .share-icon.telegram:hover { background-color: #0088cc; }
-    .share-icon.facebook:hover { background-color: #1877F2; }
+    .share-icon.whatsapp:hover { background-color: #25D366; } .share-icon.twitter:hover { background-color: #1DA1F2; } .share-icon.telegram:hover { background-color: #0088cc; } .share-icon.facebook:hover { background-color: #1877F2; }
     .qr-code-container { margin-top: 15px; }
     .qr-code-container img { background: #fff; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); }
     .qr-code-container p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px; }
     .close-share-modal { position: absolute; top: 15px; left: 15px; font-size: 1.8rem; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; }
     .close-share-modal:hover { color: var(--text-primary); transform: rotate(90deg); }
     
-    /* --- NEW: HISTORY SIDEBAR --- */
-    .history-sidebar {
-      position: fixed;
-      top: 0;
-      right: -300px; /* Start off-screen */
-      width: 280px;
-      height: 100%;
-      background-color: var(--bg-surface);
-      border-left: 1px solid var(--border-color);
-      z-index: 1001;
-      transition: right 0.3s ease-in-out;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow-lg);
-    }
+    .history-sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background-color: var(--bg-surface); border-left: 1px solid var(--border-color); z-index: 1001; transition: right 0.3s ease-in-out; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
     html[dir="ltr"] .history-sidebar { right: auto; left: -300px; border-left: none; border-right: 1px solid var(--border-color); transition: left 0.3s ease-in-out; }
     .history-sidebar.open { right: 0; }
     html[dir="ltr"] .history-sidebar.open { left: 0; }
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.6);
-      z-index: 1000;
-      backdrop-filter: blur(2px);
-    }
+    .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(2px); }
     .sidebar-overlay.open { display: block; }
     .history-header { padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
     .history-header h3 { font-size: 1.1rem; color: var(--text-primary); }
@@ -482,984 +430,176 @@
     #historyList li:hover .delete-history-item-btn { opacity: 1; }
     .delete-history-item-btn:hover { color: var(--error-color); transform: scale(1.2); }
 
-    @media (max-width: 768px) {
-      /* --- NEW: HIDE DISCLAIMER ON MOBILE --- */
-      .ai-disclaimer { display: none !important; }
-    }
-
     @media (max-width: 480px) { 
-      .header h1 { font-size: 0.95rem; }
-      .message { max-width: 95%; }
-      .chat-input-wrapper textarea { padding: 0.8rem 44px; }
-      .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; }
-      #speakBtn { left: 42px; }
-      html[dir="ltr"] #speakBtn { right: 42px; left: auto; }
-      #suggestionsContainer { grid-template-columns: 1fr; }
+      .header h1 { font-size: 0.95rem; } .message { max-width: 95%; } .chat-input-wrapper textarea { padding: 0.8rem 44px; } .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; } #speakBtn { left: 42px; } html[dir="ltr"] #speakBtn { right: 42px; left: auto; }
+      #suggestionsContainer { gap: 8px; } .suggestion-btn { padding: 10px; font-size: 0.85rem; }
+      #subjectListContainer { gap: 12px; } .subject-item-btn { padding: 12px 15px; font-size: 0.9rem; min-width: 140px; gap: 6px;} .subject-item-btn i { font-size: 1.8rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div id="downloadNotification" class="download-notification">
-      <span id="downloadNotificationText">ثبّت التطبيق على جهازك للوصول السريع!</span>
+      <span id="downloadNotificationText"></span>
       <div class="notification-buttons">
-          <button id="downloadAppBtn" class="download-btn">تثبيت</button>
+          <button id="downloadAppBtn" class="download-btn"></button>
           <button id="closeNotificationBtn" class="close-btn">×</button>
       </div>
     </div>
     
-    <header class="header">
-      <!-- Right Group (Controls) -->
-      <div id="headerControls" class="header-group">
-        <button id="enterSubjectsBtn" class="header-btn">مواد متخصصة</button>
-        <button id="generalChatBtn" class="header-btn" style="display: none;">عام</button>
+    <header class="header" dir="rtl">
+      <div class="header-group">
+        <button id="generalChatBtn" class="header-btn" style="display: none;"></button>
         <div id="languageSelector">
-          <button id="languageBtn" class="header-btn" title="تغيير اللغة">
-            <i class="fas fa-globe"></i>
-          </button>
-          <div id="languageDropdown">
-            <button data-lang="ar">العربية</button>
-            <button data-lang="en">English</button>
-            <button data-lang="fr">Français</button>
-            <button data-lang="es">Español</button>
-            <button data-lang="zh">中文</button>
+          <button id="languageBtn" class="header-btn"><i class="fas fa-globe"></i></button>
+          <div id="languageDropdown" class="dropdown-menu">
+            <button data-lang="ar"></button> <button data-lang="en"></button> <button data-lang="fr"></button> <button data-lang="es"></button> <button data-lang="zh"></button>
           </div>
         </div>
       </div>
-      
-      <!-- Center Group (Title) -->
       <div class="header-group">
         <i class="fas fa-robot"></i>
         <h1 id="botName">Saif AI</h1>
       </div>
-      
-      <!-- Left Group (Icons) -->
       <div id="headerIcons" class="header-group">
-        <i class="fas fa-share-alt header-icon share-btn-header" id="shareBtn" title="مشاركة التطبيق"></i>
-        <i class="fas fa-trash header-icon delete-all-btn" id="deleteCurrentChatBtn" title="حذف المحادثة الحالية"></i>
-        <i class="fas fa-bars header-icon history-btn" id="historyBtn" title="عرض السجل"></i>
+        <i class="fas fa-share-alt header-icon share-btn-header" id="shareBtn"></i>
+        <i class="fas fa-bars header-icon history-btn" id="historyBtn"></i>
+        <div id="settingsSelector">
+            <i class="fas fa-cog header-icon settings-btn" id="settingsBtn"></i>
+            <div id="settingsDropdown" class="dropdown-menu">
+                <button id="enterSubjectsBtn"><i class="fas fa-book"></i> <span id="enterSubjectsBtnText"></span></button>
+                <button id="deleteCurrentChatBtn" class="danger"><i class="fas fa-trash"></i> <span id="deleteCurrentChatBtnText"></span></button>
+            </div>
+        </div>
       </div>
     </header>
 
     <div class="chat-wrapper" id="chatWrapper"> 
-        <div id="chatContainer" class="chat-container">
-          <!-- Messages will be here -->
+        <div id="welcomeAnimationContainer">
+            <svg class="welcome-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"/><path d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"/><path d="M12 2V4"/><path d="M12 20V22"/><path d="M22 12H20"/><path d="M4 12H2"/><path d="M19.0711 4.92896L17.6569 6.34317"/><path d="M6.34315 17.6569L4.92893 19.0711"/><path d="M19.0711 19.0711L17.6569 17.6569"/><path d="M6.34315 6.34315L4.92893 4.92893"/></svg>
         </div>
-        
-        <!-- Suggestions will be here -->
-        <div id="suggestionsContainer"></div>
-        
+        <div id="chatContainer" class="chat-container"></div>
         <div class="chat-input-area"> 
-            <div class="status" id="statusBar"></div>
-            
-            <div class="voice-indicator" id="voiceIndicator">
-              <i class="fas fa-microphone"></i>
-              <span id="listeningText">جاري الاستماع...</span>
-            </div>
-
+            <div id="suggestionsContainer"></div>
+            <div class="voice-indicator" id="voiceIndicator"><i class="fas fa-microphone"></i><span id="listeningText"></span></div>
             <div class="chat-input-wrapper">
-              <button class="chat-input-btn" id="toggleUploadBtn" title="إرفاق ملف">
-                <i class="fas fa-plus"></i>
-              </button>
-
-              <textarea id="userInput" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
-              
-              <button class="chat-input-btn" id="speakBtn" title="تشغيل الصوت">
-                <i class="fas fa-volume-up"></i>
-              </button>
-
-              <button class="chat-input-btn" id="sendOrVoiceBtn">
-                <!-- Content will be set by JS -->
-              </button>
-              
+              <button class="chat-input-btn" id="toggleUploadBtn"><i class="fas fa-plus"></i></button>
+              <textarea id="userInput" rows="1"></textarea>
+              <button class="chat-input-btn" id="speakBtn"><i class="fas fa-volume-up"></i></button>
+              <button class="chat-input-btn" id="sendOrVoiceBtn"></button>
               <div class="upload-options-container" id="uploadOptionsContainer">
-                <button id="uploadFromGalleryBtn" onclick="triggerImageUpload()">
-                  <i class="fas fa-images"></i> رفع من المعرض
-                </button>
-                <button id="useCameraBtn" onclick="openCamera()">
-                  <i class="fas fa-camera"></i> استخدام الكاميرا
-                </button>
+                <button id="uploadFromGalleryBtn"><i class="fas fa-images"></i> <span></span></button>
+                <button id="useCameraBtn"><i class="fas fa-camera"></i> <span></span></button>
               </div>
-
               <input id="imageUpload" type="file" accept="image/*" onchange="handleFileSelect(event)" style="display: none;" />
             </div>
-            
-            <!-- AI Disclaimer -->
             <div id="aiDisclaimer" class="ai-disclaimer"></div>
         </div>
     </div>
 
     <div id="subjectsViewContainer"> 
         <div class="subjects-view-header">
-            <h2 id="subjectsViewTitle">اختر المادة الدراسية</h2>
-            <button id="backToChatBtn" class="back-to-chat-btn">
-                <i class="fas fa-arrow-left"></i> <span id="backToChatText">العودة للدردشة</span>
-            </button>
+            <h2 id="subjectsViewTitle"></h2>
+            <button id="backToChatBtn" class="back-to-chat-btn"><i class="fas fa-arrow-left"></i> <span id="backToChatText"></span></button>
         </div>
-        <div id="subjectListContainer">
-            <!-- Subject items will be populated here by JS -->
-        </div>
+        <div id="subjectListContainer"></div>
     </div>
   </div>
   
-  <!-- NEW: History Sidebar -->
   <div id="historySidebar" class="history-sidebar">
-    <div class="history-header">
-      <h3 id="historyTitle">سجل المحادثات</h3>
-      <button id="closeHistoryBtn">&times;</button>
-    </div>
-    <button id="newChatBtn" class="new-chat-btn">
-      <i class="fas fa-plus"></i> <span id="newChatText">محادثة جديدة</span>
-    </button>
-    <ul id="historyList">
-      <!-- History items will be populated here -->
-    </ul>
+    <div class="history-header"><h3 id="historyTitle"></h3><button id="closeHistoryBtn">&times;</button></div>
+    <button id="newChatBtn" class="new-chat-btn"><i class="fas fa-plus"></i> <span id="newChatText"></span></button>
+    <ul id="historyList"></ul>
   </div>
   <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-
-  <!-- Camera Modal -->
   <div id="cameraModal" class="camera-modal">
     <div class="camera-modal-content">
       <video id="cameraView" autoplay playsinline></video>
-      <div class="camera-controls">
-        <button id="captureBtn">التقاط صورة</button>
-        <button id="cancelCameraBtn">إلغاء</button>
-      </div>
+      <div class="camera-controls"><button id="captureBtn"></button><button id="cancelCameraBtn"></button></div>
     </div>
   </div>
 
-  <!-- Share Modal -->
   <div id="shareModal" class="share-modal">
     <div class="share-modal-content">
-      <span class="close-share-modal" id="closeShareModal">&times;</span>
-      <h2 id="shareModalTitle">شارك التطبيق</h2>
-      <p id="shareModalDesc">ساعدنا على النمو بمشاركة التطبيق مع أصدقائك!</p>
-      
-      <div class="share-link-container">
-        <button id="copyLinkBtn"><i class="fas fa-copy"></i> <span id="copyBtnText">نسخ</span></button>
-        <input type="text" value="https://tinyurl.com/saif-ai" id="shareLinkInput" readonly>
-      </div>
-
+      <span class="close-share-modal" id="closeShareModal">&times;</span><h2 id="shareModalTitle"></h2><p id="shareModalDesc"></p>
+      <div class="share-link-container"><button id="copyLinkBtn"><i class="fas fa-copy"></i> <span id="copyBtnText"></span></button><input type="text" value="https://tinyurl.com/saif-ai" id="shareLinkInput" readonly></div>
       <hr class="share-divider">
-
       <div class="social-share-buttons">
-          <a href="#" target="_blank" class="share-icon whatsapp" id="whatsapp-share" title="مشاركة عبر واتساب"><i class="fab fa-whatsapp"></i></a>
-          <a href="#" target="_blank" class="share-icon twitter" id="twitter-share" title="مشاركة عبر تويتر"><i class="fab fa-twitter"></i></a>
-          <a href="#" target="_blank" class="share-icon telegram" id="telegram-share" title="مشاركة عبر تيليجرام"><i class="fab fa-telegram-plane"></i></a>
-          <a href="#" target="_blank" class="share-icon facebook" id="facebook-share" title="مشاركة عبر فيسبوك"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" target="_blank" class="share-icon whatsapp" id="whatsapp-share"><i class="fab fa-whatsapp"></i></a><a href="#" target="_blank" class="share-icon twitter" id="twitter-share"><i class="fab fa-twitter"></i></a><a href="#" target="_blank" class="share-icon telegram" id="telegram-share"><i class="fab fa-telegram-plane"></i></a><a href="#" target="_blank" class="share-icon facebook" id="facebook-share"><i class="fab fa-facebook-f"></i></a>
       </div>
-      
-      <div class="qr-code-container">
-          <img id="qr-code-img" src="" alt="QR Code" width="140" height="140">
-          <p id="qrCodeText">أو امسح الرمز للمشاركة</p>
-      </div>
+      <div class="qr-code-container"><img id="qr-code-img" src="" alt="QR Code" width="140" height="140"><p id="qrCodeText"></p></div>
     </div>
   </div>
 
-
   <script>
-    // --- API KEYS ---
-    const geminiApiKey = "AIzaSyAnuSkvwbWZ0M95asG7-cd0-JhfOkWtXV8"; 
+    // --- (The entire JavaScript code from the previous response goes here, it is correct) ---
+    // For brevity, the full script is not repeated here, but it should be the same one as the last response.
+    // Ensure this script is placed here.
+    const geminiApiKey = "AIzaSyBDCnhomRHl-lfz-zqkqB05039eNwIlm-4"; 
     const ocrApiKey = "K83201031288957";     
-
-    // --- DOM ELEMENTS ---
-    const chatWrapper = document.getElementById("chatWrapper");
-    const chatContainer = document.getElementById("chatContainer");
-    const statusBar = document.getElementById("statusBar");
-    const userInput = document.getElementById("userInput");
-    const botNameElement = document.getElementById("botName");
-    const imageUploadInput = document.getElementById("imageUpload");
-    const toggleUploadBtn = document.getElementById("toggleUploadBtn");
-    const uploadOptionsContainer = document.getElementById("uploadOptionsContainer");
-    const voiceIndicator = document.getElementById('voiceIndicator');
-    const subjectsViewContainer = document.getElementById('subjectsViewContainer');
-    const subjectListContainer = document.getElementById('subjectListContainer'); 
-    const backToChatBtn = document.getElementById('backToChatBtn');
-    const cameraModal = document.getElementById('cameraModal');
-    const cameraView = document.getElementById('cameraView');
-    const captureBtn = document.getElementById('captureBtn');
-    const cancelCameraBtn = document.getElementById('cancelCameraBtn');
-    let cameraStream = null;
-    const enterSubjectsBtn = document.getElementById('enterSubjectsBtn');
-    const generalChatBtn = document.getElementById('generalChatBtn');
-    const shareBtn = document.getElementById('shareBtn');
-    const shareModal = document.getElementById('shareModal');
-    const closeShareModalBtn = document.getElementById('closeShareModal');
-    const copyLinkBtn = document.getElementById('copyLinkBtn');
-    const shareLinkInput = document.getElementById('shareLinkInput');
-    const downloadNotification = document.getElementById('downloadNotification');
-    const downloadAppBtn = document.getElementById('downloadAppBtn');
-    const closeNotificationBtn = document.getElementById('closeNotificationBtn');
-    const sendOrVoiceBtn = document.getElementById('sendOrVoiceBtn');
-    const speakBtn = document.getElementById('speakBtn');
-    const languageBtn = document.getElementById('languageBtn');
-    const languageDropdown = document.getElementById('languageDropdown');
-    const suggestionsContainer = document.getElementById('suggestionsContainer');
-    const deleteCurrentChatBtn = document.getElementById('deleteCurrentChatBtn');
-    // --- NEW: History Sidebar Elements ---
-    const historyBtn = document.getElementById('historyBtn');
-    const historySidebar = document.getElementById('historySidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    const closeHistoryBtn = document.getElementById('closeHistoryBtn');
-    const newChatBtn = document.getElementById('newChatBtn');
-    const historyList = document.getElementById('historyList');
-
-    
-    // --- GLOBAL VARIABLES & CONSTANTS ---
-    const botName = "Saif AI";
-    // --- MODIFIED: New data structure for chat sessions ---
-    const localStorageKeyAllChats = "saifAiAllChatSessions_v3";
-    const localStorageKeyLastSession = "saifAiLastSession_v3";
-    const localStorageKeyLanguage = "saifAiLanguage_v1";
-    
-    let allChatSessions = {}; // { general: [ {id, messages, timestamp} ], ... }
-    let messages = [];    
-    let currentSubject = "general";
-    let currentChatId = null; // ID of the currently active chat
-    
-    let statusTimeout;
-    let currentLanguage = "ar";
-    const subjects = [ 
-        { key: "physics", name: { ar: "فيزياء", en: "Physics", fr: "Physique", es: "Física", zh: "物理" }, icon: "fas fa-atom" },
-        { key: "chemistry", name: { ar: "كيمياء", en: "Chemistry", fr: "Chimie", es: "Química", zh: "化学" }, icon: "fas fa-flask" },
-        { key: "biology", name: { ar: "أحياء", en: "Biology", fr: "Biologie", es: "Biología", zh: "生物学" }, icon: "fas fa-dna" },
-        { key: "science", name: { ar: "علوم", en: "Science", fr: "Sciences", es: "Ciencia", zh: "科学" }, icon: "fas fa-microscope" },
-        { key: "arabic", name: { ar: "لغة عربية", en: "Arabic", fr: "Arabe", es: "Árabe", zh: "阿拉伯语" }, icon: "fas fa-pen-nib" },
-        { key: "philosophy", name: { ar: "فلسفة", en: "Philosophy", fr: "Philosophie", es: "Filosofía", zh: "哲学" }, icon: "fas fa-brain" },
-        { key: "english", name: { ar: "لغة إنجليزية", en: "English", fr: "Anglais", es: "Inglés", zh: "英语" }, icon: "fas fa-language" },
-        { key: "math", name: { ar: "رياضيات", en: "Math", fr: "Maths", es: "Matemáticas", zh: "数学" }, icon: "fas fa-calculator" },
-        { key: "religion", name: { ar: "تربية دينية", en: "Religion", fr: "Religion", es: "Religión", zh: "宗教教育" }, icon: "fas fa-mosque" }
-    ];
-    let recognition;
-    let isListening = false;
-    let deferredPrompt;
-    let speechEndTimeout;
-
-    // --- PWA & NOTIFICATION FUNCTIONS ---
-    function showAppNotification() { downloadNotification.classList.add('show'); }
-    function hideAppNotification() { downloadNotification.classList.remove('show'); }
-    function registerServiceWorker() {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.error('Service Worker registration failed:', err));
-      }
-    }
-    async function promptInstall(e) {
-        e.preventDefault();
-        if (deferredPrompt) {
-            hideAppNotification();
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-        }
-    }
-
-    // --- SPEECH RECOGNITION (INPUT) ---
-    function initSpeechRecognition() {
-        if (recognition) { recognition.abort(); }
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' };
-            recognition = new SpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = langMap[currentLanguage];
-
-            recognition.onstart = () => {
-                isListening = true;
-                sendOrVoiceBtn.classList.add('recording');
-                voiceIndicator.classList.add('active');
-                setStatus(translations[currentLanguage].listening, "", null);
-            };
-
-            recognition.onresult = (event) => {
-                clearTimeout(speechEndTimeout);
-                let transcript = Array.from(event.results)
-                    .map(result => result[0].transcript)
-                    .join('');
-                userInput.value = transcript;
-                autoResizeTextarea();
-                updateSendOrVoiceButton();
-                
-                speechEndTimeout = setTimeout(() => {
-                    if (isListening) recognition.stop();
-                }, 1500);
-            };
-
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error', event.error);
-                if (event.error !== 'no-speech') {
-                    setStatus(`${translations[currentLanguage].speechError}: ${event.error}`, "error", 4000);
-                }
-                stopListening();
-            };
-
-            recognition.onend = () => {
-                stopListening();
-            };
-        } else {
-            sendOrVoiceBtn.style.display = 'none';
-            setStatus(translations[currentLanguage].speechNotSupported, "error", 3000);
-        }
-    }
-    
-    function toggleListening() {
-        if (!recognition) return;
-        if (isListening) { 
-            recognition.stop();
-        } else { 
-            try { 
-                userInput.value = ""; 
-                autoResizeTextarea(); 
-                recognition.start(); 
-            } catch (e) { 
-                stopListening(); 
-            }
-        }
-    }
-    
-    function stopListening() {
-        clearTimeout(speechEndTimeout);
-        isListening = false;
-        sendOrVoiceBtn.classList.remove('recording');
-        voiceIndicator.classList.remove('active');
-        if (statusBar.textContent === translations[currentLanguage].listening) setStatus("", "", 100);
-    }
-    
-    // --- TEXT TO SPEECH (OUTPUT) ---
-    function speakLastBotMessage() {
-        if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-            return;
-        }
-        const lastBotMessage = [...messages].reverse().find(m => m.sender === 'bot' && !m.isSystemMessage && !m.isInitialWelcome);
-        if (lastBotMessage) {
-            const utterance = new SpeechSynthesisUtterance(lastBotMessage.text);
-            const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' };
-            utterance.lang = langMap[currentLanguage];
-            speechSynthesis.speak(utterance);
-        } else {
-            setStatus(translations[currentLanguage].noResponseToSpeak, "", 2000);
-        }
-    }
-
-    // --- INITIALIZATION & EVENT LISTENERS ---
-    function initializeApp() {
-        registerServiceWorker();
-        const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar';
-        switchLanguage(savedLang, false); // Switch language first to have translations ready
-        
-        loadAllChatSessions();
-        
-        // Event Listeners
-        const qrCodeImg = document.getElementById('qr-code-img');
-        const whatsappShare = document.getElementById('whatsapp-share');
-        const twitterShare = document.getElementById('twitter-share');
-        const telegramShare = document.getElementById('telegram-share');
-        const facebookShare = document.getElementById('facebook-share');
-
-        shareBtn.addEventListener('click', () => {
-            const shareUrl = shareLinkInput.value;
-            const shareText = translations[currentLanguage].shareText;
-            qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`;
-            whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
-            twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
-            telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
-            facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-            shareModal.style.display = 'flex';
-        });
-
-        closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; });
-        copyLinkBtn.addEventListener('click', copyShareLink);
-        toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); });
-        document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); });
-        captureBtn.addEventListener('click', captureImageFromCamera);
-        cancelCameraBtn.addEventListener('click', closeCamera);
-        enterSubjectsBtn.addEventListener('click', openSubjectsView);
-        backToChatBtn.addEventListener('click', closeSubjectsView);
-        generalChatBtn.addEventListener('click', switchToGeneralMode);
-        downloadAppBtn.addEventListener('click', promptInstall);
-        closeNotificationBtn.addEventListener('click', hideAppNotification);
-        userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}});
-        userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); }); 
-        speakBtn.addEventListener('click', speakLastBotMessage);
-        languageBtn.addEventListener('click', (e) => { e.stopPropagation(); languageDropdown.style.display = languageDropdown.style.display === 'block' ? 'none' : 'block'; });
-        document.addEventListener('click', () => { languageDropdown.style.display = 'none'; });
-        document.querySelectorAll('#languageDropdown button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                switchLanguage(e.currentTarget.dataset.lang);
-            });
-        });
-        
-        deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat);
-
-        // --- NEW: History Sidebar Listeners ---
-        historyBtn.addEventListener('click', openHistorySidebar);
-        closeHistoryBtn.addEventListener('click', closeHistorySidebar);
-        sidebarOverlay.addEventListener('click', closeHistorySidebar);
-        newChatBtn.addEventListener('click', () => {
-          loadChat(currentSubject, null); // Start a new chat in the current subject
-          closeHistorySidebar();
-        });
-
-
-        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); });
-        window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); });
-        window.addEventListener('click', (event) => {
-            if (event.target == shareModal) shareModal.style.display = 'none';
-            if (event.target == cameraModal) closeCamera();
-        });
-    }
-    
-    function copyShareLink() {
-        shareLinkInput.select();
-        navigator.clipboard.writeText(shareLinkInput.value).then(() => {
-            const originalText = document.getElementById('copyBtnText').textContent;
-            document.getElementById('copyBtnText').textContent = translations[currentLanguage].copied;
-            copyLinkBtn.querySelector('i').className = "fas fa-check";
-            setTimeout(() => { 
-                document.getElementById('copyBtnText').textContent = originalText;
-                copyLinkBtn.querySelector('i').className = "fas fa-copy";
-            }, 2000);
-        });
-    }
-
-    // --- UI & VIEW MANAGEMENT ---
-    function updateSendOrVoiceButton() {
-        const hasText = userInput.value.trim().length > 0;
-        const t = translations[currentLanguage];
-        if (hasText) {
-            sendOrVoiceBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
-            sendOrVoiceBtn.title = t.send;
-            sendOrVoiceBtn.onclick = sendMessage;
-        } else {
-            sendOrVoiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-            sendOrVoiceBtn.title = t.speak;
-            sendOrVoiceBtn.onclick = toggleListening;
-        }
-    }
-
-    function openSubjectsView() { chatWrapper.style.display = 'none'; subjectsViewContainer.style.display = 'flex'; }
+    const chatWrapper = document.getElementById("chatWrapper"); const chatContainer = document.getElementById("chatContainer"); const userInput = document.getElementById("userInput"); const botNameElement = document.getElementById("botName"); const imageUploadInput = document.getElementById("imageUpload"); const toggleUploadBtn = document.getElementById("toggleUploadBtn"); const uploadOptionsContainer = document.getElementById("uploadOptionsContainer"); const voiceIndicator = document.getElementById('voiceIndicator'); const subjectsViewContainer = document.getElementById('subjectsViewContainer'); const subjectListContainer = document.getElementById('subjectListContainer'); const backToChatBtn = document.getElementById('backToChatBtn'); const cameraModal = document.getElementById('cameraModal'); const cameraView = document.getElementById('cameraView'); const captureBtn = document.getElementById('captureBtn'); const cancelCameraBtn = document.getElementById('cancelCameraBtn'); let cameraStream = null; const generalChatBtn = document.getElementById('generalChatBtn'); const shareBtn = document.getElementById('shareBtn'); const shareModal = document.getElementById('shareModal'); const closeShareModalBtn = document.getElementById('closeShareModal'); const copyLinkBtn = document.getElementById('copyLinkBtn'); const shareLinkInput = document.getElementById('shareLinkInput'); const downloadNotification = document.getElementById('downloadNotification'); const downloadAppBtn = document.getElementById('downloadAppBtn'); const closeNotificationBtn = document.getElementById('closeNotificationBtn'); const sendOrVoiceBtn = document.getElementById('sendOrVoiceBtn'); const speakBtn = document.getElementById('speakBtn'); const languageBtn = document.getElementById('languageBtn'); const languageDropdown = document.getElementById('languageDropdown'); const suggestionsContainer = document.getElementById('suggestionsContainer'); const settingsBtn = document.getElementById('settingsBtn'); const settingsDropdown = document.getElementById('settingsDropdown'); const enterSubjectsBtn = document.getElementById('enterSubjectsBtn'); const deleteCurrentChatBtn = document.getElementById('deleteCurrentChatBtn'); const historyBtn = document.getElementById('historyBtn'); const historySidebar = document.getElementById('historySidebar'); const sidebarOverlay = document.getElementById('sidebar-overlay'); const closeHistoryBtn = document.getElementById('closeHistoryBtn'); const newChatBtn = document.getElementById('newChatBtn'); const historyList = document.getElementById('historyList'); const welcomeAnimation = document.getElementById('welcomeAnimationContainer');
+    const botName = "Saif AI"; const localStorageKeyAllChats = "saifAiAllChatSessions_v3"; const localStorageKeyLastSession = "saifAiLastSession_v3"; const localStorageKeyLanguage = "saifAiLanguage_v1";
+    let allChatSessions = {}; let messages = []; let currentSubject = "general"; let currentChatId = null; let currentLanguage = "ar";
+    const subjects = [ { key: "physics", name: { ar: "فيزياء", en: "Physics", fr: "Physique", es: "Física", zh: "物理" }, icon: "fas fa-atom" }, { key: "chemistry", name: { ar: "كيمياء", en: "Chemistry", fr: "Chimie", es: "Química", zh: "化学" }, icon: "fas fa-flask" }, { key: "biology", name: { ar: "أحياء", en: "Biology", fr: "Biologie", es: "Biología", zh: "生物学" }, icon: "fas fa-dna" }, { key: "science", name: { ar: "علوم", en: "Science", fr: "Sciences", es: "Ciencia", zh: "科学" }, icon: "fas fa-microscope" }, { key: "arabic", name: { ar: "لغة عربية", en: "Arabic", fr: "Arabe", es: "Árabe", zh: "阿拉伯语" }, icon: "fas fa-pen-nib" }, { key: "philosophy", name: { ar: "فلسفة", en: "Philosophy", fr: "Philosophie", es: "Filosofía", zh: "哲学" }, icon: "fas fa-brain" }, { key: "english", name: { ar: "لغة إنجليزية", en: "English", fr: "Anglais", es: "Inglés", zh: "英语" }, icon: "fas fa-language" }, { key: "math", name: { ar: "رياضيات", en: "Math", fr: "Maths", es: "Matemáticas", zh: "数学" }, icon: "fas fa-calculator" }, { key: "religion", name: { ar: "تربية دينية", en: "Religion", fr: "Religion", es: "Religión", zh: "宗教教育" }, icon: "fas fa-mosque" } ];
+    let recognition; let isListening = false; let deferredPrompt; let speechEndTimeout;
+    function showAppNotification() { downloadNotification.classList.add('show'); } function hideAppNotification() { downloadNotification.classList.remove('show'); }
+    function registerServiceWorker() { if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(err => console.error('Service Worker registration failed:', err)); } }
+    async function promptInstall(e) { e.preventDefault(); if (deferredPrompt) { hideAppNotification(); deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; deferredPrompt = null; } }
+    function initSpeechRecognition() { if (recognition) { recognition.abort(); } const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; if (SpeechRecognition) { const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' }; recognition = new SpeechRecognition(); recognition.continuous = true; recognition.interimResults = true; recognition.lang = langMap[currentLanguage]; recognition.onstart = () => { isListening = true; sendOrVoiceBtn.classList.add('recording'); voiceIndicator.classList.add('active'); }; recognition.onresult = (event) => { clearTimeout(speechEndTimeout); let transcript = Array.from(event.results).map(result => result[0].transcript).join(''); userInput.value = transcript; autoResizeTextarea(); updateSendOrVoiceButton(); speechEndTimeout = setTimeout(() => { if (isListening) recognition.stop(); }, 1500); }; recognition.onerror = (event) => { console.error('Speech recognition error', event.error); stopListening(); }; recognition.onend = () => { stopListening(); }; } else { sendOrVoiceBtn.style.display = 'none'; } }
+    function toggleListening() { if (!recognition) return; if (isListening) { recognition.stop(); } else { try { userInput.value = ""; autoResizeTextarea(); recognition.start(); } catch (e) { stopListening(); } } }
+    function stopListening() { clearTimeout(speechEndTimeout); isListening = false; sendOrVoiceBtn.classList.remove('recording'); voiceIndicator.classList.remove('active'); }
+    function speakLastBotMessage() { if (speechSynthesis.speaking) { speechSynthesis.cancel(); return; } const lastBotMessage = [...messages].reverse().find(m => m.sender === 'bot' && !m.isSystemMessage && !m.isInitialWelcome); if (lastBotMessage) { const utterance = new SpeechSynthesisUtterance(lastBotMessage.text); const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' }; utterance.lang = langMap[currentLanguage]; speechSynthesis.speak(utterance); } }
+    function initializeApp() { registerServiceWorker(); const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar'; switchLanguage(savedLang); loadAllChatSessions(); const qrCodeImg = document.getElementById('qr-code-img'); const whatsappShare = document.getElementById('whatsapp-share'); const twitterShare = document.getElementById('twitter-share'); const telegramShare = document.getElementById('telegram-share'); const facebookShare = document.getElementById('facebook-share'); shareBtn.addEventListener('click', () => { const shareUrl = shareLinkInput.value; const shareText = translations[currentLanguage].shareText; qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`; whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`; twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`; shareModal.style.display = 'flex'; }); closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; }); copyLinkBtn.addEventListener('click', copyShareLink); toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); }); document.getElementById('uploadFromGalleryBtn').onclick = () => triggerImageUpload(); document.getElementById('useCameraBtn').onclick = () => openCamera(); captureBtn.addEventListener('click', captureImageFromCamera); cancelCameraBtn.addEventListener('click', closeCamera); enterSubjectsBtn.addEventListener('click', openSubjectsView); backToChatBtn.addEventListener('click', closeSubjectsView); generalChatBtn.addEventListener('click', switchToGeneralMode); downloadAppBtn.addEventListener('click', promptInstall); closeNotificationBtn.addEventListener('click', hideAppNotification); userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}}); userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); updateInitialViewState(); }); speakBtn.addEventListener('click', speakLastBotMessage); languageBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(languageDropdown); }); settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(settingsDropdown); }); document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; }); document.querySelectorAll('#languageDropdown button').forEach(button => { button.addEventListener('click', (e) => { switchLanguage(e.currentTarget.dataset.lang); }); }); deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat); historyBtn.addEventListener('click', openHistorySidebar); closeHistoryBtn.addEventListener('click', closeHistorySidebar); sidebarOverlay.addEventListener('click', closeHistorySidebar); newChatBtn.addEventListener('click', () => { loadChat(currentSubject, null); closeHistorySidebar(); }); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); }); window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); }); window.addEventListener('click', (event) => { if (event.target == shareModal) shareModal.style.display = 'none'; if (event.target == cameraModal) closeCamera(); }); }
+    function toggleDropdown(menu) { const isVisible = menu.style.display === 'block'; languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; if (!isVisible) { menu.style.display = 'block'; } }
+    function copyShareLink() { shareLinkInput.select(); navigator.clipboard.writeText(shareLinkInput.value).then(() => { const originalText = document.getElementById('copyBtnText').textContent; document.getElementById('copyBtnText').textContent = translations[currentLanguage].copied; copyLinkBtn.querySelector('i').className = "fas fa-check"; setTimeout(() => { document.getElementById('copyBtnText').textContent = originalText; copyLinkBtn.querySelector('i').className = "fas fa-copy"; }, 2000); }); }
+    function updateSendOrVoiceButton() { const hasText = userInput.value.trim().length > 0; const t = translations[currentLanguage]; if (hasText) { sendOrVoiceBtn.innerHTML = '<i class="fas fa-paper-plane"></i>'; sendOrVoiceBtn.title = t.send; sendOrVoiceBtn.onclick = sendMessage; } else { sendOrVoiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'; sendOrVoiceBtn.title = t.speak; sendOrVoiceBtn.onclick = toggleListening; } }
+    function openSubjectsView() { chatWrapper.style.display = 'none'; subjectsViewContainer.style.display = 'flex'; settingsDropdown.style.display = 'none'; }
     function closeSubjectsView() { subjectsViewContainer.style.display = 'none'; chatWrapper.style.display = 'flex'; }
-    
-    function getTranslatedSubjectName(subjectKey) {
-        if (subjectKey === "general") return translations[currentLanguage].general;
-        const subject = subjects.find(s => s.key === subjectKey);
-        return subject ? subject.name[currentLanguage] : subjectKey;
-    }
-
-    function getBotDisplayName() { 
-        const subjectName = getTranslatedSubjectName(currentSubject);
-        return currentSubject === "general" ? botName : `${botName} (${subjectName})`;
-    }
-    
-    function updateSubjectUI() {
-        botNameElement.textContent = getBotDisplayName();
-        const t = translations[currentLanguage];
-        generalChatBtn.style.display = currentSubject === "general" ? 'none' : 'inline-block';
-        generalChatBtn.textContent = t.general;
-        enterSubjectsBtn.textContent = currentSubject === "general" ? t.specializedSubjects : `${t.subjectPrefix}: ${getTranslatedSubjectName(currentSubject)}`;
-        // No longer storing subject in its own key, but as part of last session
-    }
-
-    function populateSubjectListInView() { 
-        subjectListContainer.innerHTML = '';
-        subjects.forEach(subject => {
-            const btn = document.createElement('button');
-            btn.className = 'subject-item-btn';
-            btn.innerHTML = `<i class="${subject.icon}"></i><span>${subject.name[currentLanguage]}</span>`;
-            btn.onclick = () => selectSubject(subject.key);
-            subjectListContainer.appendChild(btn);
-        });
-    }
-
-    function selectSubject(subjectKey) {
-        if (currentSubject === subjectKey) { closeSubjectsView(); return; }
-        switchSubject(subjectKey);
-        setStatus(`${translations[currentLanguage].switchedToSubject} ${getTranslatedSubjectName(subjectKey)}`, "success", 3000);
-    }
-
-    function switchToGeneralMode() {
-        if (currentSubject === "general") { closeSubjectsView(); return; }
-        switchSubject("general");
-        setStatus(translations[currentLanguage].returnedToGeneral, "success", 3000);
-    }
-
-    function switchSubject(newSubject) {
-        currentSubject = newSubject;
-        
-        // Find the last chat for the new subject, or start a new one
-        const sessionsForNewSubject = allChatSessions[currentSubject] || [];
-        const lastChatInNewSubject = sessionsForNewSubject.length > 0 ? sessionsForNewSubject[0].id : null;
-        
-        loadChat(newSubject, lastChatInNewSubject);
-        
-        updateSubjectUI();
-        closeSubjectsView();
-        // saveAllChatSessionsToLocalStorage will be called by loadChat via refreshChat
-    }
-    
-    // --- MESSAGE & CHAT MANAGEMENT (REWRITTEN) ---
-    function loadAllChatSessions() {
-      try {
-        const stored = localStorage.getItem(localStorageKeyAllChats);
-        allChatSessions = stored ? JSON.parse(stored) : {};
-      } catch (e) {
-        allChatSessions = {};
-      }
-      
-      // Ensure base structure exists for all subjects
-      subjects.forEach(s => { if (!allChatSessions[s.key]) allChatSessions[s.key] = []; });
-      if (!allChatSessions.general) allChatSessions.general = [];
-
-      let lastSession = { subject: 'general', id: null };
-      try {
-        const storedLast = localStorage.getItem(localStorageKeyLastSession);
-        if (storedLast) lastSession = JSON.parse(storedLast);
-      } catch (e) { /* use default */ }
-      
-      // Validate that the last session still exists
-      const lastSessionExists = allChatSessions[lastSession.subject]?.some(s => s.id === lastSession.id);
-
-      if (lastSessionExists) {
-        loadChat(lastSession.subject, lastSession.id);
-      } else {
-        // If it doesn't exist, load the latest chat in that subject, or a new one
-        const sessionsForSubject = allChatSessions[lastSession.subject] || [];
-        const latestChatId = sessionsForSubject.length > 0 ? sessionsForSubject[0].id : null;
-        loadChat(lastSession.subject, latestChatId);
-      }
-    }
-
-    function saveAllChatSessionsToLocalStorage() {
-      // Find the current session and update its messages
-      if (currentChatId && allChatSessions[currentSubject]) {
-        const session = allChatSessions[currentSubject].find(s => s.id === currentChatId);
-        if (session) {
-          session.messages = messages;
-        }
-      }
-      // Save the entire sessions object
-      localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allChatSessions));
-      // Save the last active session reference
-      localStorage.setItem(localStorageKeyLastSession, JSON.stringify({ subject: currentSubject, id: currentChatId }));
-    }
-
-    function loadChat(subject, chatId) {
-        currentSubject = subject;
-        currentChatId = chatId;
-        
-        if (chatId === null) {
-            // This is a new chat, not yet saved
-            messages = [];
-            addWelcomeMessage();
-        } else {
-            const session = allChatSessions[subject]?.find(s => s.id === chatId);
-            if (session) {
-                messages = session.messages;
-            } else {
-                // Fallback if ID is invalid
-                messages = [];
-                addWelcomeMessage();
-                currentChatId = null; 
-            }
-        }
-        
-        updateSubjectUI();
-        refreshChat();
-    }
-
-    function addWelcomeMessage() {
-        const welcomeMsgText = getWelcomeMessageText();
-        if (messages.length === 0 || !messages.some(m => m.isInitialWelcome)) {
-          messages.unshift({ sender: "bot", text: welcomeMsgText, isInitialWelcome: true });
-        }
-    }
-
-    function addMessage(sender, text, isImage = false, isSystemMessage = false) { 
-        // If this is the first message in a new chat, create the session first
-        if (currentChatId === null && sender === 'user') {
-            const newId = Date.now();
-            const newSession = {
-                id: newId,
-                timestamp: newId,
-                messages: [] // Will be populated by refreshChat
-            };
-            // Ensure the subject array exists
-            if (!allChatSessions[currentSubject]) {
-                allChatSessions[currentSubject] = [];
-            }
-            // Add to the beginning (so it's the newest)
-            allChatSessions[currentSubject].unshift(newSession);
-            currentChatId = newId;
-        }
-        
-        messages.push({ sender, text, isImage, isSystemMessage }); 
-        refreshChat(); 
-        chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); 
-    }
-
-    function refreshChat() {
-      chatContainer.innerHTML = ""; 
-      const t = translations[currentLanguage];
-      messages.forEach((msg, index) => {
-        const messageElem = document.createElement("div"); messageElem.className = `message ${msg.sender}`;
-        let senderName = msg.sender === "bot" ? getBotDisplayName() : t.you;
-        const header = document.createElement("div"); header.className = "message-header"; 
-        // Don't show delete button on system messages
-        const deleteButtonHTML = (msg.isInitialWelcome || msg.isSystemMessage) ? '' : `<i class="fas fa-trash delete-btn" title="${t.deleteMessage}"></i>`;
-        header.innerHTML = `<span>${senderName}</span>${deleteButtonHTML}`;
-        if (!msg.isInitialWelcome && !msg.isSystemMessage) {
-            header.querySelector('.delete-btn').onclick = () => deleteMessage(index);
-        }
-        const contentDiv = document.createElement("div"); contentDiv.className = "message-content"; contentDiv.innerHTML = msg.text; 
-        messageElem.appendChild(header); messageElem.appendChild(contentDiv);
-        if(msg.sender === "bot" && !msg.isInitialWelcome && !msg.isSystemMessage) {
-            const actionsDiv = document.createElement("div"); actionsDiv.className = "message-actions";
-            actionsDiv.innerHTML = `<button title="${t.copy}"><i class="fas fa-copy"></i></button>`;
-            actionsDiv.querySelector('button').onclick = () => { navigator.clipboard.writeText(msg.text).then(() => setStatus(t.copiedSuccess, "success", 1500)); };
-            messageElem.appendChild(actionsDiv);
-        }
-        chatContainer.appendChild(messageElem);
-      });
-      toggleSuggestionsVisibility(); 
-      saveAllChatSessionsToLocalStorage(); 
-      autoResizeTextarea(); 
-    }
-    function deleteMessage(index) { messages.splice(index, 1); refreshChat(); setStatus(translations[currentLanguage].messageDeleted, "success", 1500); }
-    
-    function deleteCurrentChat() {
-      if (!currentChatId) {
-        // Can't delete a new, unsaved chat. Just clear it.
-        messages = [];
-        addWelcomeMessage();
-        refreshChat();
-        return;
-      }
-      if (confirm(translations[currentLanguage].confirmDeleteCurrent)) {
-        // Find and remove the chat session
-        const sessionIndex = allChatSessions[currentSubject].findIndex(s => s.id === currentChatId);
-        if (sessionIndex > -1) {
-            allChatSessions[currentSubject].splice(sessionIndex, 1);
-        }
-        
-        // Load the next available chat or start a new one
-        const nextSession = allChatSessions[currentSubject][0] || null;
-        loadChat(currentSubject, nextSession ? nextSession.id : null);
-        
-        setStatus(translations[currentLanguage].chatDeleted, "success", 2000);
-        speakBtn.style.display = 'none';
-      }
-    }
-    
-    function setStatus(message, type = "", duration = 3000) { clearTimeout(statusTimeout); statusBar.textContent = message; statusBar.className = "status " + type; if (message && duration) { statusTimeout = setTimeout(() => { statusBar.textContent = ""; statusBar.className = "status"; }, duration); } }
-
-    // --- AI & GEMINI FUNCTIONS ---
-    async function fetchGeminiResponse(prompt) {
-      if (!geminiApiKey) throw new Error("Gemini API key is missing.");
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
-      const response = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
-      if(!response.ok) throw new Error(`Network error: ${response.statusText}`);
-      const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
-    }
-    async function processQueryWithAI(queryText) {
-        if (!queryText?.trim()) return;
-        const t = translations[currentLanguage];
-        setStatus(`${getBotDisplayName()} ${t.thinking}...`, "", null); 
-        try {
-            const strictInstructions = t.aiInstructions
-              .replace('{botName}', getBotDisplayName())
-              .replace('{language}', t.languageName)
-              .replace('{subjectContext}', currentSubject !== 'general' ? t.aiSubjectInstruction.replace('{subject}', getTranslatedSubjectName(currentSubject)) : '');
-            
-            const prompt = `${strictInstructions} The user's question is: ${queryText}`;
-
-            const responseText = await fetchGeminiResponse(prompt);
-            addMessage("bot", responseText);
-            setStatus(t.responseReceived, "success"); 
-            speakBtn.style.display = 'flex';
-        } catch (error) {
-            addMessage("bot", `${t.errorPrefix}: ${error.message}`, false, true); 
-            setStatus(t.responseFailed, "error"); 
-        }
-    }
-    async function sendMessage() {
-      const messageText = userInput.value.trim();
-      if (!messageText) return;
-      
-      addMessage("user", messageText);
-      userInput.value = ""; 
-      autoResizeTextarea(); 
-      updateSendOrVoiceButton();
-      await processQueryWithAI(messageText);
-    }
-
-    // --- UTILITY & OTHER FUNCTIONS ---
+    function getTranslatedSubjectName(subjectKey) { if (subjectKey === "general") return translations[currentLanguage].general; const subject = subjects.find(s => s.key === subjectKey); return subject ? subject.name[currentLanguage] : subjectKey; }
+    function getBotDisplayName() { const subjectName = getTranslatedSubjectName(currentSubject); return currentSubject === "general" ? botName : `${botName} (${subjectName})`; }
+    function updateSubjectUI() { botNameElement.textContent = getBotDisplayName(); const t = translations[currentLanguage]; generalChatBtn.style.display = currentSubject === "general" ? 'none' : 'inline-block'; generalChatBtn.textContent = t.general; }
+    function populateSubjectListInView() { subjectListContainer.innerHTML = ''; subjects.forEach(subject => { const btn = document.createElement('button'); btn.className = 'subject-item-btn'; btn.innerHTML = `<i class="${subject.icon}"></i><span>${subject.name[currentLanguage]}</span>`; btn.onclick = () => selectSubject(subject.key); subjectListContainer.appendChild(btn); }); }
+    function selectSubject(subjectKey) { if (currentSubject === subjectKey) { closeSubjectsView(); return; } switchSubject(subjectKey); }
+    function switchToGeneralMode() { if (currentSubject === "general") { return; } switchSubject("general"); }
+    function switchSubject(newSubject) { currentSubject = newSubject; const sessionsForNewSubject = allChatSessions[newSubject] || []; const lastChatInNewSubject = sessionsForNewSubject.length > 0 ? sessionsForNewSubject[0].id : null; loadChat(newSubject, lastChatInNewSubject); updateSubjectUI(); closeSubjectsView(); }
+    function loadAllChatSessions() { try { const stored = localStorage.getItem(localStorageKeyAllChats); allChatSessions = stored ? JSON.parse(stored) : {}; } catch (e) { allChatSessions = {}; } subjects.forEach(s => { if (!allChatSessions[s.key]) allChatSessions[s.key] = []; }); if (!allChatSessions.general) allChatSessions.general = []; let lastSession = { subject: 'general', id: null }; try { const storedLast = localStorage.getItem(localStorageKeyLastSession); if (storedLast) lastSession = JSON.parse(storedLast); } catch (e) {} const lastSessionExists = allChatSessions[lastSession.subject]?.some(s => s.id === lastSession.id); if (lastSessionExists) { loadChat(lastSession.subject, lastSession.id); } else { const sessionsForSubject = allChatSessions[lastSession.subject] || []; const latestChatId = sessionsForSubject.length > 0 ? sessionsForSubject[0].id : null; loadChat(lastSession.subject, latestChatId); } }
+    function saveAllChatSessionsToLocalStorage() { if (currentChatId && allChatSessions[currentSubject]) { const session = allChatSessions[currentSubject].find(s => s.id === currentChatId); if (session) { session.messages = messages; } } localStorage.setItem(localStorageKeyAllChats, JSON.stringify(allChatSessions)); localStorage.setItem(localStorageKeyLastSession, JSON.stringify({ subject: currentSubject, id: currentChatId })); }
+    function loadChat(subject, chatId) { currentSubject = subject; currentChatId = chatId; if (chatId === null) { messages = []; addWelcomeMessage(); } else { const session = allChatSessions[subject]?.find(s => s.id === chatId); if (session) { messages = session.messages; } else { messages = []; addWelcomeMessage(); currentChatId = null; } } updateSubjectUI(); refreshChat(); }
+    function addWelcomeMessage() { const welcomeMsgText = getWelcomeMessageText(); if (messages.length === 0 || !messages.some(m => m.isInitialWelcome)) { messages.unshift({ sender: "bot", text: welcomeMsgText, isInitialWelcome: true }); } }
+    function addMessage(sender, text, isImage = false, isSystemMessage = false) { if (currentChatId === null && sender === 'user') { const newId = Date.now(); const newSession = { id: newId, timestamp: newId, messages: [] }; if (!allChatSessions[currentSubject]) { allChatSessions[currentSubject] = []; } allChatSessions[currentSubject].unshift(newSession); currentChatId = newId; } messages.push({ sender, text, isImage, isSystemMessage }); refreshChat(); chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }
+    function typeWriterEffect(element, text) { let i = 0; element.innerHTML = ""; function type() { if (i < text.length) { element.innerHTML += text.charAt(i); i++; chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'auto' }); setTimeout(type, 20); } else { const messageElem = element.closest('.message'); if(messageElem) addBotMessageActions(messageElem, text); } } type(); }
+    function addBotMessageActions(messageElement, text) { const t = translations[currentLanguage]; const actionsDiv = document.createElement("div"); actionsDiv.className = "message-actions"; actionsDiv.innerHTML = `<button title="${t.copy}"><i class="fas fa-copy"></i></button>`; actionsDiv.querySelector('button').onclick = () => { navigator.clipboard.writeText(text); }; messageElement.appendChild(actionsDiv); }
+    function refreshChat() { chatContainer.innerHTML = ""; const t = translations[currentLanguage]; messages.forEach((msg, index) => { const messageElem = document.createElement("div"); messageElem.className = `message ${msg.sender}`; let senderName = msg.sender === "bot" ? getBotDisplayName() : t.you; const header = document.createElement("div"); header.className = "message-header"; const deleteButtonHTML = (msg.isInitialWelcome || msg.isSystemMessage) ? '' : `<i class="fas fa-trash delete-btn" title="${t.deleteMessage}"></i>`; header.innerHTML = `<span>${senderName}</span>${deleteButtonHTML}`; if (!msg.isInitialWelcome && !msg.isSystemMessage) { header.querySelector('.delete-btn').onclick = () => deleteMessage(index); } const contentDiv = document.createElement("div"); contentDiv.className = "message-content"; contentDiv.innerHTML = msg.text; messageElem.appendChild(header); messageElem.appendChild(contentDiv); if(msg.sender === "bot" && !msg.isInitialWelcome && !msg.isSystemMessage) { addBotMessageActions(messageElem, msg.text); } chatContainer.appendChild(messageElem); }); updateInitialViewState(); saveAllChatSessionsToLocalStorage(); autoResizeTextarea(); }
+    function deleteMessage(index) { messages.splice(index, 1); refreshChat(); }
+    function deleteCurrentChat() { settingsDropdown.style.display = 'none'; if (!currentChatId) { messages = []; addWelcomeMessage(); refreshChat(); return; } if (confirm(translations[currentLanguage].confirmDeleteCurrent)) { const sessionIndex = allChatSessions[currentSubject].findIndex(s => s.id === currentChatId); if (sessionIndex > -1) { allChatSessions[currentSubject].splice(sessionIndex, 1); } const nextSession = allChatSessions[currentSubject][0] || null; loadChat(currentSubject, nextSession ? nextSession.id : null); speakBtn.style.display = 'none'; } }
+    async function fetchGeminiResponse(prompt) { if (!geminiApiKey) throw new Error("Gemini API key is missing."); const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`; const response = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) }); if(!response.ok) throw new Error(`Network error: ${response.statusText}`); const data = await response.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received."; }
+    async function processQueryWithAI(queryText) { if (!queryText?.trim()) return; const t = translations[currentLanguage]; updateInitialViewState(); const typingIndicatorHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`; const tempMsgId = `bot-msg-${Date.now()}`; const messageElem = document.createElement("div"); messageElem.className = `message bot`; messageElem.id = tempMsgId; messageElem.innerHTML = `<div class="message-header"><span>${getBotDisplayName()}</span></div><div class="message-content">${typingIndicatorHTML}</div>`; chatContainer.appendChild(messageElem); chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); try { const strictInstructions = t.aiInstructions.replace('{language}', t.languageName).replace('{subjectContext}', currentSubject !== 'general' ? t.aiSubjectInstruction.replace('{subject}', getTranslatedSubjectName(currentSubject)) : ''); const prompt = `${strictInstructions} The user's question is: ${queryText}`; const responseText = await fetchGeminiResponse(prompt); const finalMessageElement = document.getElementById(tempMsgId); if (finalMessageElement) { const contentDiv = finalMessageElement.querySelector('.message-content'); typeWriterEffect(contentDiv, responseText); messages.push({ sender: 'bot', text: responseText }); saveAllChatSessionsToLocalStorage(); } speakBtn.style.display = 'flex'; } catch (error) { const errorElement = document.getElementById(tempMsgId); if (errorElement) { errorElement.querySelector('.message-content').innerHTML = `${t.errorPrefix}: ${error.message}`; } messages.push({ sender: 'bot', text: `${t.errorPrefix}: ${error.message}`, isSystemMessage: true }); saveAllChatSessionsToLocalStorage(); } }
+    async function sendMessage() { const messageText = userInput.value.trim(); if (!messageText) return; addMessage("user", messageText); userInput.value = ""; autoResizeTextarea(); updateSendOrVoiceButton(); await processQueryWithAI(messageText); }
     function autoResizeTextarea() { userInput.style.height = 'auto'; userInput.style.height = userInput.scrollHeight + 'px'; }
-    async function openCamera() { try { cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); cameraView.srcObject = cameraStream; cameraModal.style.display = "flex"; } catch (err) { setStatus(translations[currentLanguage].cameraError, "error", 4000); } }
+    async function openCamera() { try { cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); cameraView.srcObject = cameraStream; cameraModal.style.display = "flex"; } catch (err) { console.error(err) } }
     function closeCamera() { if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); } cameraModal.style.display = "none"; }
-    async function captureImageFromCamera() { /* Your existing capture code */ }
+    async function captureImageFromCamera() {}
     function triggerImageUpload() { imageUploadInput.click(); }
-    function handleFileSelect(event) { /* Your existing file handling code */ }
-    
-    // --- LANGUAGE SWITCHING ---
-    function switchLanguage(lang, showStatus = true) {
-        currentLanguage = lang;
-        localStorage.setItem(localStorageKeyLanguage, currentLanguage);
-        document.documentElement.lang = lang;
-        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-
-        updateUIForLanguage();
-        initSpeechRecognition();
-        
-        // Reload messages array and update welcome message text
-        if (messages.length > 0 && messages[0].isInitialWelcome) {
-            messages[0].text = getWelcomeMessageText();
-        }
-        refreshChat(); // This will redraw the chat with the new language strings (e.g., "You")
-
-        if (showStatus) {
-            setStatus(translations[lang].languageChanged, "success", 2000);
-        }
-    }
-
-    function getWelcomeMessageText() {
-        const t = translations[currentLanguage];
-        let welcomeMsgText = t.welcomeGeneral.replace('{botName}', getBotDisplayName());
-        if (currentSubject !== "general") { 
-            welcomeMsgText = t.welcomeSubject
-                .replace('{botName}', getBotDisplayName())
-                .replace('{subject}', getTranslatedSubjectName(currentSubject)); 
-        }
-        return welcomeMsgText;
-    }
-    
-    // --- SUGGESTIONS FEATURE ---
-    async function fetchAndDisplaySuggestions() {
-        try {
-            const t = translations[currentLanguage];
-            let subjectContext = currentSubject === 'general' ? t.suggestionContextGeneral : t.suggestionContextSubject.replace('{subject}', getTranslatedSubjectName(currentSubject));
-            const prompt = t.suggestionPrompt
-                .replace('{subjectContext}', subjectContext)
-                .replace('{language}', t.languageName);
-
-            const responseText = await fetchGeminiResponse(prompt);
-            const suggestions = responseText.split('\n')
-                .map(s => s.trim().replace(/^(-|\*|\d+\.\s*)/, '').trim())
-                .filter(s => s.length > 0);
-
-            if (suggestions.length > 0) {
-                populateSuggestions(suggestions);
-            } else {
-                populateSuggestions(t.fallbackSuggestions);
-            }
-        } catch (error) {
-            console.error("Failed to fetch AI suggestions:", error);
-            populateSuggestions(translations[currentLanguage].fallbackSuggestions);
-        }
-    }
-
-    function populateSuggestions(suggestionsArray) {
-        suggestionsContainer.innerHTML = '';
-        suggestionsArray.forEach(text => {
-            const btn = document.createElement('button');
-            btn.className = 'suggestion-btn';
-            btn.textContent = text;
-            btn.onclick = () => {
-                userInput.value = text;
-                sendMessage();
-            };
-            suggestionsContainer.appendChild(btn);
-        });
-    }
-
-    function toggleSuggestionsVisibility() {
-        const hasUserMessages = messages.some(m => !m.isInitialWelcome);
-        if (!hasUserMessages && currentChatId === null) {
-            suggestionsContainer.style.display = 'grid';
-        } else {
-            suggestionsContainer.style.display = 'none';
-        }
-    }
-    
-    // --- NEW: HISTORY SIDEBAR FUNCTIONS ---
-    function openHistorySidebar() {
-      renderHistoryList();
-      historySidebar.classList.add('open');
-      sidebarOverlay.classList.add('open');
-    }
-
-    function closeHistorySidebar() {
-      historySidebar.classList.remove('open');
-      sidebarOverlay.classList.remove('open');
-    }
-
-    function renderHistoryList() {
-      historyList.innerHTML = '';
-      const t = translations[currentLanguage];
-      const sessions = allChatSessions[currentSubject] || [];
-
-      if (sessions.length === 0) {
-        historyList.innerHTML = `<li style="cursor: default; opacity: 0.7; justify-content: center;">${t.noHistory}</li>`;
-        return;
-      }
-      
-      sessions.forEach(session => {
-        const li = document.createElement('li');
-        if (session.id === currentChatId) {
-            li.classList.add('active');
-        }
-
-        // Find the first user message for the title, or use a default
-        const firstUserMsg = session.messages.find(m => m.sender === 'user');
-        const titleText = firstUserMsg ? firstUserMsg.text : t.newChat;
-        
-        li.innerHTML = `
-            <span class="history-item-title">${titleText}</span>
-            <button class="delete-history-item-btn" title="${t.deleteChat}"><i class="fas fa-trash"></i></button>
-        `;
-        
-        li.querySelector('.history-item-title').addEventListener('click', () => {
-            if (session.id !== currentChatId) {
-                loadChat(currentSubject, session.id);
-            }
-            closeHistorySidebar();
-        });
-        
-        li.querySelector('.delete-history-item-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (confirm(t.confirmDeleteCurrent)) {
-                const sessionIndex = allChatSessions[currentSubject].findIndex(s => s.id === session.id);
-                if (sessionIndex > -1) {
-                    allChatSessions[currentSubject].splice(sessionIndex, 1);
-                    // If we deleted the active chat, load another one
-                    if(session.id === currentChatId) {
-                        const nextSession = allChatSessions[currentSubject][0] || null;
-                        loadChat(currentSubject, nextSession ? nextSession.id : null);
-                    }
-                    saveAllChatSessionsToLocalStorage();
-                    renderHistoryList(); // Re-render the list
-                }
-            }
-        });
-
-        historyList.appendChild(li);
-      });
-    }
-
-
-    function updateUIForLanguage() {
-        const t = translations[currentLanguage];
-        // Header
-        document.getElementById('deleteCurrentChatBtn').title = t.deleteCurrentChat;
-        document.getElementById('historyBtn').title = t.viewHistory;
-        document.getElementById('shareBtn').title = t.shareApp;
-        document.getElementById('languageBtn').title = t.changeLanguage;
-        // Subject buttons
-        updateSubjectUI();
-        // Subjects View
-        document.getElementById('subjectsViewTitle').textContent = t.selectSubject;
-        document.getElementById('backToChatText').textContent = t.backToChat;
-        populateSubjectListInView();
-        // Chat Input
-        userInput.placeholder = t.placeholder;
-        speakBtn.title = t.playAudio;
-        toggleUploadBtn.title = t.attachFile;
-        document.getElementById('uploadFromGalleryBtn').innerHTML = `<i class="fas fa-images"></i> ${t.uploadFromGallery}`;
-        document.getElementById('useCameraBtn').innerHTML = `<i class="fas fa-camera"></i> ${t.useCamera}`;
-        document.getElementById('listeningText').textContent = t.listening;
-        updateSendOrVoiceButton();
-        // Disclaimer
-        document.getElementById('aiDisclaimer').textContent = t.aiDisclaimer;
-        // Suggestions
-        fetchAndDisplaySuggestions();
-        // Camera Modal
-        document.getElementById('captureBtn').textContent = t.capture;
-        document.getElementById('cancelCameraBtn').textContent = t.cancel;
-        // Share Modal
-        document.getElementById('shareModalTitle').textContent = t.shareApp;
-        document.getElementById('shareModalDesc').textContent = t.shareDescription;
-        document.getElementById('copyBtnText').textContent = t.copy;
-        document.getElementById('qrCodeText').textContent = t.qrCodeText;
-        // PWA Notification
-        document.getElementById('downloadNotificationText').textContent = t.installApp;
-        document.getElementById('downloadAppBtn').textContent = t.install;
-        // History Sidebar
-        document.getElementById('historyTitle').textContent = t.historyTitle;
-        document.getElementById('newChatText').textContent = t.newChat;
-    }
-    
+    function handleFileSelect(event) {}
+    function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem(localStorageKeyLanguage, currentLanguage); document.documentElement.lang = lang; document.documentElement.dir = ['ar'].includes(lang) ? 'rtl' : 'ltr'; updateUIForLanguage(); initSpeechRecognition(); if (messages.length > 0 && messages[0].isInitialWelcome) { messages[0].text = getWelcomeMessageText(); } refreshChat(); }
+    function getWelcomeMessageText() { const t = translations[currentLanguage]; let welcomeMsgText = t.welcomeGeneral.replace('{botName}', getBotDisplayName()); if (currentSubject !== "general") { welcomeMsgText = t.welcomeSubject.replace('{botName}', getBotDisplayName()).replace('{subject}', getTranslatedSubjectName(currentSubject)); } return welcomeMsgText; }
+    async function fetchAndDisplaySuggestions() { try { const t = translations[currentLanguage]; let subjectContext = currentSubject === 'general' ? t.suggestionContextGeneral : t.suggestionContextSubject.replace('{subject}', getTranslatedSubjectName(currentSubject)); const prompt = t.suggestionPrompt.replace('{subjectContext}', subjectContext).replace('{language}', t.languageName); const responseText = await fetchGeminiResponse(prompt); const suggestions = responseText.split('\n').map(s => s.trim().replace(/^(-|\*|\d+\.\s*)/, '').trim()).filter(s => s.length > 0); populateSuggestions(suggestions.length > 0 ? suggestions : t.fallbackSuggestions); } catch (error) { console.error("Failed to fetch AI suggestions:", error); populateSuggestions(translations[currentLanguage].fallbackSuggestions); } }
+    function populateSuggestions(suggestionsArray) { suggestionsContainer.innerHTML = ''; suggestionsArray.forEach(text => { const btn = document.createElement('button'); btn.className = 'suggestion-btn'; btn.textContent = text; btn.onclick = () => { userInput.value = text; sendMessage(); }; suggestionsContainer.appendChild(btn); }); }
+    function updateInitialViewState() { const hasUserMessages = messages.some(m => !m.isInitialWelcome); const isTyping = userInput.value.trim().length > 0; if (!hasUserMessages && currentChatId === null && !isTyping) { suggestionsContainer.style.display = 'flex'; welcomeAnimation.style.display = 'flex'; } else { suggestionsContainer.style.display = 'none'; welcomeAnimation.style.display = 'none'; } }
+    function openHistorySidebar() { renderHistoryList(); historySidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
+    function closeHistorySidebar() { historySidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); }
+    function renderHistoryList() { historyList.innerHTML = ''; const t = translations[currentLanguage]; const sessions = allChatSessions[currentSubject] || []; if (sessions.length === 0) { historyList.innerHTML = `<li style="cursor: default; opacity: 0.7; justify-content: center;">${t.noHistory}</li>`; return; } sessions.forEach(session => { const li = document.createElement('li'); if (session.id === currentChatId) { li.classList.add('active'); } const firstUserMsg = session.messages.find(m => m.sender === 'user'); const titleText = firstUserMsg ? firstUserMsg.text : t.newChat; li.innerHTML = `<span class="history-item-title">${titleText}</span><button class="delete-history-item-btn" title="${t.deleteChat}"><i class="fas fa-trash"></i></button>`; li.querySelector('.history-item-title').addEventListener('click', () => { if (session.id !== currentChatId) { loadChat(currentSubject, session.id); } closeHistorySidebar(); }); li.querySelector('.delete-history-item-btn').addEventListener('click', (e) => { e.stopPropagation(); if (confirm(t.confirmDeleteChat)) { const sessionIndex = allChatSessions[currentSubject].findIndex(s => s.id === session.id); if (sessionIndex > -1) { allChatSessions[currentSubject].splice(sessionIndex, 1); if(session.id === currentChatId) { const nextSession = allChatSessions[currentSubject][0] || null; loadChat(currentSubject, nextSession ? nextSession.id : null); } saveAllChatSessionsToLocalStorage(); renderHistoryList(); } } }); historyList.appendChild(li); }); }
+    function updateUIForLanguage() { const t = translations[currentLanguage]; languageDropdown.style.right = '0'; languageDropdown.style.left = 'auto'; settingsDropdown.style.left = '0'; settingsDropdown.style.right = 'auto'; document.getElementById('historyBtn').title = t.viewHistory; document.getElementById('shareBtn').title = t.shareApp; document.getElementById('languageBtn').title = t.changeLanguage; document.getElementById('settingsBtn').title = t.settings; document.getElementById('enterSubjectsBtnText').textContent = t.specializedSubjects; document.getElementById('deleteCurrentChatBtnText').textContent = t.deleteCurrentChat; updateSubjectUI(); document.getElementById('subjectsViewTitle').textContent = t.selectSubject; document.getElementById('backToChatText').textContent = t.backToChat; populateSubjectListInView(); userInput.placeholder = t.placeholder; speakBtn.title = t.playAudio; toggleUploadBtn.title = t.attachFile; document.querySelector('#uploadFromGalleryBtn span').textContent = t.uploadFromGallery; document.querySelector('#useCameraBtn span').textContent = t.useCamera; document.getElementById('listeningText').textContent = t.listening; updateSendOrVoiceButton(); document.getElementById('aiDisclaimer').textContent = t.aiDisclaimer; fetchAndDisplaySuggestions(); document.getElementById('captureBtn').textContent = t.capture; document.getElementById('cancelCameraBtn').textContent = t.cancel; document.getElementById('shareModalTitle').textContent = t.shareApp; document.getElementById('shareModalDesc').textContent = t.shareDescription; document.getElementById('copyBtnText').textContent = t.copy; document.getElementById('qrCodeText').textContent = t.qrCodeText; document.getElementById('downloadNotificationText').textContent = t.installApp; document.getElementById('downloadAppBtn').textContent = t.install; document.getElementById('historyTitle').textContent = t.historyTitle; document.getElementById('newChatText').textContent = t.newChat; document.querySelectorAll('#languageDropdown button').forEach(button => { const langKey = button.dataset.lang; if (t.languageNames && t.languageNames[langKey]) { button.textContent = t.languageNames[langKey]; } }); }
     const translations = {
-      'ar': {
-        languageName: "العربية",
-        specializedSubjects: "مواد متخصصة", general: "عام", subjectPrefix: "مادة",
-        welcomeGeneral: "مرحباً بك! أنا {botName}، كيف يمكنني مساعدتك اليوم؟",
-        welcomeSubject: "مرحباً! أنا {botName}. حاليًا في وضع الإجابة عن أسئلة مادة {subject}.",
-        placeholder: "اكتب رسالتك هنا...", you: "أنت",
-        thinking: "يفكر", responseReceived: "تم استلام الرد!", responseFailed: "فشل الرد.",
-        switchedToSubject: "تم التحويل إلى وضع مادة:", returnedToGeneral: "تم الرجوع إلى الوضع العام",
-        deleteMessage: "حذف الرسالة",
-        messageDeleted: "تم حذف الرسالة.",
-        listening: "جاري الاستماع...", speechError: "خطأ في التعرف على الصوت", speechNotSupported: "المتصفح لا يدعم التعرف على الصوت",
-        noResponseToSpeak: "لا يوجد رد لتشغيله.", playAudio: "تشغيل الصوت", send: "إرسال", speak: "التحدث",
-        shareApp: "مشاركة التطبيق", shareDescription: "ساعدنا على النمو بمشاركة التطبيق مع أصدقائك!", shareText: "اكتشف Saif AI، مساعد الذكاء الاصطناعي العربي المتطور!",
-        copy: "نسخ", copied: "تم النسخ", copiedSuccess: "تم النسخ بنجاح", qrCodeText: "أو امسح الرمز للمشاركة",
-        selectSubject: "اختر المادة الدراسية", backToChat: "العودة للدردشة",
-        attachFile: "إرفاق ملف", uploadFromGallery: "رفع من المعرض", useCamera: "استخدام الكاميرا", cameraError: "لا يمكن الوصول للكاميرا.",
-        capture: "التقاط صورة", cancel: "إلغاء",
-        installApp: "ثبّت التطبيق على جهازك للوصول السريع!", install: "تثبيت", languageChanged: "تم تغيير اللغة إلى العربية", changeLanguage: "تغيير اللغة",
-        errorPrefix: "عفواً، واجهت مشكلة",
-        aiInstructions: "أنت مساعد ذكاء اصطناعي خبير اسمه {botName}. مهمتك هي تقديم إجابات دقيقة ومفصلة. {subjectContext} يجب أن تكون جميع ردودك باللغة {language} فقط. كن صارمًا في اتباع هذه التعليمات.",
-        aiSubjectInstruction: "أجب كخبير متخصص في مادة {subject}.",
-        aiDisclaimer: "قد يقدم Saif AI معلومات غير دقيقة، لذا يرجى التحقق من صحة إجاباته. المنصة مخصصة لأغراض التعليم والبحث والعلم فقط.",
-        suggestionPrompt: "أنشئ 4 أسئلة متنوعة وجذابة لبدء محادثة مع مساعد ذكاء اصطناعي. {subjectContext}. يجب أن تكون الإجابة قائمة بسيطة مفصولة بأسطر جديدة، بدون ترقيم أو علامات. اللغة يجب أن تكون {language}.",
-        suggestionContextGeneral: "المستخدم مهتم بالمعرفة العامة والعلوم والإبداع",
-        suggestionContextSubject: "المستخدم يدرس حاليًا مادة {subject}",
-        fallbackSuggestions: ["اشرح لي مفهوم التوتر السطحي", "اكتب قصة قصيرة عن مستكشف فضاء", "ما هي عاصمة أستراليا؟", "ترجم 'صباح الخير' إلى الإسبانية"],
-        // New for History
-        historyTitle: "سجل المحادثات", newChat: "محادثة جديدة", viewHistory: "عرض السجل",
-        deleteCurrentChat: "حذف المحادثة الحالية", confirmDeleteCurrent: "هل أنت متأكد من حذف هذه المحادثة؟",
-        chatDeleted: "تم حذف المحادثة.", deleteChat: "حذف المحادثة", noHistory: "لا يوجد سجل بعد"
-      },
-      'en': {
-        languageName: "English",
-        specializedSubjects: "Specialized Subjects", general: "General", subjectPrefix: "Subject",
-        welcomeGeneral: "Hello! I'm {botName}. How can I help you today?",
-        welcomeSubject: "Hello! I'm {botName}, currently in subject mode for {subject}.",
-        placeholder: "Type your message here...", you: "You",
-        thinking: "is thinking", responseReceived: "Response received!", responseFailed: "Response failed.",
-        switchedToSubject: "Switched to subject mode:", returnedToGeneral: "Returned to general mode",
-        deleteMessage: "Delete message",
-        messageDeleted: "Message deleted.",
-        listening: "Listening...", speechError: "Speech recognition error", speechNotSupported: "Browser does not support speech recognition",
-        noResponseToSpeak: "No response to play.", playAudio: "Play audio", send: "Send", speak: "Speak",
-        shareApp: "Share App", shareDescription: "Help us grow by sharing the app with your friends!", shareText: "Discover Saif AI, the advanced AI assistant!",
-        copy: "Copy", copied: "Copied", copiedSuccess: "Copied successfully", qrCodeText: "Or scan the code to share",
-        selectSubject: "Select a Subject", backToChat: "Back to Chat",
-        attachFile: "Attach file", uploadFromGallery: "Upload from Gallery", useCamera: "Use Camera", cameraError: "Cannot access camera.",
-        capture: "Capture", cancel: "Cancel",
-        installApp: "Install the app on your device for quick access!", install: "Install", languageChanged: "Language changed to English", changeLanguage: "Change Language",
-        errorPrefix: "Sorry, an error occurred",
-        aiInstructions: "You are an expert AI assistant named {botName}. Your task is to provide accurate and detailed answers. {subjectContext} All of your responses must be strictly in {language} only. Be strict in following these instructions.",
-        aiSubjectInstruction: "Answer as a specialized expert in the subject of {subject}.",
-        aiDisclaimer: "Saif AI may provide inaccurate information, so please verify its answers. The platform is intended for education, research, and science purposes only.",
-        suggestionPrompt: "Generate 4 diverse and engaging conversation starter questions for an AI assistant. {subjectContext}. The output should be a simple list separated by newlines, without numbering or markers. The language must be {language}.",
-        suggestionContextGeneral: "The user is interested in general knowledge, science, and creativity",
-        suggestionContextSubject: "The user is currently studying the subject of {subject}",
-        fallbackSuggestions: ["Explain the concept of surface tension", "Write a short story about a space explorer", "What is the capital of Australia?", "Translate 'Good morning' into Spanish"],
-        // New for History
-        historyTitle: "Chat History", newChat: "New Chat", viewHistory: "View History",
-        deleteCurrentChat: "Delete current chat", confirmDeleteCurrent: "Are you sure you want to delete this chat?",
-        chatDeleted: "Chat deleted.", deleteChat: "Delete chat", noHistory: "No history yet"
-      },
-      // ... (Other languages can be updated similarly)
+      'ar': { languageName: "العربية", languageNames: { ar: 'العربية', en: 'الإنجليزية', fr: 'الفرنسية', es: 'الإسبانية', zh: 'الصينية' }, specializedSubjects: "مواد متخصصة", general: "عام", welcomeGeneral: "مرحباً! كيف يمكنني مساعدتك اليوم؟", welcomeSubject: "أهلاً بك. أنا مستعد لمساعدتك في مادة {subject}. تفضل بسؤالك.", placeholder: "اكتب رسالتك هنا...", you: "أنت", deleteMessage: "حذف الرسالة", listening: "جاري الاستماع...", noResponseToSpeak: "لا يوجد رد لتشغيله.", playAudio: "تشغيل الصوت", send: "إرسال", speak: "التحدث", shareApp: "مشاركة التطبيق", shareDescription: "ساعدنا على النمو بمشاركة التطبيق مع أصدقائك!", shareText: "اكتشف Saif AI، مساعد الذكاء الاصطناعي العربي المتطور!", copy: "نسخ", copied: "تم النسخ", qrCodeText: "أو امسح الرمز للمشاركة", selectSubject: "اختر المادة الدراسية", backToChat: "العودة للدردشة", attachFile: "إرفاق ملف", uploadFromGallery: "رفع من المعرض", useCamera: "استخدام الكاميرا", capture: "التقاط صورة", cancel: "إلغاء", installApp: "ثبّت التطبيق على جهازك للوصول السريع!", install: "تثبيت", changeLanguage: "تغيير اللغة", settings: "الإعدادات", errorPrefix: "عفواً، واجهت مشكلة", aiInstructions: "مهمتك هي تقديم إجابات متوازنة ومفيدة. كن غنياً بالمعلومات وشاملاً، ولكن تجنب الإطالة غير الضرورية. ابدأ بالإجابة مباشرة دون مقدمات. {subjectContext} يجب أن تكون جميع ردودك باللغة {language} فقط.", aiSubjectInstruction: "أجب كخبير متخصص في مادة {subject}.", aiDisclaimer: "قد يقدم Saif AI معلومات غير دقيقة، لذا يرجى التحقق من صحة إجاباته.", suggestionPrompt: "أنشئ 4 اقتراحات متنوعة لبدء محادثة. {subjectContext}. يجب أن تكون الإجابة قائمة بسيطة مفصولة بأسطر جديدة، بدون ترقيم. اللغة يجب أن تكون {language}.", suggestionContextGeneral: "المستخدم مهتم بالمعرفة العامة والعلوم.", suggestionContextSubject: "المستخدم يدرس حاليًا مادة {subject}", fallbackSuggestions: ["اشرح مفهوم التوتر السطحي", "اكتب قصة قصيرة عن مستكشف فضاء", "ما هي عاصمة أستراليا؟", "ترجم 'صباح الخير' إلى الإسبانية"], historyTitle: "سجل المحادثات", newChat: "محادثة جديدة", viewHistory: "عرض السجل", deleteCurrentChat: "حذف المحادثة الحالية", confirmDeleteCurrent: "هل أنت متأكد من حذف هذه المحادثة؟", confirmDeleteChat: "هل أنت متأكد من حذف هذه المحادثة؟", deleteChat: "حذف المحادثة", noHistory: "لا يوجد سجل بعد" },
+      'en': { languageName: "English", languageNames: { ar: 'Arabic', en: 'English', fr: 'French', es: 'Spanish', zh: 'Chinese' }, specializedSubjects: "Specialized Subjects", general: "General", welcomeGeneral: "Hi! How can I help you today?", welcomeSubject: "Welcome. I'm ready to help you with {subject}. Ask your question.", placeholder: "Type your message here...", you: "You", deleteMessage: "Delete message", listening: "Listening...", noResponseToSpeak: "No response to play.", playAudio: "Play audio", send: "Send", speak: "Speak", shareApp: "Share App", shareDescription: "Help us grow by sharing the app with your friends!", shareText: "Discover Saif AI, the advanced AI assistant!", copy: "Copy", copied: "Copied", qrCodeText: "Or scan the code to share", selectSubject: "Select a Subject", backToChat: "Back to Chat", attachFile: "Attach file", uploadFromGallery: "Upload from Gallery", useCamera: "Use Camera", capture: "Capture", cancel: "Cancel", installApp: "Install the app on your device for quick access!", install: "Install", changeLanguage: "Change Language", settings: "Settings", errorPrefix: "Sorry, an error occurred", aiInstructions: "Your mission is to provide balanced and helpful answers. Be informative and comprehensive, but avoid unnecessary length. Get straight to the point without introductions. {subjectContext} All of your responses must be strictly in {language} only.", aiSubjectInstruction: "Answer as a specialized expert in the subject of {subject}.", aiDisclaimer: "Saif AI may provide inaccurate information, so please verify its answers.", suggestionPrompt: "Generate 4 diverse conversation starter suggestions. {subjectContext}. The output should be a simple list separated by newlines, without numbering. The language must be {language}.", suggestionContextGeneral: "The user is interested in general knowledge and science.", suggestionContextSubject: "The user is currently studying the subject of {subject}", fallbackSuggestions: ["Explain the concept of surface tension", "Write a short story about a space explorer", "What is the capital of Australia?", "Translate 'Good morning' into Spanish"], historyTitle: "Chat History", newChat: "New Chat", viewHistory: "View History", deleteCurrentChat: "Delete current chat", confirmDeleteCurrent: "Are you sure you want to delete this chat?", confirmDeleteChat: "Are you sure you want to delete this chat?", deleteChat: "Delete chat", noHistory: "No history yet" },
+      'fr': { languageName: "Français", languageNames: { ar: 'Arabe', en: 'Anglais', fr: 'Français', es: 'Espagnol', zh: 'Chinois' }, specializedSubjects: "Matières Spécialisées", general: "Général", welcomeGeneral: "Salut ! Comment puis-je vous aider aujourd'hui ?", welcomeSubject: "Bienvenue. Je suis prêt à vous aider en {subject}. Posez votre question.", placeholder: "Écrivez votre message ici...", you: "Vous", deleteMessage: "Supprimer le message", listening: "Écoute...", noResponseToSpeak: "Pas de réponse à jouer.", playAudio: "Jouer l'audio", send: "Envoyer", speak: "Parler", shareApp: "Partager l'application", shareDescription: "Aidez-nous à grandir en partageant l'application avec vos amis !", shareText: "Découvrez Saif AI, l'assistant IA avancé !", copy: "Copier", copied: "Copié", qrCodeText: "Ou scannez le code pour partager", selectSubject: "Sélectionnez une matière", backToChat: "Retour au chat", attachFile: "Joindre un fichier", uploadFromGallery: "Télécharger de la galerie", useCamera: "Utiliser la caméra", capture: "Capturer", cancel: "Annuler", installApp: "Installez l'application sur votre appareil pour un accès rapide !", install: "Installer", changeLanguage: "Changer de langue", settings: "Paramètres", errorPrefix: "Désolé, une erreur est survenue", aiInstructions: "Votre mission est de fournir des réponses équilibrées et utiles. Soyez informatif et complet, mais évitez les longueurs inutiles. Allez droit au but sans introductions. {subjectContext} Toutes vos réponses doivent être strictly en {language} uniquement.", aiSubjectInstruction: "Répondez en tant qu'expert spécialisé dans le domaine de {subject}.", aiDisclaimer: "Saif AI peut fournir des informations inexactes, veuillez donc vérifier ses réponses.", suggestionPrompt: "Générez 4 suggestions diverses pour démarrer une conversation. {subjectContext}. La sortie doit être une simple liste séparée par des nouvelles lignes, sans numérotation. La langue doit être {language}.", suggestionContextGeneral: "L'utilisateur est intéressé par les connaissances générales et la science.", suggestionContextSubject: "L'utilisateur étudie actuellement la matière de {subject}", fallbackSuggestions: ["Expliquez le concept de tension superficielle", "Écrivez une nouvelle sur un explorateur de l'espace", "Quelle est la capitale de l'Australie ?", "Traduisez 'Bonjour' en espagnol"], historyTitle: "Historique des discussions", newChat: "Nouvelle discussion", viewHistory: "Voir l'historique", deleteCurrentChat: "Supprimer la discussion actuelle", confirmDeleteCurrent: "Êtes-vous sûr de vouloir supprimer cette discussion ?", confirmDeleteChat: "Êtes-vous sûr de vouloir supprimer cette discussion ?", deleteChat: "Supprimer la discussion", noHistory: "Aucun historique pour le moment" },
+      'es': { languageName: "Español", languageNames: { ar: 'Árabe', en: 'Inglés', fr: 'Francés', es: 'Español', zh: 'Chino' }, specializedSubjects: "Asignaturas Especializadas", general: "General", welcomeGeneral: "¡Hola! ¿Cómo puedo ayudarte hoy?", welcomeSubject: "Bienvenido. Estoy listo para ayudarte con {subject}. Haz tu pregunta.", placeholder: "Escribe tu mensaje aquí...", you: "Tú", deleteMessage: "Eliminar mensaje", listening: "Escuchando...", noResponseToSpeak: "No hay respuesta para reproducir.", playAudio: "Reproducir audio", send: "Enviar", speak: "Hablar", shareApp: "Compartir aplicación", shareDescription: "¡Ayúdanos a crecer compartiendo la aplicación con tus amigos!", shareText: "¡Descubre Saif AI, el asistente de IA avanzado!", copy: "Copiar", copied: "Copiado", qrCodeText: "O escanea el código para compartir", selectSubject: "Selecciona una asignatura", backToChat: "Volver al chat", attachFile: "Adjuntar archivo", uploadFromGallery: "Subir de la galería", useCamera: "Usar cámara", capture: "Capturar", cancel: "Cancelar", installApp: "¡Instala la aplicación en tu dispositivo para un acceso rápido!", install: "Instalar", changeLanguage: "Cambiar idioma", settings: "Ajustes", errorPrefix: "Lo siento, ocurrió un error", aiInstructions: "Tu misión es proporcionar respuestas equilibradas y útiles. Sé informativo y completo, pero evita longitudes innecesarias. Ve al grano sin introducciones. {subjectContext} Todas tus respuestas deben ser estrictamente en {language} únicamente.", aiSubjectInstruction: "Responde como un experto especializado en la materia de {subject}.", aiDisclaimer: "Saif AI puede proporcionar información inexacta, así que verifique sus respuestas.", suggestionPrompt: "Genera 4 sugerencias diversas para iniciar una conversación. {subjectContext}. La salida debe ser una lista simple separada por nuevas líneas, sin numeración. El idioma debe ser {language}.", suggestionContextGeneral: "El usuario está interesado en el conocimiento general y la ciencia.", suggestionContextSubject: "El usuario está estudiando actualmente la asignatura de {subject}", fallbackSuggestions: ["Explica el concepto de tensión superficial", "Escribe un cuento sobre un explorador espacial", "¿Cuál es la capital de Australia?", "Traduce 'Buenos días' al español"], historyTitle: "Historial de chat", newChat: "Nuevo chat", viewHistory: "Ver historial", deleteCurrentChat: "Eliminar chat actual", confirmDeleteCurrent: "¿Estás seguro de que quieres eliminar este chat?", confirmDeleteChat: "¿Estás seguro de que quieres eliminar este chat?", deleteChat: "Eliminar chat", noHistory: "Aún no hay historial" },
+      'zh': { languageName: "中文", languageNames: { ar: '阿拉伯语', en: '英语', fr: '法语', es: '西班牙语', zh: '中文' }, specializedSubjects: "专业科目", general: "通用", welcomeGeneral: "你好！我今天能帮你什么？", welcomeSubject: "欢迎。我准备好帮助你学习 {subject}。请提问。", placeholder: "在此输入您的消息...", you: "你", deleteMessage: "删除消息", listening: "正在听...", noResponseToSpeak: "没有可播放的回复。", playAudio: "播放音频", send: "发送", speak: "说话", shareApp: "分享应用", shareDescription: "通过与朋友分享应用来帮助我们成长！", shareText: "发现 Saif AI，先进的 AI 助手！", copy: "复制", copied: "已复制", qrCodeText: "或扫描二维码分享", selectSubject: "选择一个科目", backToChat: "返回聊天", attachFile: "附加文件", uploadFromGallery: "从图库上传", useCamera: "使用相机", capture: "拍摄", cancel: "取消", installApp: "在您的设备上安装应用程序以便快速访问！", install: "安装", changeLanguage: "更改语言", settings: "设置", errorPrefix: "抱歉，发生了错误", aiInstructions: "你的任务是提供平衡且有用的答案。内容要丰富、全面，但要避免不必要的长度。直接切入主题，无需介绍。{subjectContext} 你所有的回答都必须严格使用 {language}。", aiSubjectInstruction: "以 {subject} 科目的专业专家身份回答。", aiDisclaimer: "Saif AI 可能提供不准确的信息，因此请核实其答案。", suggestionPrompt: "生成4个多样化的对话启动建议。{subjectContext}。输出应为一个由换行符分隔的简单列表，不带编号。语言必须是 {language}。", suggestionContextGeneral: "用户对常识和科学感兴趣。", suggestionContextSubject: "用户目前正在学习 {subject} 科目", fallbackSuggestions: ["解释表面张力的概念", "写一个关于太空探险家的短篇故事", "澳大利亚的首都是哪里？", "将“早上好”翻译成西班牙语"], historyTitle: "聊天记录", newChat: "新聊天", viewHistory: "查看历史记录", deleteCurrentChat: "删除当前聊天", confirmDeleteCurrent: "你确定要删除这个聊天吗？", confirmDeleteChat: "你确定要删除这个聊天吗？", deleteChat: "删除聊天", noHistory: "暂无历史记录" }
     };
 
-
-    // --- START THE APP ---
     initializeApp();
   </script>
-
 </body>
 </html>
