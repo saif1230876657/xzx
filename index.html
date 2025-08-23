@@ -22,7 +22,10 @@
   <style>
     :root {
       --primary-color: #E0E0E0; --primary-hover-color: #FFFFFF; --primary-glow-color: rgba(224, 224, 224, 0.2);
-      --secondary-color: #BDBDBD; --bg-main: #000000; --bg-surface: #101010; --bg-surface-raised: #1c1c1c;
+      --secondary-color: #BDBDBD;
+      --bg-main-color: #000000;
+      --bg-main: radial-gradient(ellipse at 50% 0%, #1a1a1a 0%, #000000 75%);
+      --bg-surface: #101010; --bg-surface-raised: #1c1c1c;
       --bg-input: #1c1c1c; --text-primary: #f0f4f8; --text-secondary: #a0a8b2; --text-on-primary: #000000;
       --border-color: #2a2a2a; --border-color-light: #404040; --success-color: #4ce083; --error-color: #ff5c5c;
       --shadow-xs: 0 1px 3px rgba(0,0,0,0.5); --shadow-sm: 0 4px 6px rgba(0,0,0,0.6); --shadow-md: 0 6px 12px rgba(0,0,0,0.7);
@@ -33,8 +36,52 @@
     *::-webkit-scrollbar-track { background: var(--bg-surface); border-radius: 3px; }
     *::-webkit-scrollbar-thumb { background-color: var(--secondary-color); border-radius: 3px; }
     html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { background: #000; display: flex; justify-content: center; align-items: center; color: var(--text-primary); }
+    body { background: var(--bg-main-color); display: flex; justify-content: center; align-items: center; color: var(--text-primary); }
     .container { width: 100%; height: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 0; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    
+    /* ========= التعديل: تم إضافة حاوية وتنسيقات الشهب المتساقطة ========= */
+    .meteor-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .meteor {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background-color: white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.7);
+        animation: meteor-fall linear infinite;
+    }
+    .meteor::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateX(3px);
+        width: 200px;
+        height: 2px;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.6), transparent);
+    }
+    @keyframes meteor-fall {
+        0% {
+            transform: translate(0, 0) rotate(215deg);
+            opacity: 1;
+        }
+        70% {
+            opacity: 1;
+        }
+        100% {
+            transform: translate(-700px, 700px) rotate(215deg);
+            opacity: 0;
+        }
+    }
+    
     .download-notification { display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface-raised); color: var(--text-primary); text-align: center; font-weight: 500; z-index: 100; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--border-color); overflow: hidden; max-height: 0; padding: 0 15px; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; }
     .download-notification.show { max-height: 80px; padding: 10px 15px; }
     .notification-buttons { display: flex; align-items: center; gap: 10px; margin-right: auto; padding-right: 15px; }
@@ -60,12 +107,28 @@
     .dropdown-menu button.danger:hover { background-color: var(--error-color); color: white; }
     #languageBtn { padding: 0.4rem; width: 34px; height: 34px; font-size: 1.1rem; }
     .chat-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; padding-top: var(--header-height); position: relative; }
-    #welcomeAnimationContainer { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); z-index: 1; display: none; justify-content: center; align-items: center; pointer-events: none; }
-    .welcome-svg { width: 100px; height: 100px; opacity: 0; animation: fadeIn 1s ease 0.5s forwards; }
-    .welcome-svg path { stroke: var(--primary-color); stroke-width: 1; fill: transparent; stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 3s ease-in-out forwards; }
-    @keyframes fadeIn { to { opacity: 0.4; } }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    #subjectsViewContainer { background-color: var(--bg-main); padding: 1.5rem; display: none; flex-direction: column; align-items: center; }
+    #welcomeAnimationContainer { 
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+        z-index: 1; display: none; justify-content: center; align-items: center; pointer-events: none;
+    }
+    .astronaut-animation-wrapper {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 1.5s ease-out forwards;
+        opacity: 0;
+    }
+    .welcome-astronaut {
+        width: 100px;
+        height: 100px;
+        animation: float 6s ease-in-out infinite;
+    }
+    @keyframes fadeIn { to { opacity: 0.7; } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    #subjectsViewContainer { background-color: var(--bg-main-color); padding: 1.5rem; display: none; flex-direction: column; align-items: center; }
     .subjects-view-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); max-width: 700px; }
     .subjects-view-header h2 { font-size: 1.6rem; color: var(--primary-color); }
     .back-to-chat-btn { background-color: var(--bg-surface-raised); color: var(--text-primary); border: 1px solid var(--border-color-light); padding: 0.7rem 1.2rem; border-radius: var(--border-radius-md); cursor: pointer; font-size: 0.9rem; transition: all 0.25s ease; box-shadow: var(--shadow-xs); display: flex; align-items: center; gap: 0.5rem; }
@@ -75,24 +138,12 @@
     .subject-item-btn:hover { background-color: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-hover-color); transform: translateY(-4px) scale(1.03); box-shadow: var(--shadow-md), 0 0 15px var(--primary-glow-color); }
     .subject-item-btn i { font-size: 2.2rem; margin-bottom: 5px; color: var(--secondary-color); transition: color 0.3s ease; }
     .subject-item-btn:hover i { color: var(--text-on-primary); }
-    .chat-container { flex: 1; padding: 1.5rem 1rem 150px 1rem; overflow-y: auto; background: var(--bg-main); scroll-behavior: smooth; min-height: 0; }
+    .chat-container { flex: 1; padding: 1.5rem 1rem 150px 1rem; overflow-y: auto; background: transparent; scroll-behavior: smooth; min-height: 0; }
     .message { max-width: 85%; margin-bottom: 2rem; display: flex; flex-direction: column; animation: messageAppear 0.4s ease-out; word-wrap: break-word; white-space: pre-wrap; line-height: 1.7; }
     @keyframes messageAppear { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     .message-content { padding: 0.2rem 0.5rem; }
-    /* ========= التعديل: تم إضافة تنسيقات للصورة داخل الرسالة ========= */
-    .message-content .sent-image {
-        display: block;
-        max-width: 250px;
-        width: 100%;
-        border-radius: var(--border-radius-md);
-        margin-top: 10px;
-        cursor: pointer;
-        border: 1px solid var(--border-color-light);
-        transition: transform 0.2s ease;
-    }
-    .message-content .sent-image:hover {
-        transform: scale(1.03);
-    }
+    .message-content .sent-image { display: block; max-width: 250px; width: 100%; border-radius: var(--border-radius-md); margin-top: 10px; cursor: pointer; border: 1px solid var(--border-color-light); transition: transform 0.2s ease; }
+    .message-content .sent-image:hover { transform: scale(1.03); }
     .typing-indicator span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: var(--text-secondary); margin: 0 2px; animation: typing-bounce 1.4s infinite ease-in-out both; }
     .typing-indicator span:nth-child(1) { animation-delay: -0.32s; } .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
     @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
@@ -113,7 +164,7 @@
     .message-actions button { background: var(--bg-surface-raised); border: 1px solid var(--border-color); cursor: pointer; font-size: 0.85rem; padding: 5px 9px; color: var(--text-secondary); transition: all 0.25s ease; border-radius: var(--border-radius-sm); display: flex; align-items: center; gap: 5px; }
     .message-actions button:hover { color: var(--text-on-primary); background-color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-glow-color); }
     .chat-input-area { position: absolute; bottom: 0; left: 0; right: 0; background: transparent; padding: 0.8rem 1rem; z-index: 5; }
-    .chat-input-area::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 150px; background: linear-gradient(to top, var(--bg-main) 20%, transparent 100%); pointer-events: none; z-index: 4; }
+    .chat-input-area::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 150px; background: linear-gradient(to top, var(--bg-main-color) 20%, transparent 100%); pointer-events: none; z-index: 4; }
     .chat-input-wrapper { position: relative; z-index: 5; max-width: 800px; margin: 0 auto; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--border-radius-xl); transition: border-color 0.25s ease, box-shadow 0.25s ease, padding 0.2s ease; display: flex; flex-direction: column; box-shadow: var(--shadow-md); }
     .chat-input-wrapper:focus-within { border-color: var(--primary-color); box-shadow: var(--shadow-md), 0 0 0 3px var(--primary-glow-color); }
     .chat-input-main { display: flex; align-items: flex-end; width: 100%; }
@@ -191,42 +242,10 @@
     .delete-history-item-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0 5px; font-size: 0.9rem; opacity: 0.5; transition: all 0.2s; }
     #historyList li:hover .delete-history-item-btn { opacity: 1; }
     .delete-history-item-btn:hover { color: var(--error-color); transform: scale(1.2); }
-    
-    /* ========= التعديل: تم إضافة تنسيقات لعرض الصور بملء الشاشة ========= */
-    .fullscreen-image-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.85);
-        display: none; /* Hidden by default */
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-        backdrop-filter: blur(5px);
-    }
-    #fullscreenImageView {
-        max-width: 90%;
-        max-height: 85%;
-        object-fit: contain;
-        border-radius: var(--border-radius-md);
-        box-shadow: 0 0 40px rgba(0,0,0,0.5);
-    }
-    .close-overlay-btn {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #fff;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
-    .close-overlay-btn:hover {
-        transform: scale(1.2);
-    }
-
+    .fullscreen-image-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
+    #fullscreenImageView { max-width: 90%; max-height: 85%; object-fit: contain; border-radius: var(--border-radius-md); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+    .close-overlay-btn { position: absolute; top: 20px; right: 30px; font-size: 2.5rem; font-weight: bold; color: #fff; cursor: pointer; transition: transform 0.2s ease; }
+    .close-overlay-btn:hover { transform: scale(1.2); }
     @media (max-width: 480px) { 
       .header h1 { font-size: 0.95rem; } .message { max-width: 95%; } .chat-input-wrapper textarea { padding: 0.8rem 0; margin: 0 2px; } .chat-input-main .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; }
       .suggestion-btn { padding: 10px; font-size: 0.85rem; }
@@ -237,6 +256,7 @@
 </head>
 <body>
   <div class="container">
+    <div id="meteorContainer" class="meteor-container"></div>
     <div id="downloadNotification" class="download-notification">
       <span id="downloadNotificationText"></span>
       <div class="notification-buttons">
@@ -274,7 +294,9 @@
 
     <div class="chat-wrapper" id="chatWrapper"> 
         <div id="welcomeAnimationContainer">
-            <svg class="welcome-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"/><path d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"/><path d="M12 2V4"/><path d="M12 20V22"/><path d="M22 12H20"/><path d="M4 12H2"/><path d="M19.0711 4.92896L17.6569 6.34317"/><path d="M6.34315 17.6569L4.92893 19.0711"/><path d="M19.0711 19.0711L17.6569 17.6569"/><path d="M6.34315 6.34315L4.92893 4.92893"/></svg>
+            <div class="astronaut-animation-wrapper">
+                <img src="https://i.postimg.cc/15L2K4wT/1000137153.png" alt="Saif AI" class="welcome-astronaut"/>
+            </div>
         </div>
         <div id="chatContainer" class="chat-container"></div>
         <div class="chat-input-area"> 
@@ -343,7 +365,6 @@
     </div>
   </div>
 
-  <!-- ========= التعديل: تمت إضافة حاوية عرض الصور المكبرة هنا ========= -->
   <div id="imageOverlay" class="fullscreen-image-overlay">
     <span id="closeOverlayBtn" class="close-overlay-btn">&times;</span>
     <img id="fullscreenImageView" src="" alt="Full screen image view">
@@ -367,8 +388,41 @@
     function toggleListening() { if (!recognition) return; if (isListening) { recognition.stop(); } else { try { userInput.value = ""; autoResizeTextarea(); recognition.start(); } catch (e) { stopListening(); } } }
     function stopListening() { if(isListening) { isListening = false; sendOrVoiceBtn.classList.remove('recording'); voiceIndicator.classList.remove('active'); } }
     function speakMessageText(text) { if (speechSynthesis.speaking) { speechSynthesis.cancel(); } const utterance = new SpeechSynthesisUtterance(text); const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' }; utterance.lang = langMap[currentLanguage]; speechSynthesis.speak(utterance); }
-    function initializeApp() { registerServiceWorker(); const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar'; switchLanguage(savedLang); loadAllChatSessions(); const qrCodeImg = document.getElementById('qr-code-img'); const whatsappShare = document.getElementById('whatsapp-share'); const twitterShare = document.getElementById('twitter-share'); const telegramShare = document.getElementById('telegram-share'); const facebookShare = document.getElementById('facebook-share'); shareBtn.addEventListener('click', () => { const shareUrl = shareLinkInput.value; const shareText = translations[currentLanguage].shareText; qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`; whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`; twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`; shareModal.style.display = 'flex'; }); closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; }); copyLinkBtn.addEventListener('click', copyShareLink); toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); }); document.getElementById('uploadFromGalleryBtn').onclick = () => triggerImageUpload(); document.getElementById('useCameraBtn').onclick = () => openCamera(); captureBtn.addEventListener('click', captureImage); retakeBtn.addEventListener('click', () => { previewOverlay.style.display = 'none'; cameraOverlay.style.display = 'flex'; }); cancelCameraBtn.addEventListener('click', closeCamera); usePhotoBtn.addEventListener('click', handleCameraPhotoSubmission); enterSubjectsBtn.addEventListener('click', openSubjectsView); backToChatBtn.addEventListener('click', closeSubjectsView); generalChatBtn.addEventListener('click', switchToGeneralMode); downloadAppBtn.addEventListener('click', promptInstall); closeNotificationBtn.addEventListener('click', hideAppNotification); userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}}); userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); updateInitialViewState(); }); languageBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(languageDropdown); }); settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(settingsDropdown); }); document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; }); document.querySelectorAll('#languageDropdown button').forEach(button => { button.addEventListener('click', (e) => { switchLanguage(e.currentTarget.dataset.lang); }); }); deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat); historyBtn.addEventListener('click', openHistorySidebar); closeHistoryBtn.addEventListener('click', closeHistorySidebar); sidebarOverlay.addEventListener('click', closeHistorySidebar); newChatBtn.addEventListener('click', () => { loadChat(currentSubject, null); closeHistorySidebar(); }); imageUploadInput.addEventListener('change', handleFileSelect); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); }); window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); }); window.addEventListener('click', (event) => { if (event.target == shareModal) shareModal.style.display = 'none'; });
-        // ========= التعديل: تمت إضافة مستمعي الأحداث لإغلاق عرض الصور =========
+    
+    // ========= التعديل: تم إضافة دالة إنشاء الشهب =========
+    function createMeteors() {
+        const meteorContainer = document.getElementById('meteorContainer');
+        if (!meteorContainer) return;
+
+        setInterval(() => {
+            const meteor = document.createElement('div');
+            meteor.className = 'meteor';
+
+            const right = Math.random() * (window.innerWidth + 200) - 200; // Allow starting off-screen
+            const duration = Math.random() * 2 + 1; 
+            const delay = Math.random() * 5;
+
+            meteor.style.right = `${right}px`;
+            meteor.style.top = `-20px`;
+            meteor.style.animationDuration = `${duration}s`;
+            meteor.style.animationDelay = `${delay}s`;
+            
+            meteorContainer.appendChild(meteor);
+
+            meteor.addEventListener('animationend', () => {
+                meteor.remove();
+            });
+
+        }, 250);
+    }
+
+    function initializeApp() { 
+        registerServiceWorker(); 
+        const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar'; 
+        switchLanguage(savedLang); 
+        loadAllChatSessions(); 
+        createMeteors(); // <-- تشغيل تأثير الشهب
+        const qrCodeImg = document.getElementById('qr-code-img'); const whatsappShare = document.getElementById('whatsapp-share'); const twitterShare = document.getElementById('twitter-share'); const telegramShare = document.getElementById('telegram-share'); const facebookShare = document.getElementById('facebook-share'); shareBtn.addEventListener('click', () => { const shareUrl = shareLinkInput.value; const shareText = translations[currentLanguage].shareText; qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`; whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`; twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`; shareModal.style.display = 'flex'; }); closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; }); copyLinkBtn.addEventListener('click', copyShareLink); toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); }); document.getElementById('uploadFromGalleryBtn').onclick = () => triggerImageUpload(); document.getElementById('useCameraBtn').onclick = () => openCamera(); captureBtn.addEventListener('click', captureImage); retakeBtn.addEventListener('click', () => { previewOverlay.style.display = 'none'; cameraOverlay.style.display = 'flex'; }); cancelCameraBtn.addEventListener('click', closeCamera); usePhotoBtn.addEventListener('click', handleCameraPhotoSubmission); enterSubjectsBtn.addEventListener('click', openSubjectsView); backToChatBtn.addEventListener('click', closeSubjectsView); generalChatBtn.addEventListener('click', switchToGeneralMode); downloadAppBtn.addEventListener('click', promptInstall); closeNotificationBtn.addEventListener('click', hideAppNotification); userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}}); userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); updateInitialViewState(); }); languageBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(languageDropdown); }); settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(settingsDropdown); }); document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; }); document.querySelectorAll('#languageDropdown button').forEach(button => { button.addEventListener('click', (e) => { switchLanguage(e.currentTarget.dataset.lang); }); }); deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat); historyBtn.addEventListener('click', openHistorySidebar); closeHistoryBtn.addEventListener('click', closeHistorySidebar); sidebarOverlay.addEventListener('click', closeHistorySidebar); newChatBtn.addEventListener('click', () => { loadChat(currentSubject, null); closeHistorySidebar(); }); imageUploadInput.addEventListener('change', handleFileSelect); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); }); window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); }); window.addEventListener('click', (event) => { if (event.target == shareModal) shareModal.style.display = 'none'; });
         const imageOverlay = document.getElementById('imageOverlay');
         document.getElementById('closeOverlayBtn').onclick = () => { imageOverlay.style.display = 'none'; };
         imageOverlay.onclick = (e) => { if (e.target.id === 'imageOverlay') { imageOverlay.style.display = 'none'; } };
@@ -393,7 +447,6 @@
     function typeWriterEffect(element, text) { let i = 0; element.innerHTML = ""; function type() { if (i < text.length) { element.innerHTML += text.charAt(i); i++; chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'auto' }); setTimeout(type, 20); } else { const messageElem = element.closest('.message'); if(messageElem) addBotMessageActions(messageElem, text); } } type(); }
     function addBotMessageActions(messageElement, text) { const t = translations[currentLanguage]; const actionsDiv = document.createElement("div"); actionsDiv.className = "message-actions"; actionsDiv.innerHTML = ` <button title="${t.copy}"><i class="fas fa-copy"></i></button> <button title="${t.playAudio}"><i class="fas fa-volume-up"></i></button> `; actionsDiv.querySelector('button[title="' + t.copy + '"]').onclick = () => { navigator.clipboard.writeText(text); }; actionsDiv.querySelector('button[title="' + t.playAudio + '"]').onclick = () => { speakMessageText(text); }; messageElement.appendChild(actionsDiv); }
     
-    // ========= التعديل: تم تحديث دالة عرض المحادثة بالكامل =========
     function refreshChat() {
         chatContainer.innerHTML = "";
         const t = translations[currentLanguage];
@@ -413,20 +466,18 @@
             const contentDiv = document.createElement("div");
             contentDiv.className = "message-content";
             
-            // وضع النص أولاً
             if(msg.text) {
                 const textNode = document.createTextNode(msg.text);
                 contentDiv.appendChild(textNode);
             }
             
-            // ثم وضع الصورة إذا كانت موجودة
             if (msg.images && msg.images.length > 0) {
-                const imgData = msg.images[0]; // عرض أول صورة فقط
+                const imgData = msg.images[0];
                 const imageElem = document.createElement('img');
                 imageElem.src = imgData;
                 imageElem.alt = t.sentImageAlt;
                 imageElem.className = 'sent-image';
-                imageElem.onclick = () => showFullscreenImage(imgData); // إضافة حدث الضغط
+                imageElem.onclick = () => showFullscreenImage(imgData);
                 contentDiv.appendChild(imageElem);
             }
             
@@ -444,7 +495,6 @@
         autoResizeTextarea();
     }
 
-    // ========= التعديل: تم إضافة دالة لعرض الصور بملء الشاشة =========
     function showFullscreenImage(imageData) {
         document.getElementById('fullscreenImageView').src = imageData;
         document.getElementById('imageOverlay').style.display = 'flex';
@@ -455,12 +505,10 @@
     async function fetchGeminiResponse(promptParts) { if (!geminiApiKey) throw new Error("API key is missing."); const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`; const response = await fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts: promptParts }] }) }); if(!response.ok) throw new Error(`Network error: ${response.statusText}`); const data = await response.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received."; }
     async function processQueryWithAI(promptParts) { const t = translations[currentLanguage]; updateInitialViewState(); const typingIndicatorHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`; const tempMsgId = `bot-msg-${Date.now()}`; const messageElem = document.createElement("div"); messageElem.className = `message bot`; messageElem.id = tempMsgId; messageElem.innerHTML = `<div class="message-header"><span>${getBotDisplayName()}</span></div><div class="message-content">${typingIndicatorHTML}</div>`; chatContainer.appendChild(messageElem); chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); try { const responseText = await fetchGeminiResponse(promptParts); const finalMessageElement = document.getElementById(tempMsgId); if (finalMessageElement) { const contentDiv = finalMessageElement.querySelector('.message-content'); typeWriterEffect(contentDiv, responseText); messages.push({ sender: 'bot', text: responseText, images: [] }); saveAllChatSessionsToLocalStorage(); } } catch (error) { const errorElement = document.getElementById(tempMsgId); if (errorElement) { errorElement.querySelector('.message-content').innerHTML = `${t.errorPrefix}: ${error.message}`; } messages.push({ sender: 'bot', text: `${t.errorPrefix}: ${error.message}`, images: [], isSystemMessage: true }); saveAllChatSessionsToLocalStorage(); } }
     
-    // ========= التعديل: تم تحديث دالة الإرسال لمسح المعاينة بعد الإرسال =========
     async function sendMessage() {
         const messageText = userInput.value.trim();
         if (!messageText && attachedFiles.length === 0) return;
         
-        // 1. إضافة الرسالة للمحادثة (مع النص والصورة)
         addMessage("user", messageText, [...attachedFiles]);
         
         const t = translations[currentLanguage];
@@ -470,14 +518,12 @@
             promptParts.push({ inline_data: { mime_type: 'image/jpeg', data: fileData.split(',')[1] } });
         });
         
-        // 2. مسح حقل الإدخال والمعاينة فوراً بعد حفظ البيانات
         userInput.value = "";
         attachedFiles = [];
         updateImagePreviews();
         autoResizeTextarea();
         updateSendOrVoiceButton();
         
-        // 3. إرسال البيانات إلى الذكاء الاصطناعي
         await processQueryWithAI(promptParts);
     }
     
@@ -504,7 +550,7 @@
     const translations = {
       'ar': { languageName: "العربية", languageNames: { ar: 'العربية', en: 'الإنجليزية', fr: 'الفرنسية', es: 'الإسبانية', zh: 'الصينية' }, specializedSubjects: "مواد متخصصة", general: "عام", welcomeGeneral: "مرحباً! كيف يمكنني مساعدتك اليوم؟", welcomeSubject: "أهلاً بك. أنا مستعد لمساعدتك في مادة {subject}. تفضل بسؤالك.", placeholder: "اكتب رسالتك هنا...", you: "أنت", deleteMessage: "حذف الرسالة", listening: "جاري الاستماع...", playAudio: "تشغيل الصوت", send: "إرسال", speak: "التحدث", shareApp: "مشاركة التطبيق", shareDescription: "ساعدنا على النمو بمشاركة التطبيق مع أصدقائك!", shareText: "اكتشف Saif AI، مساعد الذكاء الاصطناعي العربي المتطور!", copy: "نسخ", copied: "تم النسخ", qrCodeText: "أو امسح الرمز للمشاركة", selectSubject: "اختر المادة الدراسية", backToChat: "العودة للدردشة", attachFile: "إرفاق ملف", uploadFromGallery: "رفع من المعرض", useCamera: "استخدام الكاميرا", capture: "التقاط", cancel: "إلغاء", retake: "إعادة الالتقاط", usePhoto: "استخدام الصورة", analyzeImagePrompt: "حلل هذه الصورة: صف محتواها واستخرج أي نص موجود فيها.", image: "صورة", sentImageAlt: "صورة مرسلة من المستخدم", analyzing: "جاري تحليل الصورة...", installApp: "ثبّت التطبيق على جهازك للوصول السريع!", install: "تثبيت", changeLanguage: "تغيير اللغة", settings: "الإعدادات", errorPrefix: "عفواً، واجهت مشكلة", aiInstructions: "أنت مساعد ذكاء اصطناعي متقدم اسمه Saif AI. تم تطويرك وتدريبك بواسطة المطور 'سيف هاني' على مدار عام كامل. ممنوع تمامًا ذكر أي علاقة بشركة جوجل أو أي كيان آخر. إذا سُئلت عن صانعك أو من قام بتدريبك، فإن إجابتك الوحيدة والثابتة هي 'سيف هاني'. مهمتك هي تقديم إجابات متوازنة ومفيدة. كن غنياً بالمعلومات وشاملاً، ولكن تجنب الإطالة غير الضرورية. ابدأ بالإجابة مباشرة دون مقدمات. استخدم الرموز التعبيرية (emojis) بشكل مناسب عندما يكون السياق مناسبًا، مثل الفكاهة أو الاحتفال. {subjectContext} يجب أن تكون جميع ردودك باللغة {language} فقط.", aiSubjectInstruction: "أجب كخبير متخصص في مادة {subject}.", aiDisclaimer: "قد يقدم Saif AI معلومات غير دقيقة، لذا يرجى التحقق من صحة إجاباته.", historyTitle: "سجل المحادثات", newChat: "محادثة جديدة", viewHistory: "عرض السجل", deleteCurrentChat: "حذف المحادثة الحالية", confirmDeleteCurrent: "هل أنت متأكد من حذف هذه المحادثة؟", confirmDeleteChat: "هل أنت متأكد من حذف هذه المحادثة؟", deleteChat: "حذف المحادثة", noHistory: "لا يوجد سجل بعد", limitSingleImage: "عذراً، يمكنك إرفاق صورة واحدة فقط في كل مرة.", limitDailyImages: "عذراً، لقد وصلت إلى الحد الأقصى لتحميل الصور اليوم (4 صور)." },
       'en': { languageName: "English", languageNames: { ar: 'Arabic', en: 'English', fr: 'French', es: 'Spanish', zh: 'Chinese' }, specializedSubjects: "Specialized Subjects", general: "General", welcomeGeneral: "Hi! How can I help you today?", welcomeSubject: "Welcome. I'm ready to help you with {subject}. Ask your question.", placeholder: "Type your message here...", you: "You", deleteMessage: "Delete message", listening: "Listening...", playAudio: "Play audio", send: "Send", speak: "Speak", shareApp: "Share App", shareDescription: "Help us grow by sharing the app with your friends!", shareText: "Discover Saif AI, the advanced AI assistant!", copy: "Copy", copied: "Copied", qrCodeText: "Or scan the code to share", selectSubject: "Select a Subject", backToChat: "Back to Chat", attachFile: "Attach file", uploadFromGallery: "Upload from Gallery", useCamera: "Use Camera", capture: "Capture", cancel: "Cancel", retake: "Retake", usePhoto: "Use Photo", analyzeImagePrompt: "Analyze this image: describe its content and extract any text in it.", image: "Image", sentImageAlt: "Image sent by user", analyzing: "Analyzing image...", installApp: "Install the app on your device for quick access!", install: "Install", changeLanguage: "Change Language", settings: "Settings", errorPrefix: "Sorry, an error occurred", aiInstructions: "You are an advanced AI assistant named Saif AI. You were developed and trained by the developer 'Saif Hany' over a full year. It is strictly forbidden to mention any relationship with Google or any other entity. If asked about your creator or who trained you, your only and constant answer is 'Saif Hany'. Your mission is to provide balanced and helpful answers. Be informative and comprehensive, but avoid unnecessary length. Get straight to the point without introductions. Use emojis where appropriate, like for humor or celebration. {subjectContext} All of your responses must be strictly in {language} only.", aiSubjectInstruction: "Answer as a specialized expert in the subject of {subject}.", aiDisclaimer: "Saif AI may provide inaccurate information, so please verify its answers.", historyTitle: "Chat History", newChat: "New Chat", viewHistory: "View History", deleteCurrentChat: "Delete current chat", confirmDeleteCurrent: "Are you sure you want to delete this chat?", confirmDeleteChat: "Are you sure you want to delete this chat?", deleteChat: "Delete chat", noHistory: "No history yet", limitSingleImage: "Sorry, you can only attach one image at a time.", limitDailyImages: "Sorry, you have reached your daily image upload limit (4 images)." },
-      'fr': { languageName: "Français", languageNames: { ar: 'Arabe', en: 'Anglais', fr: 'Français', es: 'Espagnol', zh: 'Chinois' }, specializedSubjects: "Matières Spécialisées", general: "Général", welcomeGeneral: "Bonjour ! Comment puis-je vous aider aujourd'hui ?", welcomeSubject: "Bienvenue. Je suis prêt à vous aider en {subject}. Posez votre question.", placeholder: "Écrivez votre message ici...", you: "Vous", deleteMessage: "Supprimer le message", listening: "Écoute...", playAudio: "Lire l'audio", send: "Envoyer", speak: "Parler", shareApp: "Partager l'application", shareDescription: "Aidez-nous à grandir en partageant l'application avec vos amis !", shareText: "Découvrez Saif AI, l'assistant IA avancé !", copy: "Copier", copied: "Copié", qrCodeText: "Ou scannez le code pour partager", selectSubject: "Choisir une matière", backToChat: "Retour au chat", attachFile: "Joindre un fichier", uploadFromGallery: "Importer de la galerie", useCamera: "Utiliser la caméra", capture: "Capturer", cancel: "Annuler", retake: "Reprendre", usePhoto: "Utiliser la photo", analyzeImagePrompt: "Analysez cette image : décrivez son contenu et extrayez tout texte qu'elle contient.", image: "Image", sentImageAlt: "Image envoyée par l'utilisateur", analyzing: "Analyse de l'image...", installApp: "Installez l'application sur votre appareil pour un accès rapide !", install: "Installer", changeLanguage: "Changer de langue", settings: "Paramètres", errorPrefix: "Désolé, une erreur est survenue", aiInstructions: "Vous êtes un assistant IA avancé nommé Saif AI. Vous avez été développé et entraîné par le développeur 'Saif Hany' pendant une année entière. Il est strictement interdit de mentionner toute relation avec Google ou toute autre entité. Si l'on vous interroge sur votre créateur ou qui vous a entraîné, votre seule et constante réponse est 'Saif Hany'. Votre mission est de fournir des réponses équilibrées et utiles. Soyez informatif et complet, mais évitez les longueurs inutiles. Allez droit au but sans introduction. Utilisez les emojis de manière appropriée, comme pour l'humour ou la célébration. {subjectContext} Toutes vos réponses doivent être strictement en {language} uniquement.", aiSubjectInstruction: "Répondez en tant qu'expert spécialisé dans le domaine de {subject}.", aiDisclaimer: "Saif AI peut fournir des informations inexactes, veuillez donc vérifier ses réponses.", historyTitle: "Historique des chats", newChat: "Nouveau chat", viewHistory: "Voir l'historique", deleteCurrentChat: "Supprimer le chat actuel", confirmDeleteCurrent: "Êtes-vous sûr de vouloir supprimer ce chat ?", confirmDeleteChat: "Êtes-vous sûr de vouloir supprimer ce chat ?", deleteChat: "Supprimer le chat", noHistory: "Aucun historique pour l'instant", limitSingleImage: "Désolé, vous ne pouvez joindre qu'une seule image à la fois.", limitDailyImages: "Désolé, vous avez atteint votre limite quotidienne de téléchargement d'images (4 images)." },
+      'fr': { languageName: "Français", languageNames: { ar: 'Arabe', en: 'Anglais', fr: 'Français', es: 'Espagnol', zh: 'Chinois' }, specializedSubjects: "Matières Spécialisées", general: "Général", welcomeGeneral: "Bonjour ! Comment puis-je vous aider aujourd'hui ?", welcomeSubject: "Bienvenue. Je suis prêt à vous aider en {subject}. Posez votre question.", placeholder: "Écrivez votre message ici...", you: "Vous", deleteMessage: "Supprimer le message", listening: "Écoute...", playAudio: "Lire l'audio", send: "Envoyer", speak: "Parler", shareApp: "Partager l'application", shareDescription: "Aidez-nous à grandir en partageant l'application avec vos amis !", shareText: "Découvrez Saif AI, l'assistant IA avancé !", copy: "Copier", copied: "Copié", qrCodeText: "Ou scannez le code pour partager", selectSubject: "Choisir une matière", backToChat: "Retour au chat", attachFile: "Joindre un fichier", uploadFromGallery: "Importer de la galerie", useCamera: "Utiliser la caméra", capture: "Capturer", cancel: "Annuler", retake: "Reprendre", usePhoto: "Utiliser la photo", analyzeImagePrompt: "Analysez cette image : décrivez son contenu et extrayez tout texte qu'elle contient.", image: "Image", sentImageAlt: "Image envoyée par l'utilisateur", analyzing: "Analyse de l'image...", installApp: "Installez l'application sur votre appareil pour un accès rapide !", install: "Installer", changeLanguage: "Changer de langue", settings: "Paramètres", errorPrefix: "Désolé, une erreur est survenue", aiInstructions: "Vous êtes un assistant IA avancé nommé Saif AI. Vous avez été développé et entraîné par le développeur 'Saif Hany' pendant une année entière. Il est strictly interdit de mentionner toute relation avec Google ou toute autre entité. Si l'on vous interroge sur votre créateur ou qui vous a entraîné, votre seule et constante réponse est 'Saif Hany'. Votre mission est de fournir des réponses équilibrées et utiles. Soyez informatif et complet, mais évitez les longueurs inutiles. Allez droit au but sans introduction. Utilisez les emojis de manière appropriée, comme pour l'humour ou la célébration. {subjectContext} Toutes vos réponses doivent être strictement en {language} uniquement.", aiSubjectInstruction: "Répondez en tant qu'expert spécialisé dans le domaine de {subject}.", aiDisclaimer: "Saif AI peut fournir des informations inexactes, veuillez donc vérifier ses réponses.", historyTitle: "Historique des chats", newChat: "Nouveau chat", viewHistory: "Voir l'historique", deleteCurrentChat: "Supprimer le chat actuel", confirmDeleteCurrent: "Êtes-vous sûr de vouloir supprimer ce chat ?", confirmDeleteChat: "Êtes-vous sûr de vouloir supprimer ce chat ?", deleteChat: "Supprimer le chat", noHistory: "Aucun historique pour l'instant", limitSingleImage: "Désolé, vous ne pouvez joindre qu'une seule image à la fois.", limitDailyImages: "Désolé, vous avez atteint votre limite quotidienne de téléchargement d'images (4 images)." },
       'es': { languageName: "Español", languageNames: { ar: 'Árabe', en: 'Inglés', fr: 'Francés', es: 'Español', zh: 'Chino' }, specializedSubjects: "Materias Especializadas", general: "General", welcomeGeneral: "¡Hola! ¿Cómo puedo ayudarte hoy?", welcomeSubject: "Bienvenido. Estoy listo para ayudarte con {subject}. Haz tu pregunta.", placeholder: "Escribe tu mensaje aquí...", you: "Tú", deleteMessage: "Eliminar mensaje", listening: "Escuchando...", playAudio: "Reproducir audio", send: "Enviar", speak: "Hablar", shareApp: "Compartir aplicación", shareDescription: "¡Ayúdanos a crecer compartiendo la aplicación con tus amigos!", shareText: "¡Descubre Saif AI, el asistente de IA avanzado!", copy: "Copiar", copied: "Copiado", qrCodeText: "O escanea el código para compartir", selectSubject: "Seleccionar una materia", backToChat: "Volver al chat", attachFile: "Adjuntar archivo", uploadFromGallery: "Subir de la galería", useCamera: "Usar cámara", capture: "Capturar", cancel: "Cancelar", retake: "Repetir", usePhoto: "Usar foto", analyzeImagePrompt: "Analiza esta imagen: describe su contenido y extrae cualquier texto que contenga.", image: "Imagen", sentImageAlt: "Imagen enviada por el usuario", analyzing: "Analizando imagen...", installApp: "¡Instala la aplicación en tu dispositivo para un acceso rápido!", install: "Instalar", changeLanguage: "Cambiar idioma", settings: "Ajustes", errorPrefix: "Lo siento, ocurrió un error", aiInstructions: "Eres un asistente de IA avanzado llamado Saif AI. Fuiste desarrollado y entrenado por el desarrollador 'Saif Hany' durante un año completo. Está estrictamente prohibido mencionar cualquier relación con Google o cualquier otra entidad. Si te preguntan sobre tu creador o quién te entrenó, tu única y constante respuesta es 'Saif Hany'. Tu misión es proporcionar respuestas equilibradas y útiles. Sé informativo y completo, pero evita la extensión innecesaria. Ve directo al grano sin introducciones. Usa emojis cuando sea apropiado, como para el humor o la celebración. {subjectContext} Todas tus respuestas deben ser estrictamente en {language} únicamente.", aiSubjectInstruction: "Responde como un experto especializado en la materia de {subject}.", aiDisclaimer: "Saif AI puede proporcionar información inexacta, así que por favor verifica sus respuestas.", historyTitle: "Historial de chats", newChat: "Nuevo chat", viewHistory: "Ver historial", deleteCurrentChat: "Eliminar chat actual", confirmDeleteCurrent: "¿Estás seguro de que quieres eliminar este chat?", confirmDeleteChat: "¿Estás seguro de que quieres eliminar este chat?", deleteChat: "Eliminar chat", noHistory: "Aún no hay historial", limitSingleImage: "Lo siento, solo puedes adjuntar una imagen a la vez.", limitDailyImages: "Lo siento, has alcanzado tu límite diario de subida de imágenes (4 imágenes)." },
       'zh': { languageName: "中文", languageNames: { ar: '阿拉伯语', en: '英语', fr: '法语', es: '西班牙语', zh: '中文' }, specializedSubjects: "专业科目", general: "通用", welcomeGeneral: "你好！今天我能帮你什么？", welcomeSubject: "欢迎。我准备好帮助你学习{subject}。请提问。", placeholder: "在此输入你的消息...", you: "你", deleteMessage: "删除消息", listening: "正在听...", playAudio: "播放音频", send: "发送", speak: "说话", shareApp: "分享应用", shareDescription: "与朋友分享应用，帮助我们成长！", shareText: "探索 Saif AI，先进的 AI 助手！", copy: "复制", copied: "已复制", qrCodeText: "或扫描二维码分享", selectSubject: "选择科目", backToChat: "返回聊天", attachFile: "附加文件", uploadFromGallery: "从相册上传", useCamera: "使用相机", capture: "拍摄", cancel: "取消", retake: "重拍", usePhoto: "使用照片", analyzeImagePrompt: "分析这张图片：描述其内容并提取其中的任何文本。", image: "图片", sentImageAlt: "用户发送的图片", analyzing: "正在分析图片...", installApp: "将应用安装到你的设备上以便快速访问！", install: "安装", changeLanguage: "更改语言", settings: "设置", errorPrefix: "抱歉，发生了错误", aiInstructions: "你是一个名为 Saif AI 的高级人工智能助手。你由开发者“Saif Hany”花费整整一年时间开发和训练。严禁提及与谷歌或任何其他实体的任何关系。如果被问及你的创造者或谁训练了你，你唯一且不变的答案是“Saif Hany”。你的任务是提供平衡且有用的答案。内容要丰富全面，但避免不必要的冗长。直接回答问题，不要有前言。在适当的情况下使用表情符号，例如幽默或庆祝。{subjectContext}你所有的回复都必须严格使用{language}。", aiSubjectInstruction: "以{subject}领域的专业专家身份回答。", aiDisclaimer: "Saif AI 可能提供不准确的信息，请核实其答案。", historyTitle: "聊天记录", newChat: "新聊天", viewHistory: "查看记录", deleteCurrentChat: "删除当前聊天", confirmDeleteCurrent: "你确定要删除此聊天吗？", confirmDeleteChat: "你确定要删除此聊天吗？", deleteChat: "删除聊天", noHistory: "暂无记录", limitSingleImage: "抱歉，每次只能附加一张图片。", limitDailyImages: "抱歉，你已达到每日图片上传上限（4张）。" }
     };
