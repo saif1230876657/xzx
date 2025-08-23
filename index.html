@@ -37,7 +37,57 @@
     *::-webkit-scrollbar-thumb { background-color: var(--secondary-color); border-radius: 3px; }
     html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { background: var(--bg-main-color); display: flex; justify-content: center; align-items: center; color: var(--text-primary); }
-    .container { width: 100%; height: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 0; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .container { 
+        width: 100%; height: 100%; background: var(--bg-main); border: 1px solid var(--border-color); 
+        border-radius: 0; display: flex; flex-direction: column; overflow: hidden; position: relative;
+        /* ========= التعديل: تمت إضافة انتقال سلس للخلفية ========= */
+        transition: background 0.5s ease-in-out;
+    }
+    /* ========= التعديل: تمت إضافة حالة التركيز للخلفية المعتمة ========= */
+    .container.is-focused {
+        background: #000000;
+    }
+    .meteor-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .meteor {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background-color: white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.7);
+        animation: meteor-fall linear infinite;
+    }
+    .meteor::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateX(-200px);
+        width: 200px;
+        height: 2px;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.6), transparent);
+    }
+    @keyframes meteor-fall {
+        0% {
+            transform: translate(0, 0) rotate(215deg);
+            opacity: 1;
+        }
+        70% {
+            opacity: 1;
+        }
+        100% {
+            transform: translate(-700px, 700px) rotate(215deg);
+            opacity: 0;
+        }
+    }
     .download-notification { display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface-raised); color: var(--text-primary); text-align: center; font-weight: 500; z-index: 100; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--border-color); overflow: hidden; max-height: 0; padding: 0 15px; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; }
     .download-notification.show { max-height: 80px; padding: 10px 15px; }
     .notification-buttons { display: flex; align-items: center; gap: 10px; margin-right: auto; padding-right: 15px; }
@@ -63,8 +113,6 @@
     .dropdown-menu button.danger:hover { background-color: var(--error-color); color: white; }
     #languageBtn { padding: 0.4rem; width: 34px; height: 34px; font-size: 1.1rem; }
     .chat-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; padding-top: var(--header-height); position: relative; }
-    
-    /* ========= التعديل: تم تبسيط تصميم أيقونة البداية (رائد الفضاء فقط) ========= */
     #welcomeAnimationContainer { 
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
         z-index: 1; display: none; justify-content: center; align-items: center; pointer-events: none;
@@ -86,7 +134,6 @@
     }
     @keyframes fadeIn { to { opacity: 0.7; } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-    
     #subjectsViewContainer { background-color: var(--bg-main-color); padding: 1.5rem; display: none; flex-direction: column; align-items: center; }
     .subjects-view-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); max-width: 700px; }
     .subjects-view-header h2 { font-size: 1.6rem; color: var(--primary-color); }
@@ -215,6 +262,7 @@
 </head>
 <body>
   <div class="container">
+    <div id="meteorContainer" class="meteor-container"></div>
     <div id="downloadNotification" class="download-notification">
       <span id="downloadNotificationText"></span>
       <div class="notification-buttons">
@@ -339,6 +387,8 @@
     const subjects = [ { key: "physics", name: { ar: "فيزياء", en: "Physics", fr: "Physique", es: "Física", zh: "物理" }, icon: "fas fa-atom" }, { key: "chemistry", name: { ar: "كيمياء", en: "Chemistry", fr: "Chimie", es: "Química", zh: "化学" }, icon: "fas fa-flask" }, { key: "biology", name: { ar: "أحياء", en: "Biology", fr: "Biologie", es: "Biología", zh: "生物学" }, icon: "fas fa-dna" }, { key: "science", name: { ar: "علوم", en: "Science", fr: "Sciences", es: "Ciencia", zh: "科学" }, icon: "fas fa-microscope" }, { key: "arabic", name: { ar: "لغة عربية", en: "Arabic", fr: "Arabe", es: "Árabe", zh: "阿拉伯语" }, icon: "fas fa-pen-nib" }, { key: "philosophy", name: { ar: "فلسفة", en: "Philosophy", fr: "Philosophie", es: "Filosofía", zh: "哲学" }, icon: "fas fa-brain" }, { key: "english", name: { ar: "لغة إنجليزية", en: "English", fr: "Anglais", es: "Inglés", zh: "英语" }, icon: "fas fa-language" }, { key: "math", name: { ar: "رياضيات", en: "Math", fr: "Maths", es: "Matemáticas", zh: "数学" }, icon: "fas fa-calculator" }, { key: "religion", name: { ar: "تربية دينية", en: "Religion", fr: "Religion", es: "Religión", zh: "宗教教育" }, icon: "fas fa-mosque" } ];
     let recognition; let isListening = false; let deferredPrompt; let speechEndTimeout;
     const predefinedSuggestions = [ {ar:"اشرح لي مفهوم الثقب الأسود ببساطة",en:"Explain the concept of a black hole simply",fr:"Expliquez simplement le concept d'un trou noir",es:"Explica de forma sencilla el concepto de agujero negro",zh:"简单解释一下黑洞的概念"}, {ar:"ما هي أفضل طريقة لتعلم لغة جديدة؟",en:"What is the best way to learn a new language?",fr:"Quelle est la meilleure façon d'apprendre une nouvelle langue ?",es:"¿Cuál es la mejor manera de aprender un nuevo idioma?",zh:"学习一门新语言的最好方法是什么？"}, {ar:"اكتب قصة قصيرة عن مستكشف فضاء",en:"Write a short story about a space explorer",fr:"Écrivez une nouvelle sur un explorateur de l'espace",es:"Escribe una historia corta sobre un explorador espacial",zh:"写一个关于太空探险家的短篇故事"}, {ar:"ما هي عاصمة أستراليا؟",en:"What is the capital of Australia?",fr:"Quelle est la capitale de l'Australie ?",es:"¿Cuál es la capital de Australia?",zh:"澳大利亚的首都是哪里？"}, {ar:"لخص لي كتاب الأب الغني والأب الفقير",en:"Summarize the book 'Rich Dad Poor Dad'",fr:"Résumez le livre 'Père riche, père pauvre'",es:"Resume el libro 'Padre Rico, Padre Pobre'",zh:"总结《富爸爸穷爸爸》这本书"}, {ar:"كيف تعمل محركات البحث مثل جوجل؟",en:"How do search engines like Google work?",fr:"Comment fonctionnent les moteurs de recherche comme Google ?",es:"¿Cómo funcionan los motores de búsqueda como Google?",zh:"像谷歌这样的搜索引擎是如何工作的？"}, {ar:"ما هي فوائد رياضة التأمل؟",en:"What are the benefits of meditation?",fr:"Quels sont les bienfaits de la méditation ?",es:"¿Cuáles son los beneficios de la meditación?",zh:"冥想有什么好处？"}, {ar:"اقترح 5 أفكار لمشاريع برمجية صغيرة",en:"Suggest 5 ideas for small programming projects",fr:"Suggérez 5 idées de petits projets de programmation",es:"Sugiere 5 ideas para pequeños proyectos de programación",zh:"为小型编程项目建议5个想法"}, {ar:"ما هو الفرق بين الذكاء الاصطناعي وتعلم الآلة؟",en:"What is the difference between AI and Machine Learning?",fr:"Quelle est la différence entre l'IA et l'apprentissage automatique ?",es:"¿Cuál es la diferencia entre la IA y el Aprendizaje Automático?",zh:"人工智能和机器学习有什么区别？"}, {ar:"اكتب لي قصيدة عن جمال الطبيعة",en:"Write me a poem about the beauty of nature",fr:"Écris-moi un poème sur la beauté de la nature",es:"Escríbeme un poema sobre la belleza de la naturaleza",zh:"为我写一首关于自然之美的诗"}, {ar:"كيف يمكنني حماية خصوصيتي على الإنترنت؟",en:"How can I protect my privacy online?",fr:"Comment puis-je protéger ma vie privée en ligne ?",es:"¿Cómo puedo proteger mi privacidad en línea?",zh:"我如何在线保护我的隐私？"}, {ar:"ما هي أبرز أحداث القرن العشرين؟",en:"What are the main events of the 20th century?",fr:"Quels sont les principaux événements du 20e siècle ?",es:"¿Cuáles son los principales acontecimientos del siglo XX?",zh:"20世纪的主要事件有哪些？"}, {ar:"اشرح نظرية النسبية لأينشطاين",en:"Explain Einstein's theory of relativity",fr:"Expliquez la théorie de la relativité d'Einstein",es:"Explica la teoría de la relatividad de Einstein",zh:"解释爱因斯坦的相对论"}, {ar:"ما هي أغرب معلومة تعرفها؟",en:"What is the weirdest fact you know?",fr:"Quel est le fait le plus étrange que vous connaissiez ?",es:"¿Cuál es el dato más extraño que conoces?",zh:"你知道的最奇怪的事实是什么？"}, {ar:"اقترح خطة لرحلة سياحية إلى اليابان لمدة أسبوع",en:"Suggest a one-week tourist trip plan to Japan",fr:"Suggérez un plan de voyage touristique d'une semaine au Japon",es:"Sugiere un plan de viaje turístico de una semana a Japón",zh:"建议一个为期一周的日本旅游计划"}, {ar:"كيف أبدأ في مجال الاستثمار؟",en:"How do I start investing?",fr:"Comment commencer à investir ?",es:"¿Cómo empiezo a invertir?",zh:"我该如何开始投资？"}, {ar:"اكتب نصًا إعلانيًا لمنتج خيالي",en:"Write an advertisement text for a fictional product",fr:"Rédigez un texte publicitaire pour un produit fictif",es:"Escribe un texto publicitario para un producto ficticio",zh:"为虚构产品撰写广告文案"}, {ar:"ما هي أهمية الحفاظ على البيئة؟",en:"What is the importance of environmental conservation?",fr:"Quelle est l'importance de la conservation de l'environnement ?",es:"¿Cuál es la importancia de la conservación del medio ambiente?",zh:"环境保护的重要性是什么？"}, {ar:"لخص فيلم 'Inception'",en:"Summarize the movie 'Inception'",fr:"Résumez le film 'Inception'",es:"Resume la película 'Inception'",zh:"总结电影《盗梦空间》"}, {ar:"ما هي الحضارات القديمة التي أثرت في العالم؟",en:"What ancient civilizations influenced the world?",fr:"Quelles civilisations anciennes ont influencé le monde ?",es:"¿Qué civilizaciones antiguas influyeron en el mundo?",zh:"哪些古代文明影响了世界？"}, {ar:"كيف يعمل نظام تحديد المواقع العالمي (GPS)؟",en:"How does the GPS system work?",fr:"Comment fonctionne le système GPS ?",es:"¿Cómo funciona el sistema GPS?",zh:"GPS系统是如何工作的？"}, {ar:"ما هي النصائح لزيادة الإنتاجية في العمل؟",en:"What are some tips for increasing productivity at work?",fr:"Quels sont les conseils pour augmenter la productivité au travail ?",es:"¿Cuáles son algunos consejos para aumentar la productividad en el trabajo?",zh:"提高工作效率有什么技巧？"}, {ar:"اكتب حوارًا فلسفيًا بين شخصين",en:"Write a philosophical dialogue between two people",fr:"Écrivez un dialogue philosophique entre deux personnes",es:"Escribe un diálogo filosófico entre dos personas",zh:"写一段两人之间的哲学对话"}, {ar:"ما هي أفضل الكتب التي قرأتها؟",en:"What are the best books you have read?",fr:"Quels sont les meilleurs livres que vous avez lus ?",es:"¿Cuáles son los mejores libros que has leído?",zh:"你读过的最好的书是哪些？"}, {ar:"كيف يمكن للذكاء الاصطناعي أن يغير مستقبلنا؟",en:"How can AI change our future?",fr:"Comment l'IA peut-elle changer notre avenir ?",es:"¿Cómo puede la IA cambiar nuestro futuro?",zh:"人工智能如何改变我们的未来？"}, {ar:"ما هي عملية البناء الضوئي؟",en:"What is the process of photosynthesis?",fr:"Quel est le processus de la photosynthèse ?",es:"¿Qué es el proceso de la fotosíntesis?",zh:"什么是光合作用的过程？"}, {ar:"لخص قصة أحد الأنبياء",en:"Summarize the story of one of the prophets",fr:"Résumez l'histoire d'un des prophètes",es:"Resume la historia de uno de los profetas",zh:"总结一位先知的故事"}, {ar:"ما هي المهارات المطلوبة في سوق العمل اليوم؟",en:"What skills are in demand in today's job market?",fr:"Quelles sont les compétences recherchées sur le marché du travail actuel ?",es:"¿Qué habilidades se demandan en el mercado laboral actual?",zh:"当今就业市场需要哪些技能？"} ];
+    const mainContainer = document.querySelector('.container');
+    const meteorContainer = document.getElementById('meteorContainer');
     function showAppNotification() { downloadNotification.classList.add('show'); } function hideAppNotification() { downloadNotification.classList.remove('show'); }
     function registerServiceWorker() { if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(err => console.error('Service Worker registration failed:', err)); } }
     async function promptInstall(e) { e.preventDefault(); if (deferredPrompt) { hideAppNotification(); deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; deferredPrompt = null; } }
@@ -346,7 +396,33 @@
     function toggleListening() { if (!recognition) return; if (isListening) { recognition.stop(); } else { try { userInput.value = ""; autoResizeTextarea(); recognition.start(); } catch (e) { stopListening(); } } }
     function stopListening() { if(isListening) { isListening = false; sendOrVoiceBtn.classList.remove('recording'); voiceIndicator.classList.remove('active'); } }
     function speakMessageText(text) { if (speechSynthesis.speaking) { speechSynthesis.cancel(); } const utterance = new SpeechSynthesisUtterance(text); const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' }; utterance.lang = langMap[currentLanguage]; speechSynthesis.speak(utterance); }
-    function initializeApp() { registerServiceWorker(); const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar'; switchLanguage(savedLang); loadAllChatSessions(); const qrCodeImg = document.getElementById('qr-code-img'); const whatsappShare = document.getElementById('whatsapp-share'); const twitterShare = document.getElementById('twitter-share'); const telegramShare = document.getElementById('telegram-share'); const facebookShare = document.getElementById('facebook-share'); shareBtn.addEventListener('click', () => { const shareUrl = shareLinkInput.value; const shareText = translations[currentLanguage].shareText; qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`; whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`; twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`; shareModal.style.display = 'flex'; }); closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; }); copyLinkBtn.addEventListener('click', copyShareLink); toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); }); document.getElementById('uploadFromGalleryBtn').onclick = () => triggerImageUpload(); document.getElementById('useCameraBtn').onclick = () => openCamera(); captureBtn.addEventListener('click', captureImage); retakeBtn.addEventListener('click', () => { previewOverlay.style.display = 'none'; cameraOverlay.style.display = 'flex'; }); cancelCameraBtn.addEventListener('click', closeCamera); usePhotoBtn.addEventListener('click', handleCameraPhotoSubmission); enterSubjectsBtn.addEventListener('click', openSubjectsView); backToChatBtn.addEventListener('click', closeSubjectsView); generalChatBtn.addEventListener('click', switchToGeneralMode); downloadAppBtn.addEventListener('click', promptInstall); closeNotificationBtn.addEventListener('click', hideAppNotification); userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}}); userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); updateInitialViewState(); }); languageBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(languageDropdown); }); settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(settingsDropdown); }); document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; }); document.querySelectorAll('#languageDropdown button').forEach(button => { button.addEventListener('click', (e) => { switchLanguage(e.currentTarget.dataset.lang); }); }); deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat); historyBtn.addEventListener('click', openHistorySidebar); closeHistoryBtn.addEventListener('click', closeHistorySidebar); sidebarOverlay.addEventListener('click', closeHistorySidebar); newChatBtn.addEventListener('click', () => { loadChat(currentSubject, null); closeHistorySidebar(); }); imageUploadInput.addEventListener('change', handleFileSelect); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); }); window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); }); window.addEventListener('click', (event) => { if (event.target == shareModal) shareModal.style.display = 'none'; });
+    
+    function createMeteors() {
+        if (!meteorContainer) return;
+        setInterval(() => {
+            const meteor = document.createElement('div');
+            meteor.className = 'meteor';
+            const right = Math.random() * (window.innerWidth + 200) - 200;
+            const duration = Math.random() * 4 + 3; 
+            const delay = Math.random() * 5;
+            meteor.style.right = `${right}px`;
+            meteor.style.top = `-20px`;
+            meteor.style.animationDuration = `${duration}s`;
+            meteor.style.animationDelay = `${delay}s`;
+            meteorContainer.appendChild(meteor);
+            meteor.addEventListener('animationend', () => {
+                meteor.remove();
+            });
+        }, 250);
+    }
+
+    function initializeApp() { 
+        registerServiceWorker(); 
+        const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar'; 
+        switchLanguage(savedLang); 
+        loadAllChatSessions(); 
+        createMeteors();
+        const qrCodeImg = document.getElementById('qr-code-img'); const whatsappShare = document.getElementById('whatsapp-share'); const twitterShare = document.getElementById('twitter-share'); const telegramShare = document.getElementById('telegram-share'); const facebookShare = document.getElementById('facebook-share'); shareBtn.addEventListener('click', () => { const shareUrl = shareLinkInput.value; const shareText = translations[currentLanguage].shareText; qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`; whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`; twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`; shareModal.style.display = 'flex'; }); closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; }); copyLinkBtn.addEventListener('click', copyShareLink); toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); }); document.getElementById('uploadFromGalleryBtn').onclick = () => triggerImageUpload(); document.getElementById('useCameraBtn').onclick = () => openCamera(); captureBtn.addEventListener('click', captureImage); retakeBtn.addEventListener('click', () => { previewOverlay.style.display = 'none'; cameraOverlay.style.display = 'flex'; }); cancelCameraBtn.addEventListener('click', closeCamera); usePhotoBtn.addEventListener('click', handleCameraPhotoSubmission); enterSubjectsBtn.addEventListener('click', openSubjectsView); backToChatBtn.addEventListener('click', closeSubjectsView); generalChatBtn.addEventListener('click', switchToGeneralMode); downloadAppBtn.addEventListener('click', promptInstall); closeNotificationBtn.addEventListener('click', hideAppNotification); userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}}); userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); updateInitialViewState(); }); languageBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(languageDropdown); }); settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(settingsDropdown); }); document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; }); document.querySelectorAll('#languageDropdown button').forEach(button => { button.addEventListener('click', (e) => { switchLanguage(e.currentTarget.dataset.lang); }); }); deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat); historyBtn.addEventListener('click', openHistorySidebar); closeHistoryBtn.addEventListener('click', closeHistorySidebar); sidebarOverlay.addEventListener('click', closeHistorySidebar); newChatBtn.addEventListener('click', () => { loadChat(currentSubject, null); closeHistorySidebar(); }); imageUploadInput.addEventListener('change', handleFileSelect); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); }); window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); }); window.addEventListener('click', (event) => { if (event.target == shareModal) shareModal.style.display = 'none'; });
         const imageOverlay = document.getElementById('imageOverlay');
         document.getElementById('closeOverlayBtn').onclick = () => { imageOverlay.style.display = 'none'; };
         imageOverlay.onclick = (e) => { if (e.target.id === 'imageOverlay') { imageOverlay.style.display = 'none'; } };
@@ -466,7 +542,24 @@
     function getWelcomeMessageText() { const t = translations[currentLanguage]; let welcomeMsgText = t.welcomeGeneral.replace('{botName}', getBotDisplayName()); if (currentSubject !== "general") { welcomeMsgText = t.welcomeSubject.replace('{botName}', getBotDisplayName()).replace('{subject}', getTranslatedSubjectName(currentSubject)); } return welcomeMsgText; }
     function updateDailySuggestions() { const suggestionsPerDay = 4; const numChunks = Math.ceil(predefinedSuggestions.length / suggestionsPerDay); const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24)); const currentChunkIndex = dayIndex % numChunks; const startIndex = currentChunkIndex * suggestionsPerDay; const todaysSuggestions = predefinedSuggestions.slice(startIndex, startIndex + suggestionsPerDay); populateSuggestions(todaysSuggestions); }
     function populateSuggestions(suggestionsArray) { suggestionsContainer.innerHTML = ''; suggestionsArray.forEach(suggestionObj => { const btn = document.createElement('button'); btn.className = 'suggestion-btn'; btn.textContent = suggestionObj[currentLanguage] || suggestionObj['en']; btn.onclick = () => { userInput.value = suggestionObj[currentLanguage] || suggestionObj['en']; sendMessage(); }; suggestionsContainer.appendChild(btn); }); }
-    function updateInitialViewState() { const hasUserMessages = messages.some(m => !m.isInitialWelcome); const isTyping = userInput.value.trim().length > 0; if (!hasUserMessages && currentChatId === null && !isTyping) { suggestionsContainer.style.display = 'flex'; welcomeAnimation.style.display = 'flex'; } else { suggestionsContainer.style.display = 'none'; welcomeAnimation.style.display = 'none'; } }
+    
+    // ========= التعديل: تم تحديث الدالة للتحكم في الخلفية والشهب =========
+    function updateInitialViewState() {
+        const hasUserMessages = messages.some(m => !m.isInitialWelcome);
+        const isTyping = userInput.value.trim().length > 0;
+        if (!hasUserMessages && currentChatId === null && !isTyping) {
+            suggestionsContainer.style.display = 'flex';
+            welcomeAnimation.style.display = 'flex';
+            meteorContainer.style.display = 'block';
+            mainContainer.classList.remove('is-focused');
+        } else {
+            suggestionsContainer.style.display = 'none';
+            welcomeAnimation.style.display = 'none';
+            meteorContainer.style.display = 'none';
+            mainContainer.classList.add('is-focused');
+        }
+    }
+    
     function openHistorySidebar() { renderHistoryList(); historySidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
     function closeHistorySidebar() { historySidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); }
     function renderHistoryList() { historyList.innerHTML = ''; const t = translations[currentLanguage]; const sessions = allChatSessions[currentSubject] || []; if (sessions.length === 0) { historyList.innerHTML = `<li style="cursor: default; opacity: 0.7; justify-content: center;">${t.noHistory}</li>`; return; } sessions.forEach(session => { const li = document.createElement('li'); if (session.id === currentChatId) { li.classList.add('active'); } const firstUserMsg = session.messages.find(m => m.sender === 'user'); const titleText = firstUserMsg ? (firstUserMsg.images.length > 0 ? `[${t.image}] ${firstUserMsg.text}`.trim() : firstUserMsg.text) : t.newChat; li.innerHTML = `<span class="history-item-title">${titleText}</span><button class="delete-history-item-btn" title="${t.deleteChat}"><i class="fas fa-trash"></i></button>`; li.querySelector('.history-item-title').addEventListener('click', () => { if (session.id !== currentChatId) { loadChat(currentSubject, session.id); } closeHistorySidebar(); }); li.querySelector('.delete-history-item-btn').addEventListener('click', (e) => { e.stopPropagation(); if (confirm(t.confirmDeleteChat)) { const sessionIndex = allChatSessions[currentSubject].findIndex(s => s.id === session.id); if (sessionIndex > -1) { allChatSessions[currentSubject].splice(sessionIndex, 1); if(session.id === currentChatId) { const nextSession = allChatSessions[currentSubject][0] || null; loadChat(currentSubject, nextSession ? nextSession.id : null); } saveAllChatSessionsToLocalStorage(); renderHistoryList(); } } }); historyList.appendChild(li); }); }
