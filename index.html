@@ -422,8 +422,22 @@
 
     @media (max-width: 480px) { 
       .header h1 { font-size: 0.95rem; } .message { max-width: 95%; } .chat-input-wrapper textarea { padding: 0.8rem 44px; } .chat-input-btn { width: 40px; height: 40px; font-size: 1rem; } #speakBtn { left: 42px; } html[dir="ltr"] #speakBtn { right: 42px; left: auto; }
-      #suggestionsContainer { gap: 8px; } .suggestion-btn { padding: 10px; font-size: 0.85rem; }
-      #subjectListContainer { gap: 12px; } .subject-item-btn { padding: 12px 15px; font-size: 0.9rem; min-width: 140px; gap: 6px;} .subject-item-btn i { font-size: 1.8rem; }
+      .suggestion-btn { padding: 10px; font-size: 0.85rem; }
+      
+      #subjectListContainer { 
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        scrollbar-width: none;
+      }
+      #subjectListContainer::-webkit-scrollbar { display: none; }
+
+      .subject-item-btn { 
+        padding: 12px 15px; font-size: 0.9rem; min-width: 140px; gap: 6px;
+        flex-shrink: 0;
+      } 
+      .subject-item-btn i { font-size: 1.8rem; }
     }
   </style>
 </head>
@@ -574,7 +588,7 @@
     function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem(localStorageKeyLanguage, currentLanguage); document.documentElement.lang = lang; document.documentElement.dir = ['ar'].includes(lang) ? 'rtl' : 'ltr'; updateUIForLanguage(); initSpeechRecognition(); if (messages.length > 0 && messages[0].isInitialWelcome) { messages[0].text = getWelcomeMessageText(); } refreshChat(); }
     function getWelcomeMessageText() { const t = translations[currentLanguage]; let welcomeMsgText = t.welcomeGeneral.replace('{botName}', getBotDisplayName()); if (currentSubject !== "general") { welcomeMsgText = t.welcomeSubject.replace('{botName}', getBotDisplayName()).replace('{subject}', getTranslatedSubjectName(currentSubject)); } return welcomeMsgText; }
     function updateDailySuggestions() { const suggestionsPerDay = 4; const numChunks = Math.ceil(predefinedSuggestions.length / suggestionsPerDay); const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24)); const currentChunkIndex = dayIndex % numChunks; const startIndex = currentChunkIndex * suggestionsPerDay; const todaysSuggestions = predefinedSuggestions.slice(startIndex, startIndex + suggestionsPerDay); populateSuggestions(todaysSuggestions); }
-    function populateSuggestions(suggestionsArray) { suggestionsContainer.innerHTML = ''; suggestionsArray.forEach(suggestionObj => { const btn = document.createElement('button'); btn.className = 'suggestion-btn'; btn.textContent = suggestionObj[currentLanguage]; btn.onclick = () => { userInput.value = suggestionObj[currentLanguage]; sendMessage(); }; suggestionsContainer.appendChild(btn); }); }
+    function populateSuggestions(suggestionsArray) { suggestionsContainer.innerHTML = ''; suggestionsArray.forEach(suggestionObj => { const btn = document.createElement('button'); btn.className = 'suggestion-btn'; btn.textContent = suggestionObj[currentLanguage] || suggestionObj['en']; btn.onclick = () => { userInput.value = suggestionObj[currentLanguage] || suggestionObj['en']; sendMessage(); }; suggestionsContainer.appendChild(btn); }); }
     function updateInitialViewState() { const hasUserMessages = messages.some(m => !m.isInitialWelcome); const isTyping = userInput.value.trim().length > 0; if (!hasUserMessages && currentChatId === null && !isTyping) { suggestionsContainer.style.display = 'flex'; welcomeAnimation.style.display = 'flex'; } else { suggestionsContainer.style.display = 'none'; welcomeAnimation.style.display = 'none'; } }
     function openHistorySidebar() { renderHistoryList(); historySidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
     function closeHistorySidebar() { historySidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); }
