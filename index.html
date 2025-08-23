@@ -38,50 +38,6 @@
     html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { background: var(--bg-main-color); display: flex; justify-content: center; align-items: center; color: var(--text-primary); }
     .container { width: 100%; height: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 0; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-    
-    /* ========= التعديل: تم إضافة حاوية وتنسيقات الشهب المتساقطة ========= */
-    .meteor-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        pointer-events: none;
-        z-index: 0;
-    }
-    .meteor {
-        position: absolute;
-        width: 3px;
-        height: 3px;
-        background-color: white;
-        border-radius: 50%;
-        box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.7);
-        animation: meteor-fall linear infinite;
-    }
-    .meteor::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%) translateX(3px);
-        width: 200px;
-        height: 2px;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0.6), transparent);
-    }
-    @keyframes meteor-fall {
-        0% {
-            transform: translate(0, 0) rotate(215deg);
-            opacity: 1;
-        }
-        70% {
-            opacity: 1;
-        }
-        100% {
-            transform: translate(-700px, 700px) rotate(215deg);
-            opacity: 0;
-        }
-    }
-    
     .download-notification { display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface-raised); color: var(--text-primary); text-align: center; font-weight: 500; z-index: 100; box-shadow: var(--shadow-md); border-bottom: 1px solid var(--border-color); overflow: hidden; max-height: 0; padding: 0 15px; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; }
     .download-notification.show { max-height: 80px; padding: 10px 15px; }
     .notification-buttons { display: flex; align-items: center; gap: 10px; margin-right: auto; padding-right: 15px; }
@@ -107,6 +63,8 @@
     .dropdown-menu button.danger:hover { background-color: var(--error-color); color: white; }
     #languageBtn { padding: 0.4rem; width: 34px; height: 34px; font-size: 1.1rem; }
     .chat-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; padding-top: var(--header-height); position: relative; }
+    
+    /* ========= التعديل: تم تبسيط تصميم أيقونة البداية (رائد الفضاء فقط) ========= */
     #welcomeAnimationContainer { 
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
         z-index: 1; display: none; justify-content: center; align-items: center; pointer-events: none;
@@ -128,6 +86,7 @@
     }
     @keyframes fadeIn { to { opacity: 0.7; } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    
     #subjectsViewContainer { background-color: var(--bg-main-color); padding: 1.5rem; display: none; flex-direction: column; align-items: center; }
     .subjects-view-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); max-width: 700px; }
     .subjects-view-header h2 { font-size: 1.6rem; color: var(--primary-color); }
@@ -256,7 +215,6 @@
 </head>
 <body>
   <div class="container">
-    <div id="meteorContainer" class="meteor-container"></div>
     <div id="downloadNotification" class="download-notification">
       <span id="downloadNotificationText"></span>
       <div class="notification-buttons">
@@ -388,41 +346,7 @@
     function toggleListening() { if (!recognition) return; if (isListening) { recognition.stop(); } else { try { userInput.value = ""; autoResizeTextarea(); recognition.start(); } catch (e) { stopListening(); } } }
     function stopListening() { if(isListening) { isListening = false; sendOrVoiceBtn.classList.remove('recording'); voiceIndicator.classList.remove('active'); } }
     function speakMessageText(text) { if (speechSynthesis.speaking) { speechSynthesis.cancel(); } const utterance = new SpeechSynthesisUtterance(text); const langMap = { ar: 'ar-SA', en: 'en-US', fr: 'fr-FR', es: 'es-ES', zh: 'zh-CN' }; utterance.lang = langMap[currentLanguage]; speechSynthesis.speak(utterance); }
-    
-    // ========= التعديل: تم إضافة دالة إنشاء الشهب =========
-    function createMeteors() {
-        const meteorContainer = document.getElementById('meteorContainer');
-        if (!meteorContainer) return;
-
-        setInterval(() => {
-            const meteor = document.createElement('div');
-            meteor.className = 'meteor';
-
-            const right = Math.random() * (window.innerWidth + 200) - 200; // Allow starting off-screen
-            const duration = Math.random() * 2 + 1; 
-            const delay = Math.random() * 5;
-
-            meteor.style.right = `${right}px`;
-            meteor.style.top = `-20px`;
-            meteor.style.animationDuration = `${duration}s`;
-            meteor.style.animationDelay = `${delay}s`;
-            
-            meteorContainer.appendChild(meteor);
-
-            meteor.addEventListener('animationend', () => {
-                meteor.remove();
-            });
-
-        }, 250);
-    }
-
-    function initializeApp() { 
-        registerServiceWorker(); 
-        const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar'; 
-        switchLanguage(savedLang); 
-        loadAllChatSessions(); 
-        createMeteors(); // <-- تشغيل تأثير الشهب
-        const qrCodeImg = document.getElementById('qr-code-img'); const whatsappShare = document.getElementById('whatsapp-share'); const twitterShare = document.getElementById('twitter-share'); const telegramShare = document.getElementById('telegram-share'); const facebookShare = document.getElementById('facebook-share'); shareBtn.addEventListener('click', () => { const shareUrl = shareLinkInput.value; const shareText = translations[currentLanguage].shareText; qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`; whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`; twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`; shareModal.style.display = 'flex'; }); closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; }); copyLinkBtn.addEventListener('click', copyShareLink); toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); }); document.getElementById('uploadFromGalleryBtn').onclick = () => triggerImageUpload(); document.getElementById('useCameraBtn').onclick = () => openCamera(); captureBtn.addEventListener('click', captureImage); retakeBtn.addEventListener('click', () => { previewOverlay.style.display = 'none'; cameraOverlay.style.display = 'flex'; }); cancelCameraBtn.addEventListener('click', closeCamera); usePhotoBtn.addEventListener('click', handleCameraPhotoSubmission); enterSubjectsBtn.addEventListener('click', openSubjectsView); backToChatBtn.addEventListener('click', closeSubjectsView); generalChatBtn.addEventListener('click', switchToGeneralMode); downloadAppBtn.addEventListener('click', promptInstall); closeNotificationBtn.addEventListener('click', hideAppNotification); userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}}); userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); updateInitialViewState(); }); languageBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(languageDropdown); }); settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(settingsDropdown); }); document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; }); document.querySelectorAll('#languageDropdown button').forEach(button => { button.addEventListener('click', (e) => { switchLanguage(e.currentTarget.dataset.lang); }); }); deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat); historyBtn.addEventListener('click', openHistorySidebar); closeHistoryBtn.addEventListener('click', closeHistorySidebar); sidebarOverlay.addEventListener('click', closeHistorySidebar); newChatBtn.addEventListener('click', () => { loadChat(currentSubject, null); closeHistorySidebar(); }); imageUploadInput.addEventListener('change', handleFileSelect); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); }); window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); }); window.addEventListener('click', (event) => { if (event.target == shareModal) shareModal.style.display = 'none'; });
+    function initializeApp() { registerServiceWorker(); const savedLang = localStorage.getItem(localStorageKeyLanguage) || 'ar'; switchLanguage(savedLang); loadAllChatSessions(); const qrCodeImg = document.getElementById('qr-code-img'); const whatsappShare = document.getElementById('whatsapp-share'); const twitterShare = document.getElementById('twitter-share'); const telegramShare = document.getElementById('telegram-share'); const facebookShare = document.getElementById('facebook-share'); shareBtn.addEventListener('click', () => { const shareUrl = shareLinkInput.value; const shareText = translations[currentLanguage].shareText; qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(shareUrl)}&bgcolor=1c1c1c&color=ffffff&qzone=1`; whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`; twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; telegramShare.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`; facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`; shareModal.style.display = 'flex'; }); closeShareModalBtn.addEventListener('click', () => { shareModal.style.display = 'none'; }); copyLinkBtn.addEventListener('click', copyShareLink); toggleUploadBtn.addEventListener('click', (e) => { e.stopPropagation(); uploadOptionsContainer.classList.toggle('active'); }); document.getElementById('uploadFromGalleryBtn').onclick = () => triggerImageUpload(); document.getElementById('useCameraBtn').onclick = () => openCamera(); captureBtn.addEventListener('click', captureImage); retakeBtn.addEventListener('click', () => { previewOverlay.style.display = 'none'; cameraOverlay.style.display = 'flex'; }); cancelCameraBtn.addEventListener('click', closeCamera); usePhotoBtn.addEventListener('click', handleCameraPhotoSubmission); enterSubjectsBtn.addEventListener('click', openSubjectsView); backToChatBtn.addEventListener('click', closeSubjectsView); generalChatBtn.addEventListener('click', switchToGeneralMode); downloadAppBtn.addEventListener('click', promptInstall); closeNotificationBtn.addEventListener('click', hideAppNotification); userInput.addEventListener("keydown", (e) => { if(e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); sendMessage();}}); userInput.addEventListener("input", () => { autoResizeTextarea(); updateSendOrVoiceButton(); updateInitialViewState(); }); languageBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(languageDropdown); }); settingsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(settingsDropdown); }); document.addEventListener('click', () => { uploadOptionsContainer.classList.remove('active'); languageDropdown.style.display = 'none'; settingsDropdown.style.display = 'none'; }); document.querySelectorAll('#languageDropdown button').forEach(button => { button.addEventListener('click', (e) => { switchLanguage(e.currentTarget.dataset.lang); }); }); deleteCurrentChatBtn.addEventListener('click', deleteCurrentChat); historyBtn.addEventListener('click', openHistorySidebar); closeHistoryBtn.addEventListener('click', closeHistorySidebar); sidebarOverlay.addEventListener('click', closeHistorySidebar); newChatBtn.addEventListener('click', () => { loadChat(currentSubject, null); closeHistorySidebar(); }); imageUploadInput.addEventListener('change', handleFileSelect); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showAppNotification(); }); window.addEventListener('appinstalled', () => { deferredPrompt = null; hideAppNotification(); }); window.addEventListener('click', (event) => { if (event.target == shareModal) shareModal.style.display = 'none'; });
         const imageOverlay = document.getElementById('imageOverlay');
         document.getElementById('closeOverlayBtn').onclick = () => { imageOverlay.style.display = 'none'; };
         imageOverlay.onclick = (e) => { if (e.target.id === 'imageOverlay') { imageOverlay.style.display = 'none'; } };
